@@ -1,9 +1,10 @@
 import React from "react"
-import Header from '../components/header'
+import Container from "../components/container"
+import Header from "../components/header"
 
 export default () => (
-    <div>
+    <Container>
         <Header routeLink="/about/" routeName="About"/>
         <p>Living in the future, with React!</p>
-    </div>
+    </Container>
 )
