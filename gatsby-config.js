@@ -6,6 +6,5 @@ module.exports = {
                 pathToConfigModule: 'src/utils/typography.js',
             },
         },
-        'gatsby-plugin-glamor'
     ],
 }
