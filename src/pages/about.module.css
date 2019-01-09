@@ -1,0 +1,31 @@
+.story {
+    display: flex;
+    align-items: center;
+    margin: 0 auto 1rem auto;
+}
+
+.story:last-child {
+    margin-bottom: 0;
+}
+
+.avatar {
+    flex: 0 0 6rem;
+    width: 6rem;
+    height: 6rem;
+    margin: 0;
+}
+
+.description {
+    flex: 1;
+    margin-left: 1.2rem;
+    padding: 1rem;
+}
+
+.storyname {
+    margin: 0 0 1rem 0;
+    padding: 0;
+}
+
+.excerpt {
+    margin: 0;
+}
