@@ -8,7 +8,7 @@ export default (props) => (
     <h1>Gatsby Experiment</h1>
     <p>What a time to be alive!</p>
     <img
-      src="https://source.unsplash.com/random/900x200"
+      src="https://source.unsplash.com/random/800x200"
       alt="random unsplash"
     />
   </div>
