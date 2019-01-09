@@ -1,7 +1,9 @@
-import React from "react";
+import React from "react"
+import Header from "../components/header"
 
-export default () => (
+export default (props) => (
   <div className="about">
+    <Header routeLink="/" routeName="Home"/>
     <h3>Let me tell you a story, all about how</h3>
     <p>my react got flipped, turned upside down</p>
     <img

@@ -3,7 +3,7 @@ import Header from '../components/header'
 
 export default () => (
     <div>
-        <Header />
-        <p>Living in the future</p>
+        <Header routeLink="/about/" routeName="About"/>
+        <p>Living in the future, with React!</p>
     </div>
 )
