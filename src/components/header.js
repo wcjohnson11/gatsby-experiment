@@ -2,9 +2,11 @@ import React from "react"
 import { Link } from "gatsby"
 import headerStyles from "./header.module.css"
 
-export default (props) => (
+export default () => (
   <div className={headerStyles.header}>
-    <Link to={props.routeLink}>{props.routeName}</Link>
+    <Link to="/">Home</Link>
+    <Link to="/about/">About</Link>
+    <Link to="/contact/">Contact</Link>
     <h1>Gatsby Experiment</h1>
     <p>What a time to be alive!</p>
     <img

@@ -1,6 +1,5 @@
 import React from "react"
-import Container from "../components/container"
-import Header from "../components/header"
+import Layout from "../components/layout"
 import styles from "./about.module.css"
 
 const Story = props => (
@@ -14,10 +13,10 @@ const Story = props => (
 )
 
 export default props => (
-  <Container>
-    <Header routeLink="/" routeName="Home" />
-    <h3>Let me tell you a story, all about how</h3>
-    <p>my react got flipped, turned upside down</p>
+  <Layout>
+    <h3>Let me tell you a story</h3>
+    <h3>all about how</h3>
+    <p>my react world got flipped, turned upside down</p>
     <p>and it never would've happened without this newfangled tech!</p>
     <br />
     <Story
@@ -30,5 +29,5 @@ export default props => (
       avatar="https://source.unsplash.com/random/100x100"
       excerpt="A tool for writing CSS like normal but it is compiled with hashed unique class and animation names so you don't have to worry about name collisions."
     />
-  </Container>
+  </Layout>
 );

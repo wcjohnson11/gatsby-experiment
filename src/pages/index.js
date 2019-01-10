@@ -1,10 +1,8 @@
 import React from "react"
-import Container from "../components/container"
-import Header from "../components/header"
+import Layout from "../components/layout"
 
 export default () => (
-    <Container>
-        <Header routeLink="/about/" routeName="About"/>
+    <Layout>
         <p>Living in the future, with React!</p>
-    </Container>
+    </Layout>
 )
