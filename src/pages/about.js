@@ -1,14 +1,34 @@
 import React from "react"
+import Container from "../components/container"
 import Header from "../components/header"
+import styles from "./about.module.css"
 
-export default (props) => (
-  <div className="about">
-    <Header routeLink="/" routeName="Home"/>
+const Story = props => (
+  <div className={styles.story}>
+    <img src={props.avatar} className={styles.avatar} alt="" />
+    <div className={styles.description}>
+      <h2 className={styles.storyname}>{props.storyname}</h2>
+      <p className="styles.excerpt">{props.excerpt}</p>
+    </div>
+  </div>
+)
+
+export default props => (
+  <Container>
+    <Header routeLink="/" routeName="Home" />
     <h3>Let me tell you a story, all about how</h3>
     <p>my react got flipped, turned upside down</p>
-    <img
-      src="https://source.unsplash.com/random/150x150"
-      alt="about unsplash"
+    <p>and it never would've happened without this newfangled tech!</p>
+    <br />
+    <Story
+      storyname="GatsbyJS"
+      avatar="https://source.unsplash.com/random/100x100"
+      excerpt="A BLAZING fast modern site generator for React, extremely pluggable with best modern practices and all the cool kids are using it."
     />
-  </div>
+    <Story
+      storyname="CSS Modules"
+      avatar="https://source.unsplash.com/random/100x100"
+      excerpt="A tool for writing CSS like normal but it is compiled with hashed unique class and animation names so you don't have to worry about name collisions."
+    />
+  </Container>
 );
