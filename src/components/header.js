@@ -1,12 +1,12 @@
 import React from "react"
-import { Link } from "gatsby"
+import { graphql, Link } from "gatsby"
 import ListLink from "./listLink";
 import styles from "./header.module.css"
 
-export default () => (
+export default ({ data }) => (
   <div className={styles.header}>
     <Link to="/" className={styles.headerTitle}>
-      <h1>Gatsby Experiment</h1>
+      <h1>{data.site.siteMetadata.title}</h1>
     </Link>
     <ul className={styles.headerList}>
       <ListLink to="/">Home</ListLink>
@@ -20,3 +20,12 @@ export default () => (
     />
   </div>
 );
+
+export const query = graphql
+  query {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+  }
