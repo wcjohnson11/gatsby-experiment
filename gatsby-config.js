@@ -1,4 +1,7 @@
 module.exports = {
+    siteMetadata: {
+        title: 'Gatsby Experiment',
+    },
     plugins: [
         {
             resolve: 'gatsby-plugin-typography',
