@@ -3,6 +3,7 @@ module.exports = {
         title: 'Gatsby Experiment',
     },
     plugins: [
+        'gatsby-transformer-remark',
         {
             resolve: 'gatsby-plugin-typography',
             options: {
