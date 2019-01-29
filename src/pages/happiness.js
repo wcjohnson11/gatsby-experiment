@@ -32,7 +32,10 @@ class Happiness extends React.Component {
             }, [])
             worldHappinessData.x = 'GDP per Capita'
             worldHappinessData.y = 'World Happiness Report Score'
-            this.setState({ categories, categoryInfo, datsets: { 'happiness': worldHappinessData }})
+            this.setState({ categories: categories,
+                categoryInfo: categoryInfo,
+                datasets: { 'happiness': worldHappinessData }
+            })
         })
     }
 
