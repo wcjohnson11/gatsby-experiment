@@ -32,19 +32,44 @@ class Happiness extends React.Component {
             }, [])
             worldHappinessData.x = 'GDP per Capita'
             worldHappinessData.y = 'World Happiness Report Score'
+            console.log(data)
+            const GINIData = data.reduce((result, d) => {
+                if (d['GINI index'] !== '-' && d['GDP per capita (PPP)'] !== '-') {
+                    result.push({
+                        name: d.indicator,
+                        y: cleanNumbers(d['GINI index']),
+                        x: cleanNumbers(d['GDP per capita (PPP)'])
+                    })
+                }
+                return result
+            }, [])
+            GINIData.x = 'GDP per Capita'
+            GINIData.y = 'GINI index'
             this.setState({ categories: categories,
                 categoryInfo: categoryInfo,
-                datasets: { 'happiness': worldHappinessData }
+                datasets: { 'happiness': worldHappinessData, 'gini': GINIData }
             })
         })
     }
 
+    handleCircleMouseOver(event) {
+        console.log(event.clientX, event.clientY, event.target)
+    }
+
     render() {
-        const data = this.state.datasets.happiness
+        const { happiness, gini } = this.state.datasets
         return (
             <Layout>
                 <h1>How we measure happiness</h1>
-                <Scatterplot data={data}/>
+                <div className="pure-g">
+                    <Scatterplot className="pure-u-12-24" data={happiness} handleMouseOver={this.handleCircleMouseOver}/>
+                    <Scatterplot className="pure-u-12-24" data={gini} handleMouseOver={this.handleCircleMouseOver}/>
+                </div>
+                <div id="tooltip" className="hidden">
+                    <p><strong id="tooltip-name">Important Label Heading</strong></p>
+                    <p><span id="name">GDP per Capita</span><span id="gdp-value">100</span></p>
+                    <p><span id="name">WHR Score</span><span id="whr-value">100</span></p>
+                </div>
             </Layout>
         )
     }
