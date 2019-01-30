@@ -2,13 +2,13 @@ import React from 'react';
 import * as d3 from 'd3';
 import styles from './scatterplot.module.css';
 
-const width = 600;
-const height = 600;
-const padding = 100;
+const width = 540;
+const height = 400;
+const padding = 50;
 
 class Scatterplot extends React.Component {
 	state = {
-		circles: []
+        circles: []
 	};
 
 	// Initialize Axes
@@ -16,12 +16,12 @@ class Scatterplot extends React.Component {
 	yAxis = d3.axisLeft();
 
 	static getDerivedStateFromProps(nextProps, prevState) {
-		const { data } = nextProps;
+		const { data, className, handleMouseOver } = nextProps;
 		if (!data) return {};
 
 		// Get min, max of x value
 		// and map to X-position
-		const xScale = d3.scaleLinear().domain(d3.extent(data, (d) => d.x)).range([ padding, width - padding ]);
+		const xScale = d3.scaleLinear().domain([-1000, d3.max(data, (d) => d.x)]).range([ padding, width - padding ]);
 
 		// 2. Initialize scale of Y Position
 		// and map to Y-position
@@ -39,8 +39,8 @@ class Scatterplot extends React.Component {
 			x: data.x,
 			y: data.y
 		};
-		return { circles, xScale, yScale, labels };
-	}
+		return { circles, xScale, yScale, labels, className, handleMouseOver };
+    }
 
 	componentDidUpdate() {
 		const { xScale, yScale, labels } = this.state;
@@ -53,22 +53,34 @@ class Scatterplot extends React.Component {
 	}
 
 	render() {
+        const { className, circles, handleMouseOver } = this.state
 		return (
-			<svg width={width} height={height}>
-				{this.state.circles.map((d) => (
-					<circle key={d.key} fill={'white'} stroke={'black'} strokeWidth={2} cx={d.cx} cy={d.cy} r={3} />
+			<svg className={className} width={width} height={height}>
+				{circles.map((d) => (
+                    <circle
+                        key={d.key}
+                        className={styles.circle}
+                        cx={d.cx}
+                        cy={d.cy}
+                        r={3}
+                        onMouseOver={handleMouseOver}
+                    />
 				))}
 				<g ref="xAxis" className={styles.axis} transform={`translate(0, ${height - padding})`} />
-				<g ref="yAxis" className={styles.axis} transform={`translate(${padding}, 0)`} />
 				<text
 					className={styles.axisLabel}
 					ref="xAxisLabel"
-					transform={`translate(${width / 3}, ${height - padding / 3})`}
+					transform={`translate(${(width / 2) - padding}, ${height - 10})`}
 				/>
+				<g ref="yAxis" className={styles.axis} transform={`translate(${padding}, 0)`} />
 				<text
 					className={styles.axisLabel}
 					ref="yAxisLabel"
-					transform={`translate(${padding / 2}, ${height - padding}) rotate(-90)`}
+                    transform={`rotate(-90)`}
+                    dy="1em"
+                    x={0 - (height / 2)}
+                    y={0}
+                    textAnchor="middle"
 				/>
 			</svg>
 		);

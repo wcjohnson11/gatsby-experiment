@@ -1,7 +1,18 @@
 .axis path, line {
-  stroke: gray;
+  stroke: #0B0414;
 }
 
 .axisLabel {
-    text-anchor: 'middle';
+    fill: #0B0414;
+}
+
+.circle {
+    fill: #FFFEFF;
+    stroke: #0B0414;
+    stroke-width: 2;
+}
+
+.circle:hover {
+    stroke: #FC4616;
+    stroke-width: 4;
 }
