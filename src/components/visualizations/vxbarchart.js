@@ -11,7 +11,7 @@ import styles from './scatterplot.module.css';
 
 const margin = 25;
 
-class VxScatterplot extends React.Component {
+class VxBarChart extends React.Component {
 	state = {
 		data: [],
 		xScale: false,
@@ -165,4 +165,4 @@ class VxScatterplot extends React.Component {
 	}
 }
 
-export default VxScatterplot;
+export default VxBarChart;
