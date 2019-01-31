@@ -6,6 +6,7 @@ import { Bar } from '@vx/shape';
 import { AxisTop } from '@vx/axis';
 import { scaleLinear } from '@vx/scale';
 import { Group } from '@vx/group';
+import { Motion, spring } from 'react-motion'
 import styles from './scatterplot.module.css';
 
 const margin = 25;
@@ -98,7 +99,7 @@ class VxScatterplot extends React.Component {
 									strokeWidth={2}
 									fill="rgb(133, 90, 242"
 									onMouseOver={(e) => this.handleMouseOverBar(e, d)}
-									onMouseOut={() => hideTooltip}
+									onMouseOut={() => hideTooltip()}
 								/>
 							);
 						})}
@@ -115,25 +116,50 @@ class VxScatterplot extends React.Component {
 						/>
 					</Group>
 				</svg>
-				{tooltipOpen && (
-					<TooltipWithBounds
-						// set this to random so it correctly updates with parent bounds
-						key={Math.random()}
-						top={tooltipTop}
-						left={tooltipLeft}
-						style={{ letterSpacing: 'normal' }}
-					>
-						<p className={styles.tooltipP}>
-							Country <strong>{tooltipData.name}</strong>
-						</p>
-						<p className={styles.tooltipP}>
-							data.x <strong>{tooltipData.x}</strong>
-						</p>
-						<p className={styles.tooltipP}>
-							data.y <strong>{tooltipData.y}</strong>
-						</p>
-					</TooltipWithBounds>
-				)}
+					<div style={{
+						position: 'absolute',
+						top: margin,
+						left: margin,
+						width: dataMax,
+						height: innerHeight,
+						pointerEvents: 'none'
+					}}>
+						<Motion
+							defaultStyle={{ left: tooltipLeft || 0, top: tooltipTop || 0, opacity: 0 }}
+							style={{
+								left: spring(tooltipLeft || 0),
+								top: spring(tooltipTop || 0),
+								opacity: spring(tooltipOpen ? 1 : 0)
+							}}
+						>
+							{style => (
+								<TooltipWithBounds
+									key={Math.random()}
+									style={{
+										top: style.top,
+										left: style.left,
+										opacity: style.opacity,
+										letterSpacing: 'normal'
+									}}
+								>
+										{ tooltipData && (
+										<div>
+											<p className={styles.tooltipP}>
+												Country <strong>{tooltipData.name}</strong>
+											</p>
+											<p className={styles.tooltipP}>
+												data.x <strong>{tooltipData.x}</strong>
+											</p>
+											<p className={styles.tooltipP}>
+												data.y <strong>{tooltipData.y}</strong>
+											</p>
+
+									</div>
+							)}
+								</TooltipWithBounds>
+							)}
+						</Motion>
+					</div>
 			</React.Fragment>
 		);
 	}
