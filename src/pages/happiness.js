@@ -9,7 +9,8 @@ class Happiness extends React.Component {
     state = {
         categories: [],
         categoryInfo: [],
-        datasets: {}
+        datasets: {},
+        currentCircle: false
     }
 
     componentDidMount() {
@@ -32,7 +33,7 @@ class Happiness extends React.Component {
             }, [])
             worldHappinessData.x = 'GDP per Capita'
             worldHappinessData.y = 'World Happiness Report Score'
-            console.log(data)
+
             const GINIData = data.reduce((result, d) => {
                 if (d['GINI index'] !== '-' && d['GDP per capita (PPP)'] !== '-') {
                     result.push({
@@ -53,7 +54,7 @@ class Happiness extends React.Component {
     }
 
     handleCircleMouseOver(event) {
-        console.log(event.clientX, event.clientY, event.target)
+        console.log(event.target)
     }
 
     render() {
