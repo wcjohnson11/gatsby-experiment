@@ -1,79 +1,88 @@
-import React from "react"
-import {tsv} from 'd3'
-import Layout from "../components/layout"
-import Scatterplot from "../components/visualizations/scatterplot"
+import React from 'react';
+import { tsv } from 'd3';
+import Layout from '../components/layout';
+import Scatterplot from '../components/visualizations/scatterplot';
+import VxScatterplot from '../components/visualizations/vxscatterplot';
+import { withTooltip } from '@vx/tooltip';
+import { withParentSize } from '@vx/responsive';
 
-const cleanNumbers = (string) => parseFloat(string.replace(/,/g, ''))
+const cleanNumbers = (string) => parseFloat(string.replace(/,/g, ''));
 
 class Happiness extends React.Component {
-    state = {
-        categories: [],
-        categoryInfo: [],
-        datasets: {},
-        currentCircle: false
-    }
+	state = {
+		categories: [],
+		categoryInfo: [],
+		datasets: {},
+		currentCircle: false
+	};
 
-    componentDidMount() {
-        tsv('happy.tsv').then(data => {
-            const categories = data.columns
-            const categoryInfo = []
-            for (var i = 0; i < 4; i++) {
-                categoryInfo.push(data.shift())
-            }
-            // Set X and Y values for world happiness
-            const worldHappinessData = data.reduce((result, d) => {
-                if (d['world happiness report score'] !== '-' && d['GDP per capita (PPP)'] !== '-') {
-                    result.push({
-                        name: d.indicator,
-                        y: cleanNumbers(d['world happiness report score']),
-                        x: cleanNumbers(d['GDP per capita (PPP)'])
-                    })
-                }
-                return result
-            }, [])
-            worldHappinessData.x = 'GDP per Capita'
-            worldHappinessData.y = 'World Happiness Report Score'
+	componentDidMount() {
+		tsv('happy.tsv').then((data) => {
+			const categories = data.columns;
+			const categoryInfo = [];
+			for (var i = 0; i < 4; i++) {
+				categoryInfo.push(data.shift());
+			}
+			// Set X and Y values for world happiness
+			const worldHappinessData = data.reduce((result, d) => {
+				if (d['world happiness report score'] !== '-' && d['GDP per capita (PPP)'] !== '-') {
+					result.push({
+						name: d.indicator,
+						y: cleanNumbers(d['world happiness report score']),
+						x: cleanNumbers(d['GDP per capita (PPP)'])
+					});
+				}
+				return result;
+			}, []);
+			worldHappinessData.x = 'GDP per Capita';
+			worldHappinessData.y = 'World Happiness Report Score';
 
-            const GINIData = data.reduce((result, d) => {
-                if (d['GINI index'] !== '-' && d['GDP per capita (PPP)'] !== '-') {
-                    result.push({
-                        name: d.indicator,
-                        y: cleanNumbers(d['GINI index']),
-                        x: cleanNumbers(d['GDP per capita (PPP)'])
-                    })
-                }
-                return result
-            }, [])
-            GINIData.x = 'GDP per Capita'
-            GINIData.y = 'GINI index'
-            this.setState({ categories: categories,
-                categoryInfo: categoryInfo,
-                datasets: { 'happiness': worldHappinessData, 'gini': GINIData }
-            })
-        })
-    }
+			const GINIData = data.reduce((result, d) => {
+				if (d['GINI index'] !== '-' && d['GDP per capita (PPP)'] !== '-') {
+					result.push({
+						name: d.indicator,
+						y: cleanNumbers(d['GINI index']),
+						x: cleanNumbers(d['GDP per capita (PPP)'])
+					});
+				}
+				return result;
+			}, []);
+			GINIData.x = 'GDP per Capita';
+			GINIData.y = 'GINI index';
+			this.setState({
+				categories: categories,
+				categoryInfo: categoryInfo,
+				datasets: { happiness: worldHappinessData, gini: GINIData }
+			});
+		});
+	}
 
-    handleCircleMouseOver(event) {
-        console.log(event.target)
-    }
+	handleCircleMouseOver(event) {
+		console.log(event.target);
+	}
 
-    render() {
-        const { happiness, gini } = this.state.datasets
-        return (
-            <Layout>
-                <h1>How we measure happiness</h1>
-                <div className="pure-g">
-                    <Scatterplot className="pure-u-12-24" data={happiness} handleMouseOver={this.handleCircleMouseOver}/>
-                    <Scatterplot className="pure-u-12-24" data={gini} handleMouseOver={this.handleCircleMouseOver}/>
-                </div>
-                <div id="tooltip" className="hidden">
-                    <p><strong id="tooltip-name">Important Label Heading</strong></p>
-                    <p><span id="name">GDP per Capita</span><span id="gdp-value">100</span></p>
-                    <p><span id="name">WHR Score</span><span id="whr-value">100</span></p>
-                </div>
-            </Layout>
-        )
-    }
+	render() {
+		const { happiness, gini } = this.state.datasets;
+		const ScatterWithSize = withParentSize(VxScatterplot);
+		const BarChartwTooltip = withTooltip(ScatterWithSize);
+
+		return (
+			<Layout>
+				<h1>How we measure happiness</h1>
+				<div className="pure-g">
+					<Scatterplot
+						className="pure-u-12-24"
+						data={happiness}
+						handleMouseOver={this.handleCircleMouseOver}
+					/>
+					<Scatterplot className="pure-u-12-24" data={gini} handleMouseOver={this.handleCircleMouseOver} />
+				</div>
+				<div className="pure-g">
+					<BarChartwTooltip className="pure-u-24-24" data={happiness} />
+				</div>
+			</Layout>
+		);
+	}
 }
 
-export default Happiness
+export default Happiness;
