@@ -29,8 +29,10 @@ class Scatterplot extends React.Component {
 
 		const circles = data.map((d) => {
 			return {
-				cx: xScale(d.x),
-				cy: yScale(d.y),
+                cx: xScale(d.x),
+                x: d.x,
+                cy: yScale(d.y),
+                y: d.y,
 				key: d.name
 			};
 		});
@@ -65,7 +67,9 @@ class Scatterplot extends React.Component {
                         key={d.key}
                         className={styles.circle}
                         cx={d.cx}
+                        x={d.x}
                         cy={d.cy}
+                        y={d.y}
                         r={3}
                         onMouseOver={handleMouseOver}
                     />
