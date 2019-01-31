@@ -49,11 +49,15 @@ class Scatterplot extends React.Component {
 		this.yAxis.scale(yScale);
 		d3.select(this.refs.yAxis).call(this.yAxis);
 		d3.select(this.refs.xAxisLabel).text(labels.x);
-		d3.select(this.refs.yAxisLabel).text(labels.y);
-	}
+        d3.select(this.refs.yAxisLabel).text(labels.y);
+    }
+    
+    handleCircleMouseOver(event) {
+        console.log(event.clientX, event.clientY, event.target)
+    }
 
 	render() {
-        const { className, circles, handleMouseOver } = this.state
+        const { className, circles, handleMouseOver} = this.state
 		return (
 			<svg className={className} width={width} height={height}>
 				{circles.map((d) => (
