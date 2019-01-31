@@ -2,7 +2,7 @@ import React from 'react';
 import { tsv } from 'd3';
 import Layout from '../components/layout';
 import Scatterplot from '../components/visualizations/scatterplot';
-import VxScatterplot from '../components/visualizations/vxscatterplot';
+import VxBarChart from '../components/visualizations/vxbarchart';
 import { withTooltip } from '@vx/tooltip';
 import { withParentSize } from '@vx/responsive';
 
@@ -63,8 +63,8 @@ class Happiness extends React.Component {
 
 	render() {
 		const { happiness, gini } = this.state.datasets;
-		const ScatterWithSize = withParentSize(VxScatterplot);
-		const BarChartwTooltip = withTooltip(ScatterWithSize);
+		const BarChartWithSize = withParentSize(VxBarChart);
+		const BarChartwTooltip = withTooltip(BarChartWithSize);
 
 		return (
 			<Layout>
