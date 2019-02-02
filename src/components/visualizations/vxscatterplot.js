@@ -1,7 +1,7 @@
 import React from 'react';
 import { Group } from '@vx/group';
 import { Circle } from '@vx/shape';
-import { scaleLinear } from '@vx/scale';
+import { scaleLinear, scaleOrdinal } from '@vx/scale';
 import { localPoint } from '@vx/event';
 import { TooltipWithBounds } from '@vx/tooltip';
 import { AxisLeft, AxisBottom } from '@vx/axis';
@@ -33,7 +33,20 @@ class VxScatterplot extends React.Component {
 		const yScale = scaleLinear({
 			domain: [ 0, max(data, (d) => d.y) ],
 			range: [ parentHeight - margin, margin ]
-		});
+        });
+
+        const continentNames = data.reduce((result, d) => {
+            if (result.indexOf(d.continent) < 0 && d.continent !== undefined) {
+                result.push(d.continent)
+            }
+            return result;
+        }, [])
+        
+        // TODO pick actual colors
+        const colorScale = scaleOrdinal({
+            domain: continentNames,
+            range: ['red', 'yellow', 'green','pink', 'black', 'blue']
+        })
 
 		const labels = {
 			x: data.x,
@@ -45,7 +58,8 @@ class VxScatterplot extends React.Component {
 				cx: xScale(d.x),
 				cy: yScale(d.y),
 				x: `$${formatMoney(d.x, 2)}`,
-				y: d.y,
+                y: d.y,
+                color: colorScale(d.continent),
 				r: 3,
 				key: d.name
 			};
@@ -112,6 +126,7 @@ class VxScatterplot extends React.Component {
                                     <Circle
                                     key={d.key}
                                     className={style.circle}
+                                    fill={d.color}
                                     cx={d.cx}
                                     cy={d.cy}
                                     r={d.r}
