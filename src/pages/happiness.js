@@ -3,6 +3,7 @@ import { tsv } from 'd3';
 import Layout from '../components/layout';
 import Scatterplot from '../components/visualizations/scatterplot';
 import VxBarChart from '../components/visualizations/vxbarchart';
+import VxScatterplot from '../components/visualizations/vxscatterplot';
 import { withTooltip } from '@vx/tooltip';
 import { withParentSize } from '@vx/responsive';
 
@@ -63,22 +64,31 @@ class Happiness extends React.Component {
 
 	render() {
 		const { happiness, gini } = this.state.datasets;
-		const BarChartWithSize = withParentSize(VxBarChart);
-		const BarChartwTooltip = withTooltip(BarChartWithSize);
+		const BarChartWithTooltip = withTooltip(VxBarChart);
+		const BarChartWithSize = withParentSize(BarChartWithTooltip);
+		const ScatterplotWithTooltip = withTooltip(VxScatterplot);
+		const VxScatterplotWithSize = withParentSize(ScatterplotWithTooltip);
 
 		return (
 			<Layout>
 				<h1>How we measure happiness</h1>
 				<div className="pure-g">
 					<Scatterplot
-						className="pure-u-12-24"
+						className="pure-u-1 pure-u-md-1-2"
 						data={happiness}
 						handleMouseOver={this.handleCircleMouseOver}
 					/>
-					<Scatterplot className="pure-u-12-24" data={gini} handleMouseOver={this.handleCircleMouseOver} />
+					<Scatterplot
+						className="pure-u-1 pure-u-md-1-2"
+						data={gini}
+						handleMouseOver={this.handleCircleMouseOver}
+					/>
 				</div>
 				<div className="pure-g">
-					<BarChartwTooltip className="pure-u-24-24" data={happiness} />
+					<VxScatterplotWithSize className={`pure-u-1`} data={happiness} />
+				</div>
+				<div className="pure-g">
+					<BarChartWithSize className="pure-u-1" data={happiness} />
 				</div>
 			</Layout>
 		);

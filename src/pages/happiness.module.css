@@ -1,0 +1,14 @@
+.pure-g {
+    width: 100%;
+    height: 100%;
+}
+
+.pure-g > div {
+    width: 100%;
+    height: 100%;
+}
+
+.pure-u-24-24 {
+    height: 600px;
+    width: 100%;
+}
