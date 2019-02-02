@@ -115,10 +115,12 @@ class Happiness extends React.Component {
 					/>
 				</div>
 				<div className="pure-g">
-					<VxScatterplotWithSize className={`pure-u-1`} data={happiness} />
-				</div>
-				<div className="pure-g">
-					<BarChartWithSize className="pure-u-1" data={happiness} />
+					<div className="pure-u-1 pure-u-md-2-3">
+						<VxScatterplotWithSize data={happiness} />
+					</div>
+					<div className="pure-u-1 pure-u-md-1-3">
+						<BarChartWithSize data={happiness} />
+					</div>
 				</div>
 			</Layout>
 		);
