@@ -1,5 +1,5 @@
 import React from 'react';
-import { tsv } from 'd3';
+import { csv } from 'd3';
 import Layout from '../components/layout';
 import Scatterplot from '../components/visualizations/scatterplot';
 import VxBarChart from '../components/visualizations/vxbarchart';
@@ -7,7 +7,9 @@ import VxScatterplot from '../components/visualizations/vxscatterplot';
 import { withTooltip } from '@vx/tooltip';
 import { withParentSize } from '@vx/responsive';
 
-const cleanNumbers = (string) => parseFloat(string.replace(/,/g, ''));
+const cleanNumbers = (string) => {
+	return parseFloat(string.replace(/,/g, ''));
+};
 
 class Happiness extends React.Component {
 	state = {
@@ -18,40 +20,67 @@ class Happiness extends React.Component {
 	};
 
 	componentDidMount() {
-		tsv('happy.tsv').then((data) => {
-			const categories = data.columns;
+		Promise.all([ csv('countrycodes.csv'), csv('happy2.csv') ]).then((allData) => {
+			const countryCodes = allData[0];
+			const happy = allData[1];
+
 			const categoryInfo = [];
 			for (var i = 0; i < 4; i++) {
-				categoryInfo.push(data.shift());
+				categoryInfo.push(happy.shift());
 			}
+
+			happy.forEach((country) => {
+				const result = countryCodes.filter((code) => {
+					return code.Three_Letter_Country_Code === country['ISO Country code'];
+				});
+				if (result[0]) {
+					country.continentName = result[0].Continent_Name;
+					country.continentCode = result[0].Continent_Code;
+				}
+
+				country['GDP  (billions PPP)'] = cleanNumbers(country['GDP  (billions PPP)']);
+				country['GDP per capita (PPP)'] = cleanNumbers(country['GDP per capita (PPP)']);
+				country['health expenditure  per person'] = cleanNumbers(country['health expenditure  per person']);
+				country['population'] = cleanNumbers(country['population']);
+				country['surface area (Km2)'] = cleanNumbers(country['surface area (Km2)']);
+				country['GINI index'] = cleanNumbers(country['GINI index']);
+				country['world happiness report score'] = cleanNumbers(country['world happiness report score']);
+			});
+			
+			happy.columns.push('Continent Code', 'Continent Name');
+			const happySub5Mil = happy.filter((country) => country.population > 5000000);
+
+			console.log(happy, happySub5Mil);
+
 			// Set X and Y values for world happiness
-			const worldHappinessData = data.reduce((result, d) => {
-				if (d['world happiness report score'] !== '-' && d['GDP per capita (PPP)'] !== '-') {
+			const worldHappinessData = happy.reduce((result, d) => {
+				if (d['world happiness report score'] && d['GDP per capita (PPP)']) {
+					console.log('check', d['GDP per capita (PPP)'], d);
 					result.push({
 						name: d.indicator,
-						y: cleanNumbers(d['world happiness report score']),
-						x: cleanNumbers(d['GDP per capita (PPP)'])
+						y: d['world happiness report score'],
+						x: d['GDP per capita (PPP)']
 					});
 				}
 				return result;
 			}, []);
 			worldHappinessData.x = 'GDP per Capita';
 			worldHappinessData.y = 'World Happiness Report Score';
-
-			const GINIData = data.reduce((result, d) => {
-				if (d['GINI index'] !== '-' && d['GDP per capita (PPP)'] !== '-') {
+			const GINIData = happy.reduce((result, d) => {
+				if (d['GINI index'] && d['GDP per capita (PPP)']) {
 					result.push({
 						name: d.indicator,
-						y: cleanNumbers(d['GINI index']),
-						x: cleanNumbers(d['GDP per capita (PPP)'])
+						y: d['GINI index'],
+						x: d['GDP per capita (PPP)']
 					});
 				}
 				return result;
 			}, []);
 			GINIData.x = 'GDP per Capita';
 			GINIData.y = 'GINI index';
+			console.log(worldHappinessData, GINIData);
 			this.setState({
-				categories: categories,
+				categories: happy.columns,
 				categoryInfo: categoryInfo,
 				datasets: { happiness: worldHappinessData, gini: GINIData }
 			});
