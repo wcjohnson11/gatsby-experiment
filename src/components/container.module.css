@@ -2,3 +2,13 @@
     margin: 3rem auto;
     max-width: 1200px;
 }
+
+.pure-g {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.pure-g > div {
+    width: 95% !important;
+    height: 95% !important;
+}
