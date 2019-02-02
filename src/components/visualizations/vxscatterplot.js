@@ -70,99 +70,108 @@ class VxScatterplot extends React.Component {
 				y: datum.y
 			}
 		});
-	}
+    }
+    
+    handleMouseOut() {
+        // TODO: create animation w opacity
+        setTimeout(() => this.props.hideTooltip(), 300)
+    }
 
 	render() {
-		const { parentWidth, tooltipData, tooltipLeft, tooltipTop, tooltipOpen, hideTooltip } = this.props;
+		const { parentWidth, tooltipData, tooltipLeft, tooltipTop, tooltipOpen } = this.props;
 
 		const { xScale, yScale, labels, circles } = this.state;
 
 		return (
 			<React.Fragment>
 				<svg width={parentWidth} height={parentHeight + margin}>
-					<Group top={margin} left={margin}>
-						<AxisLeft
-							scale={yScale}
-							axisClassName="axis-class"
-							labelClassName="axis-label-class"
-							label={labels.y}
-							left={margin}
-							tickClassName="tick-label-class"
-							stroke="#333333"
-							tickStroke="#333333"
-						/>
-						<AxisBottom
-							scale={xScale}
-							axisClassName="axis-class"
-							labelClassName="axis-label-class"
-							label={labels.x}
-							top={parentHeight - margin}
-							tickClassName="tick-label-class"
-							stroke="#333333"
-							tickStroke="#333333"
-						/>
-						{circles.map((d, i) => {
-							return (
-								<Circle
-									key={d.key}
-									className={style.circle}
-									cx={d.cx}
-									cy={d.cy}
-									r={d.r}
-									x={d.x}
-									y={d.x}
-									onMouseOver={(e) => this.handleMouseOver(e, d)}
-									onMouseOut={() => hideTooltip()}
-								/>
-							);
-						})}
-					</Group>
+                    { circles[0] &&
+                        <Group top={margin} left={margin}>
+                            <AxisLeft
+                                scale={yScale}
+                                axisClassName="axis-class"
+                                labelClassName="axis-label-class"
+                                label={labels.y}
+                                left={margin}
+                                tickClassName="tick-label-class"
+                                stroke="#333333"
+                                tickStroke="#333333"
+                                />
+                            <AxisBottom
+                                scale={xScale}
+                                axisClassName="axis-class"
+                                labelClassName="axis-label-class"
+                                label={labels.x}
+                                top={parentHeight - margin}
+                                tickClassName="tick-label-class"
+                                stroke="#333333"
+                                tickStroke="#333333"
+                                />
+                            {circles.map((d, i) => {
+                                return (
+                                    <Circle
+                                    key={d.key}
+                                    className={style.circle}
+                                    cx={d.cx}
+                                    cy={d.cy}
+                                    r={d.r}
+                                    x={d.x}
+                                    y={d.x}
+                                    onMouseOver={(e) => this.handleMouseOver(e, d)}
+                                    onMouseOut={() => this.handleMouseOut()}
+                                    />
+                                    );
+                                })}
+                        </Group>
+                    }
 				</svg>
-				<div
-					style={{
-						position: 'absolute',
-						top: margin,
-						left: margin,
-						width: parentWidth - margin,
-						height: parentHeight - margin,
-						pointerEvents: 'none'
-					}}
-				>
-					<Motion
-						defaultStyle={{ left: tooltipLeft || 0, top: tooltipTop || 0, opacity: 0 }}
-						style={{
-							left: spring(tooltipLeft || 0),
-							top: spring(tooltipTop || 0),
-							opacity: spring(tooltipOpen ? 1 : 0)
-						}}
-					>
-						{(style) => (
-							<TooltipWithBounds
-								key={Math.random()}
-								style={{
-									top: style.top - margin / 2,
-									left: style.left - margin / 2,
-									opacity: style.opacity,
-									letterSpacing: 'normal'
-								}}
-							>
-								{tooltipData && (
-									<div>
-										<p className={style.tooltipP}>
-											<strong>Country</strong> {tooltipData.name}
-										</p>
-										<p className={style.tooltipP}>
-											<strong>{labels.x}</strong> {tooltipData.x}
-										</p>
-										<p className={style.tooltipP}>
-											<strong>{labels.y}</strong> {tooltipData.y}
-										</p>
-									</div>
-								)}
-							</TooltipWithBounds>
-						)}
-					</Motion>
-				</div>
+                { tooltipOpen &&
+                    <div
+                    style={{
+                        position: 'absolute',
+                        top: margin,
+                        left: margin,
+                        width: parentWidth - margin,
+                        height: parentHeight - margin,
+                        pointerEvents: 'none'
+                    }}
+                    >
+                        <Motion
+                            defaultStyle={{ left: tooltipLeft || 0, top: tooltipTop || 0, opacity: 0 }}
+                            style={{
+                                left: spring(tooltipLeft || 0),
+                                top: spring(tooltipTop || 0),
+                                opacity: spring(tooltipOpen ? 1 : 0)
+                            }}
+                            >
+                            {(style) => (
+                                <TooltipWithBounds
+                                key={Math.random()}
+                                style={{
+                                    top: style.top - margin / 2,
+                                    left: style.left - margin / 2,
+                                    opacity: style.opacity,
+                                    letterSpacing: 'normal'
+                                }}
+                                >
+                                    {tooltipData && (
+                                        <div>
+                                            <p className={style.tooltipP}>
+                                                <strong>Country</strong> {tooltipData.name}
+                                            </p>
+                                            <p className={style.tooltipP}>
+                                                <strong>{labels.x}</strong> {tooltipData.x}
+                                            </p>
+                                            <p className={style.tooltipP}>
+                                                <strong>{labels.y}</strong> {tooltipData.y}
+                                            </p>
+                                        </div>
+                                    )}
+                                </TooltipWithBounds>
+                            )}
+                        </Motion>
+                    </div>
+                }
 			</React.Fragment>
 		);
 	}

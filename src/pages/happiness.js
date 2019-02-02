@@ -55,11 +55,11 @@ class Happiness extends React.Component {
 			// Set X and Y values for world happiness
 			const worldHappinessData = happy.reduce((result, d) => {
 				if (d['world happiness report score'] && d['GDP per capita (PPP)']) {
-					console.log('check', d['GDP per capita (PPP)'], d);
 					result.push({
 						name: d.indicator,
 						y: d['world happiness report score'],
-						x: d['GDP per capita (PPP)']
+						x: d['GDP per capita (PPP)'],
+						continent: d.continentName
 					});
 				}
 				return result;
@@ -71,7 +71,8 @@ class Happiness extends React.Component {
 					result.push({
 						name: d.indicator,
 						y: d['GINI index'],
-						x: d['GDP per capita (PPP)']
+						x: d['GDP per capita (PPP)'],
+						continent: d.continentName
 					});
 				}
 				return result;
@@ -94,9 +95,9 @@ class Happiness extends React.Component {
 	render() {
 		const { happiness, gini } = this.state.datasets;
 		const BarChartWithTooltip = withTooltip(VxBarChart);
+		const VxScatterplotWithTooltip = withTooltip(VxScatterplot)
 		const BarChartWithSize = withParentSize(BarChartWithTooltip);
-		const ScatterplotWithTooltip = withTooltip(VxScatterplot);
-		const VxScatterplotWithSize = withParentSize(ScatterplotWithTooltip);
+		const VxScatterplotWithSize = withParentSize(VxScatterplotWithTooltip);
 
 		return (
 			<Layout>
