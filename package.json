@@ -12,14 +12,25 @@
     "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\""
   },
   "dependencies": {
+    "@vx/axis": "0.0.184",
+    "@vx/event": "0.0.182",
+    "@vx/grid": "0.0.184",
+    "@vx/group": "0.0.183",
+    "@vx/responsive": "0.0.184",
+    "@vx/scale": "0.0.182",
+    "@vx/shape": "0.0.184",
+    "@vx/tooltip": "0.0.184",
+    "d3": "^5.8.0",
     "gatsby": "^2.0.76",
     "gatsby-plugin-typography": "^2.2.5",
     "gatsby-source-filesystem": "^2.0.14",
     "gatsby-transformer-remark": "^2.2.0",
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
+    "react-motion": "^0.5.2",
     "react-typography": "^0.16.18",
-    "typography": "^0.16.18"
+    "typography": "^0.16.18",
+    "vx": "0.0.1"
   },
   "repository": {
     "type": "git",
