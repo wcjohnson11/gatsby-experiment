@@ -2,6 +2,7 @@ import React from 'react';
 import { Group } from '@vx/group';
 import { Circle } from '@vx/shape';
 import { scaleLinear, scaleOrdinal } from '@vx/scale';
+import { LegendOrdinal } from '@vx/legend';
 import { localPoint } from '@vx/event';
 import { TooltipWithBounds } from '@vx/tooltip';
 import { AxisLeft, AxisBottom } from '@vx/axis';
@@ -43,7 +44,7 @@ class VxScatterplot extends React.Component {
         }, [])
         
         // TODO pick actual colors
-        const colorScale = scaleOrdinal({
+        const zScale = scaleOrdinal({
             domain: continentNames,
             range: ['red', 'yellow', 'green','pink', 'black', 'blue']
         })
@@ -59,7 +60,7 @@ class VxScatterplot extends React.Component {
 				cy: yScale(d.y),
 				x: `$${formatMoney(d.x, 2)}`,
                 y: d.y,
-                color: colorScale(d.continent),
+                color: zScale(d.continent),
 				r: 3,
 				key: d.name
 			};
@@ -69,7 +70,8 @@ class VxScatterplot extends React.Component {
 			labels,
 			circles,
 			xScale,
-			yScale
+            yScale,
+            zScale
 		};
 	}
 
@@ -94,11 +96,11 @@ class VxScatterplot extends React.Component {
 	render() {
 		const { parentWidth, tooltipData, tooltipLeft, tooltipTop, tooltipOpen } = this.props;
 
-		const { xScale, yScale, labels, circles } = this.state;
+		const { xScale, yScale, labels, circles, zScale } = this.state;
 
 		return (
 			<React.Fragment>
-				<svg width={parentWidth} height={parentHeight + margin}>
+				<svg width={parentWidth} height={parentHeight + margin + margin}>
                     { circles[0] &&
                         <Group top={margin} left={margin}>
                             <AxisLeft
@@ -140,6 +142,22 @@ class VxScatterplot extends React.Component {
                         </Group>
                     }
 				</svg>
+                <div
+                    style={{
+                        position: "absolute",
+                        top: margin / 2 - 10,
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        fontSize: "14px"
+                    }}
+                >
+                    <LegendOrdinal
+                        scale={zScale}
+                        direction="row"
+                        labelMargin="0 15px 0 0"
+                    />
+                </div>
                 { tooltipOpen &&
                     <div
                     style={{
