@@ -6,10 +6,11 @@ import { Bar } from '@vx/shape';
 import { AxisTop } from '@vx/axis';
 import { scaleLinear } from '@vx/scale';
 import { Group } from '@vx/group';
-import { Motion, spring } from 'react-motion'
+import { Motion, spring } from 'react-motion';
 import styles from './scatterplot.module.css';
 
 const margin = 25;
+const parentHeight = 800;
 
 class VxBarChart extends React.Component {
 	state = {
@@ -19,7 +20,7 @@ class VxBarChart extends React.Component {
 	};
 
 	static getDerivedStateFromProps(nextProps, prevState) {
-		const { data, className, parentWidth } = nextProps;
+		const { data, parentWidth } = nextProps;
 		if (!data) return {};
 
 		// Get min, max of x value
@@ -71,9 +72,7 @@ class VxBarChart extends React.Component {
 			tooltipOpen,
 			hideTooltip,
 			parentWidth,
-			parentHeight,
-			data,
-			className
+			data
 		} = this.props;
 
 		const { xScale } = this.state;
@@ -84,7 +83,7 @@ class VxBarChart extends React.Component {
 
 		return (
 			<React.Fragment>
-				<svg width={parentWidth} height={parentHeight} className={className}>
+				<svg width={parentWidth} height={parentHeight}>
 					<Group top={margin + margin} left={margin}>
 						{data.map((d, i) => {
 							return (
@@ -116,50 +115,51 @@ class VxBarChart extends React.Component {
 						/>
 					</Group>
 				</svg>
-					<div style={{
+				<div
+					style={{
 						position: 'absolute',
-						top: margin,
-						left: margin,
+						top: (margin/2),
+						left: (margin/2),
 						width: dataMax,
 						height: innerHeight,
 						pointerEvents: 'none'
-					}}>
-						<Motion
-							defaultStyle={{ left: tooltipLeft || 0, top: tooltipTop || 0, opacity: 0 }}
-							style={{
-								left: spring(tooltipLeft || 0),
-								top: spring(tooltipTop || 0),
-								opacity: spring(tooltipOpen ? 1 : 0)
-							}}
-						>
-							{style => (
-								<TooltipWithBounds
-									key={Math.random()}
-									style={{
-										top: style.top,
-										left: style.left,
-										opacity: style.opacity,
-										letterSpacing: 'normal'
-									}}
-								>
-										{ tooltipData && (
-										<div>
-											<p className={styles.tooltipP}>
-												Country <strong>{tooltipData.name}</strong>
-											</p>
-											<p className={styles.tooltipP}>
-												data.x <strong>{tooltipData.x}</strong>
-											</p>
-											<p className={styles.tooltipP}>
-												data.y <strong>{tooltipData.y}</strong>
-											</p>
-
+					}}
+				>
+					<Motion
+						defaultStyle={{ left: tooltipLeft || 0, top: tooltipTop || 0, opacity: 0 }}
+						style={{
+							left: spring(tooltipLeft || 0),
+							top: spring(tooltipTop || 0),
+							opacity: spring(tooltipOpen ? 1 : 0)
+						}}
+					>
+						{(style) => (
+							<TooltipWithBounds
+								key={Math.random()}
+								style={{
+									top: style.top,
+									left: style.left,
+									opacity: style.opacity,
+									letterSpacing: 'normal'
+								}}
+							>
+								{tooltipData && (
+									<div>
+										<p className={styles.tooltipP}>
+											Country <strong>{tooltipData.name}</strong>
+										</p>
+										<p className={styles.tooltipP}>
+											data.x <strong>{tooltipData.x}</strong>
+										</p>
+										<p className={styles.tooltipP}>
+											data.y <strong>{tooltipData.y}</strong>
+										</p>
 									</div>
-							)}
-								</TooltipWithBounds>
-							)}
-						</Motion>
-					</div>
+								)}
+							</TooltipWithBounds>
+						)}
+					</Motion>
+				</div>
 			</React.Fragment>
 		);
 	}
