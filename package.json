@@ -29,6 +29,7 @@
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
     "react-motion": "^0.5.2",
+    "react-simple-maps": "^0.12.1",
     "react-typography": "^0.16.18",
     "typography": "^0.16.18",
     "vx": "0.0.1"
