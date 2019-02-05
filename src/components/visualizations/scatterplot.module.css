@@ -20,3 +20,7 @@
     stroke: gray;
     fill: gray;
 }
+
+.ticklabel > text {
+    transform: rotate(-65);
+}

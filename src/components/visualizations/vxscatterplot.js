@@ -3,15 +3,27 @@ import { Group } from '@vx/group';
 import { Circle } from '@vx/shape';
 import { scaleLinear } from '@vx/scale';
 import { AxisLeft, AxisBottom } from '@vx/axis';
-import { LegendOrdinal } from '@vx/legend';
 import { localPoint } from '@vx/event';
 import { TooltipWithBounds } from '@vx/tooltip';
+import { withTooltip } from '@vx/tooltip';
+import { withParentSize } from '@vx/responsive';
 import { max } from 'd3';
 import formatMoney from '../../utils/formatMoney';
 import style from './scatterplot.module.css';
 
 const margin = 30;
-const parentHeight = 500;
+
+const numTicksForHeight = (height) => {
+  if (height <= 300) return 3;
+  if (300 < height && height <= 600) return 5;
+  return 10;
+}
+
+const numTicksForWidth =(width) => {
+  if (width <= 300) return 2;
+  if (300 < width && width <= 400) return 5;
+  return 10;
+}
 
 class VxScatterplot extends React.Component {
 	state = {
@@ -22,7 +34,8 @@ class VxScatterplot extends React.Component {
 	};
 
 	static getDerivedStateFromProps(nextProps, prevState) {
-		const { data, parentWidth, zScale } = nextProps;
+        const { data, parentWidth, zScale } = nextProps;
+        const parentHeight = parentWidth
 		if (!data) return {};
 
 		const xScale = scaleLinear({
@@ -56,7 +69,8 @@ class VxScatterplot extends React.Component {
 			labels,
 			circles,
 			xScale,
-			yScale
+            yScale,
+            parentHeight
 		};
 	}
 
@@ -79,9 +93,9 @@ class VxScatterplot extends React.Component {
 	}
 
 	render() {
-		const { parentWidth, tooltipData, tooltipLeft, tooltipTop, tooltipOpen, zScale } = this.props;
+		const { parentWidth, tooltipData, tooltipLeft, tooltipTop, tooltipOpen } = this.props;
 
-		const { xScale, yScale, labels, circles } = this.state;
+		const { xScale, yScale, labels, circles, parentHeight } = this.state;
 
 		return (
 			<React.Fragment>
@@ -90,23 +104,25 @@ class VxScatterplot extends React.Component {
 						<Group top={margin} left={margin}>
 							<AxisLeft
 								scale={yScale}
-								axisClassName="axis-class"
-								labelClassName="axis-label-class"
+								axisClassName={style.axis}
+								labelClassName={style['axis-label']}
 								label={labels.y}
 								left={margin}
-								tickClassName="tick-label-class"
+								tickClassName={style['tick-label']}
 								stroke="#333333"
-								tickStroke="#333333"
+                                tickStroke="#333333"
+                                numTicks={numTicksForHeight(parentHeight)}
 							/>
 							<AxisBottom
 								scale={xScale}
-								axisClassName="axis-class"
-								labelClassName="axis-label-class"
+								axisClassName={style.axis}
+								labelClassName={style['axis-label']}
 								label={labels.x}
 								top={parentHeight - margin}
-								tickClassName="tick-label-class"
+                                tickClassName={style['tick-label']}
 								stroke="#333333"
-								tickStroke="#333333"
+                                tickStroke="#333333"
+                                numTicks={numTicksForWidth(parentWidth)}
 							/>
 							{circles.map((d, i) => {
 								return (
@@ -127,18 +143,6 @@ class VxScatterplot extends React.Component {
 						</Group>
 					)}
 				</svg>
-				<div
-					style={{
-						position: 'absolute',
-						top: margin / 2 - 10,
-						width: '100%',
-						display: 'flex',
-						justifyContent: 'center',
-						fontSize: '14px'
-					}}
-				>
-					<LegendOrdinal scale={zScale} direction="row" labelMargin="0 15px 0 0" />
-				</div>
 				{tooltipOpen && (
 					<TooltipWithBounds
 						key={Math.random()}
@@ -169,4 +173,7 @@ class VxScatterplot extends React.Component {
 	}
 }
 
-export default VxScatterplot;
+const VxScatterplotWithTooltip = withTooltip(VxScatterplot);
+const VxScatterplotWithSize = withParentSize(VxScatterplotWithTooltip);
+
+export default VxScatterplotWithSize;
