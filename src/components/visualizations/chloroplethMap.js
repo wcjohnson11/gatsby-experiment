@@ -2,16 +2,12 @@ import React from 'react';
 import { ComposableMap, ZoomableGroup, Geographies, Geography } from 'react-simple-maps';
 import { localPoint } from '@vx/event';
 import { TooltipWithBounds } from '@vx/tooltip';
+import { withTooltip } from '@vx/tooltip';
 import { scaleLinear } from 'd3-scale';
 import { max } from 'd3';
+import style from './chloroplethMap.module.css'
 
-const wrapperStyles = {
-	width: '100%',
-	maxWidth: 980,
-	margin: '0 auto'
-};
-
-class BasicMap extends React.Component {
+class ChloroplethMap extends React.Component {
 	handleMouseOver(event, datum) {
 		const coords = localPoint(event.target.ownerSVGElement, event);
 		this.props.showTooltip({
@@ -36,7 +32,7 @@ class BasicMap extends React.Component {
 		const valueMap = {};
 		data.forEach((country) => (valueMap[country.code] = country.y));
 		return (
-			<div style={wrapperStyles}>
+			<div className={style.wrapper}>
 				<ComposableMap
 					projectionConfig={{
 						scale: 205,
@@ -44,10 +40,7 @@ class BasicMap extends React.Component {
 					}}
 					width={980}
 					height={551}
-					style={{
-						width: '100%',
-						height: 'auto'
-					}}
+					className={style['composable-map']}
 				>
 					<ZoomableGroup center={[ 0, 20 ]}>
 						<Geographies geography={'world-geo-pop.json'}>
@@ -59,6 +52,7 @@ class BasicMap extends React.Component {
 									return (
 										<Geography
 											key={i}
+											className={style.geography}
 											geography={geography}
 											projection={projection}
 											onMouseOver={(e) => this.handleMouseOver(e, geography.properties)}
@@ -67,21 +61,10 @@ class BasicMap extends React.Component {
 											style={{
 												default: {
 													fill: colorScale(geography.properties.mapValue),
-													stroke: '#607D8B',
-													strokeWidth: 0.75,
-													outline: 'none'
+													stroke: '#607D8B'
 												},
 												hover: {
-													fill: '#263238',
-													stroke: '#607D8B',
-													strokeWidth: 0.75,
-													outline: 'none'
-												},
-												pressed: {
-													fill: '#263238',
-													stroke: '#607D8B',
-													strokeWidth: 0.75,
-													outline: 'none'
+													fill: colorScale(geography.properties.mapValue)
 												}
 											}}
 										/>
@@ -101,7 +84,7 @@ class BasicMap extends React.Component {
 						}}
 					>
 						{tooltipData && (
-							<div>
+							<div className={style.tooltip}>
 								<p>
 									<strong>Country</strong> {tooltipData.name}
 								</p>
@@ -118,4 +101,5 @@ class BasicMap extends React.Component {
 	}
 }
 
-export default BasicMap;
+const ChloroplethMapWithTooltip = withTooltip(ChloroplethMap);
+export default ChloroplethMapWithTooltip;

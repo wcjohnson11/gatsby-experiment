@@ -1,0 +1,31 @@
+.wrapper {
+    width: 100%;
+    max-width: 980%;
+    margin: 0 auto;
+    background-color: lightpink;
+}
+
+.composable-map {
+    width: 100%;
+    height: auto;
+}
+
+.geography {
+    stroke-width: 0.75;
+    stroke: '#607D8B';
+    outline: none;
+}
+
+.geography:hover {
+    stroke-width: 1.25;
+    fill: inherit;
+    filter: drop-shadow(4px 4px 7px rgba(0,0,0,0.5));  
+}
+
+.geography:pressed {
+    filter: brightness(90%);
+}
+
+.tooltip {
+    box-shadow: 0 0 4 4 rgba(0,0,0,0.5);
+}
