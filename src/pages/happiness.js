@@ -5,7 +5,8 @@ import Scatterplot from '../components/visualizations/scatterplot';
 import VxBarChart from '../components/visualizations/vxbarchart';
 import VxScatterplot from '../components/visualizations/vxscatterplot';
 import { withTooltip } from '@vx/tooltip';
-import { withParentSize } from '@vx/responsive';
+import { scaleOrdinal } from '@vx/scale'
+import { withParentSize } from '@vx/responsive'
 
 const cleanNumbers = (string) => {
 	return parseFloat(string.replace(/,/g, ''));
@@ -16,7 +17,8 @@ class Happiness extends React.Component {
 		categories: [],
 		categoryInfo: [],
 		datasets: {},
-		currentCircle: false
+		currentCountry: false,
+		isPromiseResolved: false
 	};
 
 	componentDidMount() {
@@ -46,10 +48,15 @@ class Happiness extends React.Component {
 				country['GINI index'] = cleanNumbers(country['GINI index']);
 				country['world happiness report score'] = cleanNumbers(country['world happiness report score']);
 			});
+
 			
 			happy.columns.push('Continent Code', 'Continent Name');
 			const happySub5Mil = happy.filter((country) => country.population > 5000000);
-
+			const continentNames = ['Africa', 'Asia', 'Europe', 'South America', 'North America', 'Oceania']
+			const zScale = scaleOrdinal({
+				domain: continentNames,
+				range: ['orange', 'yellow', 'blue', 'purple', 'green', 'red']
+			})
 			console.log(happy, happySub5Mil);
 
 			// Set X and Y values for world happiness
@@ -79,49 +86,55 @@ class Happiness extends React.Component {
 			}, []);
 			GINIData.x = 'GDP per Capita';
 			GINIData.y = 'GINI index';
+
 			console.log(worldHappinessData, GINIData);
 			this.setState({
 				categories: happy.columns,
 				categoryInfo: categoryInfo,
+				zScale: zScale,
+				isPromiseResolved: true,
 				datasets: { happiness: worldHappinessData, gini: GINIData }
 			});
 		});
 	}
 
-	handleCircleMouseOver(event) {
-		console.log(event.target);
-	}
-
 	render() {
+		const {zScale, isPromiseResolved} = this.state
 		const { happiness, gini } = this.state.datasets;
-		const BarChartWithTooltip = withTooltip(VxBarChart);
+		const VxBarChartWithTooltip = withTooltip(VxBarChart);
+		const VxBarChartWithSize = withParentSize(VxBarChartWithTooltip);
 		const VxScatterplotWithTooltip = withTooltip(VxScatterplot)
-		const BarChartWithSize = withParentSize(BarChartWithTooltip);
 		const VxScatterplotWithSize = withParentSize(VxScatterplotWithTooltip);
 
 		return (
 			<Layout>
 				<h1>How we measure happiness</h1>
-				<div className="pure-g">
-					<Scatterplot
-						className="pure-u-1 pure-u-md-1-2"
-						data={happiness}
-						handleMouseOver={this.handleCircleMouseOver}
-					/>
-					<Scatterplot
-						className="pure-u-1 pure-u-md-1-2"
-						data={gini}
-						handleMouseOver={this.handleCircleMouseOver}
-					/>
-				</div>
-				<div className="pure-g">
-					<div className="pure-u-1 pure-u-md-2-3">
-						<VxScatterplotWithSize data={happiness} />
-					</div>
-					<div className="pure-u-1 pure-u-md-1-3">
-						<BarChartWithSize data={happiness} />
-					</div>
-				</div>
+				{ isPromiseResolved &&
+					<React.Fragment>
+						<div className="pure-g">
+							<div className="pure-u-1 pure-u-md-1-2">
+								<VxScatterplotWithSize
+									data={happiness}
+									zScale={zScale}
+								/>
+							</div>
+							<div className="pure-u-1 pure-u-md-1-2">
+								<VxScatterplotWithSize
+									data={gini}
+									zScale={zScale}
+								/>
+							</div>
+						</div>
+						<div className="pure-g">
+							<div className="pure-u-1 pure-u-md-1-2">
+								<VxBarChartWithSize
+									data={happiness}
+									zScale={zScale}
+								/>
+							</div>
+						</div>
+					</React.Fragment>
+				}
 			</Layout>
 		);
 	}
