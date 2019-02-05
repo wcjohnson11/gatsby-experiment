@@ -1,7 +1,7 @@
 import React from 'react';
 import { Group } from '@vx/group';
 import { Circle } from '@vx/shape';
-import { scaleLinear, scaleOrdinal } from '@vx/scale';
+import { scaleLinear } from '@vx/scale';
 import { LegendOrdinal } from '@vx/legend';
 import { localPoint } from '@vx/event';
 import { TooltipWithBounds } from '@vx/tooltip';
@@ -23,7 +23,7 @@ class VxScatterplot extends React.Component {
 	};
 
 	static getDerivedStateFromProps(nextProps, prevState) {
-		const { data, parentWidth } = nextProps;
+		const { data, parentWidth, zScale } = nextProps;
 		if (!data) return {};
 
 		const xScale = scaleLinear({
@@ -35,19 +35,6 @@ class VxScatterplot extends React.Component {
 			domain: [ 0, max(data, (d) => d.y) ],
 			range: [ parentHeight - margin, margin ]
         });
-
-        const continentNames = data.reduce((result, d) => {
-            if (result.indexOf(d.continent) < 0 && d.continent !== undefined) {
-                result.push(d.continent)
-            }
-            return result;
-        }, [])
-        
-        // TODO pick actual colors
-        const zScale = scaleOrdinal({
-            domain: continentNames,
-            range: ['red', 'yellow', 'green','pink', 'black', 'blue']
-        })
 
 		const labels = {
 			x: data.x,
@@ -94,14 +81,14 @@ class VxScatterplot extends React.Component {
     }
 
 	render() {
-		const { parentWidth, tooltipData, tooltipLeft, tooltipTop, tooltipOpen } = this.props;
+		const { parentWidth, tooltipData, tooltipLeft, tooltipTop, tooltipOpen, zScale} = this.props;
 
-		const { xScale, yScale, labels, circles, zScale } = this.state;
+		const { xScale, yScale, labels, circles } = this.state;
 
 		return (
 			<React.Fragment>
 				<svg width={parentWidth} height={parentHeight + margin + margin}>
-                    { circles[0] &&
+                    { circles &&
                         <Group top={margin} left={margin}>
                             <AxisLeft
                                 scale={yScale}
@@ -143,20 +130,20 @@ class VxScatterplot extends React.Component {
                     }
 				</svg>
                 <div
-                    style={{
-                        position: "absolute",
-                        top: margin / 2 - 10,
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                        fontSize: "14px"
-                    }}
+                style={{
+                    position: "absolute",
+                    top: margin / 2 - 10,
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    fontSize: "14px"
+                }}
                 >
                     <LegendOrdinal
                         scale={zScale}
                         direction="row"
                         labelMargin="0 15px 0 0"
-                    />
+                        />
                 </div>
                 { tooltipOpen &&
                     <div
