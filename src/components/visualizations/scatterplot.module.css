@@ -15,3 +15,8 @@
     stroke: #FC4616;
     stroke-width: 4;
 }
+
+.circle.fade {
+    stroke: gray;
+    fill: gray;
+}
