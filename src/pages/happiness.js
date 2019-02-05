@@ -125,14 +125,6 @@ class Happiness extends React.Component {
 								/>
 							</div>
 						</div>
-						<div className="pure-g">
-							<div className="pure-u-1 pure-u-md-1-2">
-								<VxBarChartWithSize
-									data={happiness}
-									zScale={zScale}
-								/>
-							</div>
-						</div>
 					</React.Fragment>
 				}
 			</Layout>
