@@ -1,12 +1,11 @@
 import React from 'react';
 import { csv } from 'd3';
 import Layout from '../components/layout';
-import Scatterplot from '../components/visualizations/scatterplot';
-import VxBarChart from '../components/visualizations/vxbarchart';
 import VxScatterplot from '../components/visualizations/vxscatterplot';
+import BasicMap from '../components/visualizations/chloroplethMap';
 import { withTooltip } from '@vx/tooltip';
-import { scaleOrdinal } from '@vx/scale'
-import { withParentSize } from '@vx/responsive'
+import { scaleOrdinal } from '@vx/scale';
+import { withParentSize } from '@vx/responsive';
 
 const cleanNumbers = (string) => {
 	return parseFloat(string.replace(/,/g, ''));
@@ -49,14 +48,13 @@ class Happiness extends React.Component {
 				country['world happiness report score'] = cleanNumbers(country['world happiness report score']);
 			});
 
-			
 			happy.columns.push('Continent Code', 'Continent Name');
 			const happySub5Mil = happy.filter((country) => country.population > 5000000);
-			const continentNames = ['Africa', 'Asia', 'Europe', 'South America', 'North America', 'Oceania']
+			const continentNames = [ 'Africa', 'Asia', 'Europe', 'South America', 'North America', 'Oceania' ];
 			const zScale = scaleOrdinal({
 				domain: continentNames,
-				range: ['orange', 'yellow', 'blue', 'purple', 'green', 'red']
-			})
+				range: [ 'orange', 'yellow', 'blue', 'purple', 'green', 'red' ]
+			});
 			console.log(happy, happySub5Mil);
 
 			// Set X and Y values for world happiness
@@ -64,6 +62,7 @@ class Happiness extends React.Component {
 				if (d['world happiness report score'] && d['GDP per capita (PPP)']) {
 					result.push({
 						name: d.indicator,
+						code: d['ISO Country code'],
 						y: d['world happiness report score'],
 						x: d['GDP per capita (PPP)'],
 						continent: d.continentName
@@ -77,6 +76,7 @@ class Happiness extends React.Component {
 				if (d['GINI index'] && d['GDP per capita (PPP)']) {
 					result.push({
 						name: d.indicator,
+						code: d['ISO Country code'],
 						y: d['GINI index'],
 						x: d['GDP per capita (PPP)'],
 						continent: d.continentName
@@ -99,34 +99,30 @@ class Happiness extends React.Component {
 	}
 
 	render() {
-		const {zScale, isPromiseResolved} = this.state
+		const { zScale, isPromiseResolved } = this.state;
 		const { happiness, gini } = this.state.datasets;
-		const VxBarChartWithTooltip = withTooltip(VxBarChart);
-		const VxBarChartWithSize = withParentSize(VxBarChartWithTooltip);
-		const VxScatterplotWithTooltip = withTooltip(VxScatterplot)
+		const VxScatterplotWithTooltip = withTooltip(VxScatterplot);
 		const VxScatterplotWithSize = withParentSize(VxScatterplotWithTooltip);
+		const BasicMapWithTooltip = withTooltip(BasicMap);
 
 		return (
 			<Layout>
 				<h1>How we measure happiness</h1>
-				{ isPromiseResolved &&
+				{isPromiseResolved && (
 					<React.Fragment>
 						<div className="pure-g">
 							<div className="pure-u-1 pure-u-md-1-2">
-								<VxScatterplotWithSize
-									data={happiness}
-									zScale={zScale}
-								/>
+								<VxScatterplotWithSize data={happiness} zScale={zScale} />
 							</div>
 							<div className="pure-u-1 pure-u-md-1-2">
-								<VxScatterplotWithSize
-									data={gini}
-									zScale={zScale}
-								/>
+								<VxScatterplotWithSize data={gini} zScale={zScale} />
 							</div>
 						</div>
+						<div className="pure-g">
+							<BasicMapWithTooltip data={happiness} mapValue="Happiness" />
+						</div>
 					</React.Fragment>
-				}
+				)}
 			</Layout>
 		);
 	}
