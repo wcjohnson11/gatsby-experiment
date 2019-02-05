@@ -19,7 +19,7 @@ class VxScatterplot extends React.Component {
 		cicles: [],
 		labels: {},
 		xScale: false,
-		yScale: false
+        yScale: false
 	};
 
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -57,8 +57,7 @@ class VxScatterplot extends React.Component {
 			labels,
 			circles,
 			xScale,
-            yScale,
-            zScale
+            yScale
 		};
 	}
 
