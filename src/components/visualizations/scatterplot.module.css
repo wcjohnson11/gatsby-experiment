@@ -7,12 +7,16 @@
 }
 
 .circle {
-    fill: #FFFEFF;
     stroke: #0B0414;
-    stroke-width: 2;
+    stroke-width: 1;
 }
 
 .circle:hover {
     stroke: #FC4616;
     stroke-width: 4;
+}
+
+.circle.fade {
+    stroke: gray;
+    fill: gray;
 }

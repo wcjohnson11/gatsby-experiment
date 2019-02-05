@@ -3,14 +3,14 @@ import { max } from 'd3';
 import { localPoint } from '@vx/event';
 import { TooltipWithBounds } from '@vx/tooltip';
 import { Bar } from '@vx/shape';
-import { AxisTop } from '@vx/axis';
-import { scaleLinear } from '@vx/scale';
+import { AxisLeft, AxisTop } from '@vx/axis';
+import { scaleLinear, scaleBand } from '@vx/scale';
 import { Group } from '@vx/group';
 import { Motion, spring } from 'react-motion';
 import styles from './scatterplot.module.css';
 
 const margin = 25;
-const parentHeight = 800;
+const parentHeight = 1200;
 
 class VxBarChart extends React.Component {
 	state = {
@@ -30,25 +30,25 @@ class VxBarChart extends React.Component {
 			range: [ margin, parentWidth - margin ]
 		});
 
-		// 2. Initialize scale of Y Position
-		// and map to Y-position
-		// const yScale = d3.scaleLinear().domain([0, d3.max(data, (d) => d.y)]).range([height - padding, padding]);
+		const yScale = scaleBand({
+			domain: data.reduce((result, d) => {
+				result.push(d.name)
+				return result
+			}, []),
+			rangeRound: [margin, parentHeight + margin],
+			padding: 0.2
+		});
 
-		// const circles = data.map((d) => {
-		//     return {
-		//         cx: xScale(d.x),
-		//         x: d.x,
-		//         cy: yScale(d.y),
-		//         y: d.y,
-		//         key: d.name
-		//     };
-		// });
+		const dataMax = max(data, (d) => d.x);
+		const innerWidth = parentWidth - margin;
+		const innerHeight = parentHeight - margin;
+		const barHeight = Math.max(15, innerHeight / data.length);
 
 		const labels = {
 			x: data.x,
 			y: data.y
 		};
-		return { xScale, data, labels };
+		return { xScale, yScale, data, labels, dataMax, innerWidth, innerHeight, barHeight };
 	}
 
 	handleMouseOverBar(event, datum) {
@@ -72,15 +72,12 @@ class VxBarChart extends React.Component {
 			tooltipOpen,
 			hideTooltip,
 			parentWidth,
-			data
+			data,
+			zScale
 		} = this.props;
 
-		const { xScale } = this.state;
-		const dataMax = max(data, (d) => d.x);
-		const innerWidth = parentWidth - margin;
-		const innerHeight = parentHeight - margin;
-		const barHeight = Math.max(10, innerHeight / data.length);
-
+		const { barHeight, dataMax, innerWidth, innerHeight, xScale, yScale } = this.state;
+			
 		return (
 			<React.Fragment>
 				<svg width={parentWidth} height={parentHeight}>
@@ -92,74 +89,71 @@ class VxBarChart extends React.Component {
 									width={innerWidth * d.x / dataMax}
 									left={margin}
 									height={barHeight}
-									x={0}
+									x={margin}
 									y={i * barHeight}
 									stroke="#fff"
 									strokeWidth={2}
-									fill="rgb(133, 90, 242"
+									fill={zScale(d.continent)}
 									onMouseOver={(e) => this.handleMouseOverBar(e, d)}
 									onMouseOut={() => hideTooltip()}
 								/>
 							);
 						})}
 					</Group>
-					<Group top={margin + margin}>
+					<Group top={margin} left={margin}>
 						<AxisTop
 							scale={xScale}
 							axisClassName="axis-class"
 							labelClassName="axis-label-class"
 							label={data.x}
 							tickClassName="tick-label-class"
+							top={margin}
 							stroke="#333333"
 							tickStroke="#333333"
 						/>
+						<AxisLeft
+							scale={yScale}
+							left={margin}
+							top={0 - margin - margin}
+							hideAxisLine={true}
+							axisClassName="axis-class"
+							labelClassName="axis-label-class"
+							tickClassName="tick-label-class"
+							stroke="#333333"
+							tickStroke="#333333"
+							tickLabelProps={(value, index) => ({
+								letterSpacing: 'normal',
+								fontSize: 11,
+								textAnchor: "end",
+								dy: "0.33em"
+							})}
+						/>
 					</Group>
 				</svg>
-				<div
+				{ tooltipOpen && 
+					<TooltipWithBounds
+					key='tooltip'
 					style={{
-						position: 'absolute',
-						top: (margin/2),
-						left: (margin/2),
-						width: dataMax,
-						height: innerHeight,
-						pointerEvents: 'none'
+						top: tooltipTop,
+						left: tooltipLeft,
+						letterSpacing: 'normal'
 					}}
-				>
-					<Motion
-						defaultStyle={{ left: tooltipLeft || 0, top: tooltipTop || 0, opacity: 0 }}
-						style={{
-							left: spring(tooltipLeft || 0),
-							top: spring(tooltipTop || 0),
-							opacity: spring(tooltipOpen ? 1 : 0)
-						}}
 					>
-						{(style) => (
-							<TooltipWithBounds
-								key={Math.random()}
-								style={{
-									top: style.top,
-									left: style.left,
-									opacity: style.opacity,
-									letterSpacing: 'normal'
-								}}
-							>
-								{tooltipData && (
-									<div>
-										<p className={styles.tooltipP}>
-											Country <strong>{tooltipData.name}</strong>
-										</p>
-										<p className={styles.tooltipP}>
-											data.x <strong>{tooltipData.x}</strong>
-										</p>
-										<p className={styles.tooltipP}>
-											data.y <strong>{tooltipData.y}</strong>
-										</p>
-									</div>
-								)}
-							</TooltipWithBounds>
-						)}
-					</Motion>
-				</div>
+					{tooltipData && (
+						<div>
+							<p className={styles.tooltipP}>
+								Country <strong>{tooltipData.name}</strong>
+							</p>
+							<p className={styles.tooltipP}>
+								data.x <strong>{tooltipData.x}</strong>
+							</p>
+							<p className={styles.tooltipP}>
+								data.y <strong>{tooltipData.y}</strong>
+							</p>
+						</div>
+					)}
+				</TooltipWithBounds>
+				}
 			</React.Fragment>
 		);
 	}
