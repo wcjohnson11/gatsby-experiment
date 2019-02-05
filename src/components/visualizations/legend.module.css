@@ -1,0 +1,31 @@
+.legend {
+    font-size: 14px;
+    text-align: center;
+    justify-content: center;
+    border: 1px solid black;
+    border-radius: 8px;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.row {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.legend-item {
+    margin: 0 15px;
+}
+
+.legend-item > svg {
+    margin-right: 5px;
+}
+
+.legend-label {
+    margin: 0 10px !important;
+}

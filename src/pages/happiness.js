@@ -1,11 +1,10 @@
 import React from 'react';
 import { csv } from 'd3';
 import Layout from '../components/layout';
-import VxScatterplot from '../components/visualizations/vxscatterplot';
-import BasicMap from '../components/visualizations/chloroplethMap';
-import { withTooltip } from '@vx/tooltip';
+import VxScatterplotWithSize from '../components/visualizations/vxscatterplot';
+import ChloroplethMapWithTooltip from '../components/visualizations/chloroplethMap';
+import Legend from '../components/visualizations/legend';
 import { scaleOrdinal } from '@vx/scale';
-import { withParentSize } from '@vx/responsive';
 
 const cleanNumbers = (string) => {
 	return parseFloat(string.replace(/,/g, ''));
@@ -97,13 +96,14 @@ class Happiness extends React.Component {
 			});
 		});
 	}
+	
+	handleLegendClick(label) {
+		const continentName = label.datum
+	}
 
 	render() {
 		const { zScale, isPromiseResolved } = this.state;
 		const { happiness, gini } = this.state.datasets;
-		const VxScatterplotWithTooltip = withTooltip(VxScatterplot);
-		const VxScatterplotWithSize = withParentSize(VxScatterplotWithTooltip);
-		const BasicMapWithTooltip = withTooltip(BasicMap);
 
 		return (
 			<Layout>
@@ -111,15 +111,16 @@ class Happiness extends React.Component {
 				{isPromiseResolved && (
 					<React.Fragment>
 						<div className="pure-g">
-							<div className="pure-u-1 pure-u-md-1-2">
+							<Legend scale={zScale} legendClick={this.handleLegendClick}/>
+							<div className="pure-u-1 pure-u-md-1-3">
 								<VxScatterplotWithSize data={happiness} zScale={zScale} />
 							</div>
-							<div className="pure-u-1 pure-u-md-1-2">
+							<div className="pure-u-1 pure-u-md-1-3">
 								<VxScatterplotWithSize data={gini} zScale={zScale} />
 							</div>
-						</div>
-						<div className="pure-g">
-							<BasicMapWithTooltip data={happiness} mapValue="Happiness" />
+							<div className="pure-u-1">
+								<ChloroplethMapWithTooltip data={happiness} mapValue="Happiness" />
+							</div>
 						</div>
 					</React.Fragment>
 				)}

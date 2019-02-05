@@ -14,6 +14,7 @@
   "dependencies": {
     "@vx/axis": "0.0.184",
     "@vx/event": "0.0.182",
+    "@vx/gradient": "0.0.183",
     "@vx/grid": "0.0.184",
     "@vx/group": "0.0.183",
     "@vx/legend": "0.0.183",
