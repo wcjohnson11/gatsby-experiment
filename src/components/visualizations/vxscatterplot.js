@@ -146,51 +146,29 @@ class VxScatterplot extends React.Component {
                         />
                 </div>
                 { tooltipOpen &&
-                    <div
-                    style={{
-                        position: 'absolute',
-                        top: margin,
-                        left: margin,
-                        width: parentWidth - margin,
-                        height: parentHeight - margin,
-                        pointerEvents: 'none'
-                    }}
+                    <TooltipWithBounds
+                        key={Math.random()}
+                        style={{
+                            top: tooltipTop,
+                            left: tooltipLeft,
+                            opacity: 1,
+                            letterSpacing: 'normal'
+                        }}
                     >
-                        <Motion
-                            defaultStyle={{ left: tooltipLeft || 0, top: tooltipTop || 0, opacity: 0 }}
-                            style={{
-                                left: spring(tooltipLeft || 0),
-                                top: spring(tooltipTop || 0),
-                                opacity: spring(tooltipOpen ? 1 : 0)
-                            }}
-                            >
-                            {(style) => (
-                                <TooltipWithBounds
-                                key={Math.random()}
-                                style={{
-                                    top: style.top - margin / 2,
-                                    left: style.left - margin / 2,
-                                    opacity: style.opacity,
-                                    letterSpacing: 'normal'
-                                }}
-                                >
-                                    {tooltipData && (
-                                        <div>
-                                            <p className={style.tooltipP}>
-                                                <strong>Country</strong> {tooltipData.name}
-                                            </p>
-                                            <p className={style.tooltipP}>
-                                                <strong>{labels.x}</strong> {tooltipData.x}
-                                            </p>
-                                            <p className={style.tooltipP}>
-                                                <strong>{labels.y}</strong> {tooltipData.y}
-                                            </p>
-                                        </div>
-                                    )}
-                                </TooltipWithBounds>
-                            )}
-                        </Motion>
-                    </div>
+                        {tooltipData && (
+                            <div>
+                                <p className={style.tooltipP}>
+                                    <strong>Country</strong> {tooltipData.name}
+                                </p>
+                                <p className={style.tooltipP}>
+                                    <strong>{labels.x}</strong> {tooltipData.x}
+                                </p>
+                                <p className={style.tooltipP}>
+                                    <strong>{labels.y}</strong> {tooltipData.y}
+                                </p>
+                            </div>
+                        )}
+                    </TooltipWithBounds>
                 }
 			</React.Fragment>
 		);
