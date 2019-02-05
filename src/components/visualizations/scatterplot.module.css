@@ -1,8 +1,9 @@
 .axis path, line {
   stroke: #0B0414;
+  stroke-width: 1px;
 }
 
-.axisLabel {
+.axis-label {
     fill: #0B0414;
 }
 
@@ -23,4 +24,10 @@
 
 .ticklabel > text {
     transform: rotate(-65);
+}
+
+.grid {
+    opacity: 0.3;
+    stroke-width: 1px;
+    overflow: hidden;
 }

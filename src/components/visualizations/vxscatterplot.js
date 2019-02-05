@@ -1,5 +1,6 @@
 import React from 'react';
 import { Group } from '@vx/group';
+import { Grid } from '@vx/grid';
 import { Circle } from '@vx/shape';
 import { scaleLinear } from '@vx/scale';
 import { AxisLeft, AxisBottom } from '@vx/axis';
@@ -93,7 +94,7 @@ class VxScatterplot extends React.Component {
 	}
 
 	render() {
-		const { parentWidth, tooltipData, tooltipLeft, tooltipTop, tooltipOpen } = this.props;
+		const { parentWidth, tooltipData, tooltipLeft, tooltipTop, tooltipOpen, useGrid } = this.props;
 
 		const { xScale, yScale, labels, circles, parentHeight } = this.state;
 
@@ -102,6 +103,20 @@ class VxScatterplot extends React.Component {
 				<svg width={parentWidth} height={parentHeight + margin + margin}>
 					{circles && (
 						<Group top={margin} left={margin}>
+                            { useGrid &&
+                                <Grid
+                                    top={0}
+                                    left={0}
+                                    className={style.grid}
+                                    xScale={xScale}
+                                    yScale={yScale}
+                                    stroke="rgba(142, 32, 95, 0.3)"
+                                    width={parentWidth - (margin * 2)}
+                                    height={parentHeight - (margin)}
+                                    numTicksRows={numTicksForHeight(parentHeight)}
+                                    numTicksColumns={numTicksForWidth(parentWidth)}
+                                />
+                            }
 							<AxisLeft
 								scale={yScale}
 								axisClassName={style.axis}

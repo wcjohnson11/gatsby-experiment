@@ -113,10 +113,10 @@ class Happiness extends React.Component {
 						<div className="pure-g">
 							<Legend scale={zScale} legendClick={this.handleLegendClick}/>
 							<div className="pure-u-1 pure-u-md-1-3">
-								<VxScatterplotWithSize data={happiness} zScale={zScale} />
+								<VxScatterplotWithSize data={happiness} zScale={zScale} useGrid={false}/>
 							</div>
 							<div className="pure-u-1 pure-u-md-1-3">
-								<VxScatterplotWithSize data={gini} zScale={zScale} />
+								<VxScatterplotWithSize data={gini} zScale={zScale} useGrid={false}/>
 							</div>
 							<div className="pure-u-1">
 								<ChloroplethMapWithTooltip data={happiness} mapValue="Happiness" />
