@@ -2,7 +2,7 @@ import React from 'react';
 import { csv } from 'd3';
 import Layout from '../components/layout';
 import VxScatterplotWithSize from '../components/visualizations/vxscatterplot';
-import ChloroplethMapWithTooltip from '../components/visualizations/chloroplethMap';
+import ChloroplethMapWithSize from '../components/visualizations/chloroplethMap';
 import Legend from '../components/visualizations/legend';
 import { scaleOrdinal } from '@vx/scale';
 
@@ -86,24 +86,75 @@ class Happiness extends React.Component {
 			GINIData.x = 'GDP per Capita';
 			GINIData.y = 'GINI index';
 
-			console.log(worldHappinessData, GINIData);
+			const happyPlanet = happy.reduce((result, d) => {
+				if (d['happy planet index'] !== 'FALSE' && d['GDP per capita (PPP)']) {
+					result.push({
+						name: d.indicator,
+						code: d['ISO Country code'],
+						y: d['happy planet index'],
+						x: d['GDP per capita (PPP)'],
+						continent: d.continentName
+					});
+				}
+				return result;
+			}, []);
+			happyPlanet.x = 'GDP per Capita';
+			happyPlanet.y = 'happy planet index';
+
+			const humanDevIndex = happy.reduce((result, d) => {
+				if (d['human development index'] !== 'FALSE' && d['GDP per capita (PPP)']) {
+					result.push({
+						name: d.indicator,
+						code: d['ISO Country code'],
+						y: d['human development index'],
+						x: d['GDP per capita (PPP)'],
+						continent: d.continentName
+					});
+				}
+				return result;
+			}, []);
+			humanDevIndex.x = 'GDP per Capita';
+			humanDevIndex.y = 'Human Development Index';
+
+			const Seda = happy.reduce((result, d) => {
+				if (d['sustainable economic development assessment (SEDA)'] !== 'FALSE' && d['GDP per capita (PPP)']) {
+					result.push({
+						name: d.indicator,
+						code: d['ISO Country code'],
+						y: d['sustainable economic development assessment (SEDA)'],
+						x: d['GDP per capita (PPP)'],
+						continent: d.continentName
+					});
+				}
+				return result;
+			}, []);
+			Seda.x = 'GDP per Capita';
+			Seda.y = 'sustainable economic development assessment (SEDA)';
+
+			console.log(Seda);
 			this.setState({
 				categories: happy.columns,
 				categoryInfo: categoryInfo,
 				zScale: zScale,
 				isPromiseResolved: true,
-				datasets: { happiness: worldHappinessData, gini: GINIData }
+				datasets: {
+					happiness: worldHappinessData,
+					gini: GINIData,
+					happyPlanet: happyPlanet,
+					humanDevIndex: humanDevIndex,
+					Seda: Seda
+				}
 			});
 		});
 	}
-	
+
 	handleLegendClick(label) {
-		const continentName = label.datum
+		const continentName = label.datum;
 	}
 
 	render() {
 		const { zScale, isPromiseResolved } = this.state;
-		const { happiness, gini } = this.state.datasets;
+		const { happiness, gini, happyPlanet, humanDevIndex, Seda } = this.state.datasets;
 
 		return (
 			<Layout>
@@ -111,15 +162,26 @@ class Happiness extends React.Component {
 				{isPromiseResolved && (
 					<React.Fragment>
 						<div className="pure-g">
-							<Legend scale={zScale} legendClick={this.handleLegendClick}/>
-							<div className="pure-u-1 pure-u-md-1-3">
-								<VxScatterplotWithSize data={happiness} zScale={zScale} useGrid={false}/>
+							<Legend scale={zScale} legendClick={this.handleLegendClick} />
+							<div className="pure-u-1 pure-u-md-1-5">
+								<VxScatterplotWithSize data={happyPlanet} zScale={zScale} useGrid={false} />
 							</div>
-							<div className="pure-u-1 pure-u-md-1-3">
-								<VxScatterplotWithSize data={gini} zScale={zScale} useGrid={false}/>
+							<div className="pure-u-1 pure-u-md-1-5">
+								<VxScatterplotWithSize data={humanDevIndex} zScale={zScale} useGrid={false} />
 							</div>
+							<div className="pure-u-1 pure-u-md-1-5">
+								<VxScatterplotWithSize data={Seda} zScale={zScale} useGrid={false} />
+							</div>
+							<div className="pure-u-1 pure-u-md-1-5">
+								<VxScatterplotWithSize data={happiness} zScale={zScale} useGrid={false} />
+							</div>
+							<div className="pure-u-1 pure-u-md-1-5">
+								<VxScatterplotWithSize data={gini} zScale={zScale} useGrid={false} />
+							</div>
+						</div>
+						<div className="pure-g">
 							<div className="pure-u-1">
-								<ChloroplethMapWithTooltip data={happiness} mapValue="Happiness" />
+								<ChloroplethMapWithSize data={happiness} mapValue="Happiness" />
 							</div>
 						</div>
 					</React.Fragment>
