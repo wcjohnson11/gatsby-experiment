@@ -48,8 +48,6 @@ class VxMap extends React.Component {
         const centerY = height / 2;
         const scale = parentWidth / 630 * 100;
 
-
-        
         return (
             <svg width={parentWidth} height={height}>
                 <rect x={0} y={0} width={parentWidth} height={height} fill={bg} rx={14} />
