@@ -16,7 +16,7 @@ class VxMap extends React.Component {
 		const valueMap = {};
 		data.forEach((country) => (valueMap[country.code] = country.y));
 
-		topology.objects.units.geometries.map((geography, i) => {
+		topology.objects.units.geometries.forEach((geography, i) => {
 			const continentCode = geography.properties.iso_a3;
 			geography.properties.mapValue = valueMap[continentCode];
 		});
