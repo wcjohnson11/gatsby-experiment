@@ -5,12 +5,12 @@ import { TooltipWithBounds } from '@vx/tooltip';
 import { Bar } from '@vx/shape';
 import { AxisLeft, AxisTop } from '@vx/axis';
 import { scaleLinear, scaleBand } from '@vx/scale';
+import { withParentSize } from '@vx/responsive';
 import { Group } from '@vx/group';
-import { Motion, spring } from 'react-motion';
+import numTicksForWidth from '../../utils/numTicksForWidth';
 import styles from './scatterplot.module.css';
 
 const margin = 25;
-const parentHeight = 1200;
 
 class VxBarChart extends React.Component {
 	state = {
@@ -21,34 +21,45 @@ class VxBarChart extends React.Component {
 
 	static getDerivedStateFromProps(nextProps, prevState) {
 		const { data, parentWidth } = nextProps;
+		const parentHeight = parentWidth
 		if (!data) return {};
 
-		// Get min, max of x value
-		// and map to X-position
-		const xScale = scaleLinear({
-			domain: [ -500, max(data, (d) => d.x) ],
-			range: [ margin, parentWidth - margin ]
-		});
+		const sortedData = data.sort((a, b) => {
+			if (data.y === 'GINI index') {
+				if (a.y > b.y) return -1;
+				if (a.y < b.y) return 1;
+			} else {
+				if (a.y > b.y) return -1;
+				if (a.y < b.y) return 1;
+			}
+		}).slice(0,10)
 
-		const yScale = scaleBand({
-			domain: data.reduce((result, d) => {
-				result.push(d.name)
-				return result
-			}, []),
-			rangeRound: [margin, parentHeight + margin],
-			padding: 0.2
-		});
-
+		
 		const dataMax = max(data, (d) => d.x);
 		const innerWidth = parentWidth - margin;
 		const innerHeight = parentHeight - margin;
 		const barHeight = Math.max(15, innerHeight / data.length);
-
+		
+		// Get min, max of x value
+		// and map to X-position
+		const xScale = scaleLinear({
+			domain: [ 0, max(sortedData, (d) => d.y) ],
+			range: [ margin, innerWidth ]
+		});
+		
+		const yScale = scaleBand({
+			domain: sortedData.reduce((result, d) => {
+				result.push(d.name)
+				return result
+			}, []),
+			rangeRound: [margin, innerHeight]
+		});
+		
 		const labels = {
 			x: data.x,
 			y: data.y
 		};
-		return { xScale, yScale, data, labels, dataMax, innerWidth, innerHeight, barHeight };
+		return { xScale, yScale, data, labels, dataMax, innerWidth, innerHeight, barHeight, sortedData, parentHeight };
 	}
 
 	handleMouseOverBar(event, datum) {
@@ -76,13 +87,13 @@ class VxBarChart extends React.Component {
 			zScale
 		} = this.props;
 
-		const { barHeight, dataMax, innerWidth, innerHeight, xScale, yScale } = this.state;
+		const { barHeight, dataMax, innerWidth, innerHeight, xScale, yScale, sortedData, parentHeight } = this.state;
 			
 		return (
 			<React.Fragment>
 				<svg width={parentWidth} height={parentHeight}>
 					<Group top={margin + margin} left={margin}>
-						{data.map((d, i) => {
+						{sortedData.map((d, i) => {
 							return (
 								<Bar
 									key={d.name}
@@ -105,16 +116,17 @@ class VxBarChart extends React.Component {
 							scale={xScale}
 							axisClassName="axis-class"
 							labelClassName="axis-label-class"
-							label={data.x}
+							label={data.y}
 							tickClassName="tick-label-class"
 							top={margin}
 							stroke="#333333"
 							tickStroke="#333333"
+							numTicks={numTicksForWidth(innerWidth)}
 						/>
 						<AxisLeft
 							scale={yScale}
 							left={margin}
-							top={0 - margin - margin}
+							top={0}
 							hideAxisLine={true}
 							axisClassName="axis-class"
 							labelClassName="axis-label-class"
@@ -159,4 +171,6 @@ class VxBarChart extends React.Component {
 	}
 }
 
-export default VxBarChart;
+const VxBarChartWithSize = withParentSize(VxBarChart)
+
+export default VxBarChartWithSize;
