@@ -19,18 +19,12 @@ export default () => (
 
     <div className={styles.header}>
     <Link to="/" className={styles.headerTitle}>
-      <h1>{data.site.siteMetadata.title}</h1>
+      <a>{data.site.siteMetadata.title}</a>
     </Link>
-    <ul className={styles.headerList}>
-      <ListLink to="/">Home</ListLink>
+    {/* <ul className={styles.headerList}>
       <ListLink to="/about/">About</ListLink>
       <ListLink to="/contact/">Contact</ListLink>
-    </ul>
-    <p>What a time to be alive!</p>
-    <img
-      src="https://source.unsplash.com/random/800x200"
-      alt="random unsplash"
-      />
+    </ul> */}
   </div>
   )}
   />

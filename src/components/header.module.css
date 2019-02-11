@@ -1,23 +1,24 @@
 .header {
-    padding: 1.25rem 1rem;
+    padding: .5rem 1rem;
     margin-bottom: 1.5rem;
+    background-color: #33004B;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .headerTitle {
     text-shadow: none;
     background-image: none;
+    color: white;
+    text-decoration: none;
 }
 
-.headerTitle > h1 {
-    display: inline;
+.headerTitle > a {
+    font-size: 1.5rem;
 }
 
-.headerList {
-    list-style: none;
-    float: right;
-}
-
-.headerList > li {
-    display: inline-block;
-    padding-right: .5rem;
+.headerTitle > a:hover {
+    color: #FF530D;
 }
