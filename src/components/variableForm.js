@@ -1,10 +1,16 @@
 import React from 'react';
 
 class VariableForm extends React.Component {
-	state = { value: 'Gini' };
+    constructor(props) {
+        super(props);
+        this.state = { value: 'Gini' };
+        this.handleChange = this.handleChange.bind(this)
+    }
+
 
 	handleChange(event) {
-		this.setState({ value: event.target.value });
+        this.setState({ value: event.target.value });
+        this.props.handleFieldSelect(event.target.value)
 	}
 
 	render() {
