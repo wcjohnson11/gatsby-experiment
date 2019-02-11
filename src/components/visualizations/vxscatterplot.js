@@ -10,21 +10,11 @@ import { withTooltip } from '@vx/tooltip';
 import { withParentSize } from '@vx/responsive';
 import { max } from 'd3';
 import formatMoney from '../../utils/formatMoney';
+import numTicksForHeight from '../../utils/numTicksForHeight';
+import numTicksForWidth from '../../utils/numTicksForWidth';
 import style from './scatterplot.module.css';
 
 const margin = 30;
-
-const numTicksForHeight = (height) => {
-  if (height <= 300) return 3;
-  if (300 < height && height <= 600) return 5;
-  return 10;
-}
-
-const numTicksForWidth =(width) => {
-  if (width <= 300) return 2;
-  if (300 < width && width <= 400) return 5;
-  return 10;
-}
 
 class VxScatterplot extends React.Component {
 	state = {
