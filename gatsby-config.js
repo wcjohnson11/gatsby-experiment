@@ -1,6 +1,6 @@
 module.exports = {
     siteMetadata: {
-        title: 'Gatsby Experiment',
+        title: 'wcj.io',
     },
     plugins: [
         'gatsby-transformer-remark',
