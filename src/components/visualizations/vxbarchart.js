@@ -1,7 +1,7 @@
 import React from 'react';
 import { max } from 'd3';
 import { localPoint } from '@vx/event';
-import { TooltipWithBounds } from '@vx/tooltip';
+import { TooltipWithBounds, withTooltip } from '@vx/tooltip';
 import { Bar } from '@vx/shape';
 import { AxisLeft, AxisTop } from '@vx/axis';
 import { scaleLinear, scaleBand } from '@vx/scale';
@@ -21,40 +21,41 @@ class VxBarChart extends React.Component {
 
 	static getDerivedStateFromProps(nextProps, prevState) {
 		const { data, parentWidth } = nextProps;
-		const parentHeight = parentWidth
+		const parentHeight = parentWidth;
 		if (!data) return {};
 
-		const sortedData = data.sort((a, b) => {
-			if (data.y === 'GINI index') {
-				if (a.y > b.y) return -1;
-				if (a.y < b.y) return 1;
-			} else {
-				if (a.y > b.y) return -1;
-				if (a.y < b.y) return 1;
-			}
-		}).slice(0,10)
+		const sortedData = data
+			.sort((a, b) => {
+				if (data.y === 'GINI index') {
+					if (a.y > b.y) return 1;
+					if (a.y < b.y) return -1;
+				} else {
+					if (a.y > b.y) return -1;
+					if (a.y < b.y) return 1;
+				}
+			})
+			.slice(0, 20);
 
-		
-		const dataMax = max(data, (d) => d.x);
+		const dataMax = max(sortedData, (d) => d.y);
 		const innerWidth = parentWidth - margin;
 		const innerHeight = parentHeight - margin;
-		const barHeight = Math.max(15, innerHeight / data.length);
-		
+		const barHeight = Math.max(15, innerHeight / sortedData.length);
+
 		// Get min, max of x value
 		// and map to X-position
 		const xScale = scaleLinear({
 			domain: [ 0, max(sortedData, (d) => d.y) ],
 			range: [ margin, innerWidth ]
 		});
-		
+
 		const yScale = scaleBand({
 			domain: sortedData.reduce((result, d) => {
-				result.push(d.name)
-				return result
+				result.push(d.name);
+				return result;
 			}, []),
-			rangeRound: [margin, innerHeight]
+			rangeRound: [ margin, innerHeight ]
 		});
-		
+
 		const labels = {
 			x: data.x,
 			y: data.y
@@ -87,8 +88,8 @@ class VxBarChart extends React.Component {
 			zScale
 		} = this.props;
 
-		const { barHeight, dataMax, innerWidth, innerHeight, xScale, yScale, sortedData, parentHeight } = this.state;
-			
+		const { barHeight, dataMax, innerWidth, innerHeight, xScale, yScale, sortedData, parentHeight, labels } = this.state;
+
 		return (
 			<React.Fragment>
 				<svg width={parentWidth} height={parentHeight}>
@@ -136,41 +137,41 @@ class VxBarChart extends React.Component {
 							tickLabelProps={(value, index) => ({
 								letterSpacing: 'normal',
 								fontSize: 11,
-								textAnchor: "end",
-								dy: "0.33em"
+								textAnchor: 'end',
+								dy: '0.33em'
 							})}
 						/>
 					</Group>
 				</svg>
-				{ tooltipOpen && 
+				{tooltipOpen && (
 					<TooltipWithBounds
-					key='tooltip'
-					style={{
-						top: tooltipTop,
-						left: tooltipLeft,
-						letterSpacing: 'normal'
-					}}
+						key="tooltip"
+						style={{
+							top: tooltipTop,
+							left: tooltipLeft,
+							letterSpacing: 'normal'
+						}}
 					>
-					{tooltipData && (
-						<div>
-							<p className={styles.tooltipP}>
-								Country <strong>{tooltipData.name}</strong>
-							</p>
-							<p className={styles.tooltipP}>
-								data.x <strong>{tooltipData.x}</strong>
-							</p>
-							<p className={styles.tooltipP}>
-								data.y <strong>{tooltipData.y}</strong>
-							</p>
-						</div>
-					)}
-				</TooltipWithBounds>
-				}
+						{tooltipData && (
+							<div>
+								<p className={styles.tooltipP}>
+									Country <strong>{tooltipData.name}</strong>
+								</p>
+								<p className={styles.tooltipP}>
+									{labels.x} <strong>{tooltipData.x}</strong>
+								</p>
+								<p className={styles.tooltipP}>
+									{labels.y} <strong>{tooltipData.y}</strong>
+								</p>
+							</div>
+						)}
+					</TooltipWithBounds>
+				)}
 			</React.Fragment>
 		);
 	}
 }
-
-const VxBarChartWithSize = withParentSize(VxBarChart)
+const VxBarChartWithTooltip = withTooltip(VxBarChart)
+const VxBarChartWithSize = withParentSize(VxBarChartWithTooltip);
 
 export default VxBarChartWithSize;
