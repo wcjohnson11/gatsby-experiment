@@ -34,7 +34,7 @@ class ChloroplethMap extends React.Component {
 
 	handleMouseOut() {
 		// TODO: create animation w opacity
-		setTimeout(() => this.props.hideTooltip(), 300);
+		this.props.hideTooltip();
 	}
 
 	render() {
@@ -49,13 +49,13 @@ class ChloroplethMap extends React.Component {
 				<div className={style.content}>
 					<ComposableMap
 						projectionConfig={{
-							scale: parentWidth / 6.5
+							scale: parentWidth / 6
 						}}
 						width={parentWidth}
 						height={parentWidth / 2}
 						style={{ width: '100%', height: '100%' }}
 					>
-						<ZoomableGroup disablePanning zoom={1}>
+						<ZoomableGroup disablePanning zoom={1.1}>
 							<Geographies geography={'world-geo-pop.json'}>
 								{(geographies, projection) =>
 									geographies.map((geography, i) => {
