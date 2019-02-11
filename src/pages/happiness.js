@@ -3,8 +3,10 @@ import { csv } from 'd3';
 import Layout from '../components/layout';
 import VxScatterplotWithSize from '../components/visualizations/vxscatterplot';
 import ChloroplethMapWithSize from '../components/visualizations/chloroplethMap';
+import VxBarChart from '../components/visualizations/vxbarchart'
 import Legend from '../components/visualizations/legend';
 import { scaleOrdinal } from '@vx/scale';
+import style from './happiness.module.css';
 
 const cleanNumbers = (string) => {
 	return parseFloat(string.replace(/,/g, ''));
@@ -131,7 +133,51 @@ class Happiness extends React.Component {
 			Seda.x = 'GDP per Capita';
 			Seda.y = 'sustainable economic development assessment (SEDA)';
 
-			console.log(Seda);
+			const EconomicFreedom = happy.reduce((result, d) => {
+				if (d['overall economic freedom score'] !== 'FALSE' && d['GDP per capita (PPP)']) {
+					result.push({
+						name: d.indicator,
+						code: d['ISO Country code'],
+						y: d['overall economic freedom score'],
+						x: d['GDP per capita (PPP)'],
+						continent: d.continentName
+					});
+				}
+				return result;
+			}, []);
+			EconomicFreedom.x = 'GDP per Capita';
+			EconomicFreedom.y = 'Overall Economic Freedom Score';
+			
+			const CivilLiberties = happy.reduce((result, d) => {
+				if (d['civil liberties score'] !== 'FALSE' && d['GDP per capita (PPP)']) {
+					result.push({
+						name: d.indicator,
+						code: d['ISO Country code'],
+						y: d['civil liberties score'],
+						x: d['GDP per capita (PPP)'],
+						continent: d.continentName
+					});
+				}
+				return result;
+			}, []);
+			CivilLiberties.x = 'GDP per Capita';
+			CivilLiberties.y = 'Civil Liberties Score';
+			
+			const PoliticalRights = happy.reduce((result, d) => {
+				if (d['political rights score'] !== 'FALSE' && d['GDP per capita (PPP)']) {
+					result.push({
+						name: d.indicator,
+						code: d['ISO Country code'],
+						y: d['political rights score'],
+						x: d['GDP per capita (PPP)'],
+						continent: d.continentName
+					});
+				}
+				return result;
+			}, []);
+			PoliticalRights.x = 'GDP per Capita';
+			PoliticalRights.y = 'Political Rights';
+			
 			this.setState({
 				categories: happy.columns,
 				categoryInfo: categoryInfo,
@@ -142,6 +188,9 @@ class Happiness extends React.Component {
 					gini: GINIData,
 					happyPlanet: happyPlanet,
 					humanDevIndex: humanDevIndex,
+					economicFreedom: EconomicFreedom,
+					civilLiberties: CivilLiberties,
+					politicalRights: PoliticalRights,
 					Seda: Seda
 				}
 			});
@@ -154,11 +203,20 @@ class Happiness extends React.Component {
 
 	render() {
 		const { zScale, isPromiseResolved } = this.state;
-		const { happiness, gini, happyPlanet, humanDevIndex, Seda } = this.state.datasets;
+		const { happiness, gini, happyPlanet, humanDevIndex, Seda, economicFreedom, civilLiberties, politicalRights } = this.state.datasets;
 
 		return (
 			<Layout>
-				<h1>How we measure happiness</h1>
+				<h1 className={style.title}>Measuring Happiness Around The World</h1>
+				<p>What does it mean to live a good life? For most people, the answer will be happiness. Other popular answers, such as love, money, freedom, security or community could arguably be considered the building blocks or prerequisites for happiness. If there is a strong corrollation between happiness and quality of life, then if we can find a way to model happiness in a society, then we can measure it's quality of life, observe changes over time, refine our models and maximize for policies that lead to more happiness.</p>
+				<h3>What is Happiness anyway?</h3>
+				<blockquote>
+					<p>Happiness is the experience of joy, contentment, or positive well-being, combined with a sense that one’s life is good, meaningful, and worthwhile.</p>
+					<footer>Psychologist Sonja Lyubomirsky in her book <cite><a href="https://www.amazon.com/gp/product/0143114956">The How of Happiness</a></cite></footer>
+				</blockquote>
+				<p>I like this definition of happiness, it clearly seperates happiness into two main parts, positive emotions such as joy, contentment, interest and love and then the sense of satisfaction that comes with achieving life goals. The emotional aspect is universal while the second is more variable depending on a person's values. Different cultures and life experiences will lead to different values. For instance, in a survey that 
+					. It's an entirely different question, although very interesting, if we can view what is happiness as a view into what people feel like is missing from their lives, or what gives them purpose. For interest, when Sonja Lyubomirsky did a research project asking people in America and Russia to define this, she received very different answers. American people said money, family, success, having fun, Russian people said spiritual salvation, a world of peace and beauty, mutual understanding among people. It's interesting to think about what </p>
+				<p>Happines is cultural (america > money, family, success, having fun,,,, spiritual salvation, a world of peace and beauty, mutual understanding among people</p>
 				{isPromiseResolved && (
 					<React.Fragment>
 						<div className="pure-g">
@@ -176,7 +234,35 @@ class Happiness extends React.Component {
 								<VxScatterplotWithSize data={happiness} zScale={zScale} useGrid={false} />
 							</div>
 							<div className="pure-u-1 pure-u-md-1-5">
+								<VxScatterplotWithSize data={economicFreedom} zScale={zScale} useGrid={false} />
+							</div>
+						</div>
+						<div className="pure-g">
+							<div className="pure-u-1 pure-u-md-1-5">
 								<VxScatterplotWithSize data={gini} zScale={zScale} useGrid={false} />
+							</div>
+							<div className="pure-u-1 pure-u-md-1-5">
+								<VxScatterplotWithSize data={civilLiberties} zScale={zScale} useGrid={false} />
+							</div>
+							<div className="pure-u-1 pure-u-md-1-5">
+								<VxScatterplotWithSize data={politicalRights} zScale={zScale} useGrid={false} />
+							</div>
+						</div>
+						<div className="pure-g">
+							<div className="pure-u-1 pure-u-md-1-5">
+								<VxBarChart data={happyPlanet} zScale={zScale} />
+							</div>
+							<div className="pure-u-1 pure-u-md-1-5">
+								<VxBarChart data={humanDevIndex} zScale={zScale} />
+							</div>
+							<div className="pure-u-1 pure-u-md-1-5">
+								<VxBarChart data={Seda} zScale={zScale} />
+							</div>
+							<div className="pure-u-1 pure-u-md-1-5">
+								<VxBarChart data={happiness} zScale={zScale} />
+							</div>
+							<div className="pure-u-1 pure-u-md-1-5">
+								<VxBarChart data={gini} zScale={zScale} />
 							</div>
 						</div>
 						<div className="pure-g">
