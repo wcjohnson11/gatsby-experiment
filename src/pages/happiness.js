@@ -8,6 +8,7 @@ import VxBarChart from '../components/visualizations/vxbarchart'
 import Legend from '../components/visualizations/legend';
 import { scaleOrdinal } from '@vx/scale';
 import style from './happiness.module.css';
+import BarChart from '../components/visualizations/barchart';
 
 const cleanNumbers = (string) => {
 	return parseFloat(string.replace(/,/g, ''));
@@ -272,27 +273,15 @@ class Happiness extends React.Component {
 				)}
 				<h4>GINI index</h4>
 				<p>One of the oldest measurements of wellbeing is The GINI index, developed by Italian Statistician Corrado Gini in 1912, measures inequality in income distribution in family income, with 0 representing perfect equality (everyone earns exactly the same) and 1 representing perfect inequality (one family earns everything, everyone else earns nothing). The GINI index is an imperfect measurement because it focuses on income, rather than wealth, which is much harder to measure because of unreliable GDP and income data. Shadow economies and tax havens make it hard to measure income and wealth, particularly in developing countries. Despite this, it appears to be fairly well correlated to GDP per capita, meaning that countries with a higher GDP per capita tend to have less inequality, at least as far as it can be measured.</p>
-				<VariableForm handleFieldSelect={this.handleVariableFieldSelect} variableValue={variableValue} />
 				{isPromiseResolved && (
 					<React.Fragment>
 						<div className="pure-g">
-							<div className="pure-u-1 pure-u-md-1-5">
-								<VxBarChart data={happyPlanet} zScale={zScale} />
-							</div>
-							<div className="pure-u-1 pure-u-md-1-5">
-								<VxBarChart data={humanDevIndex} zScale={zScale} />
-							</div>
-							<div className="pure-u-1 pure-u-md-1-5">
-								<VxBarChart data={Seda} zScale={zScale} />
-							</div>
-							<div className="pure-u-1 pure-u-md-1-5">
-								<VxBarChart data={happiness} zScale={zScale} />
-							</div>
-							<div className="pure-u-1 pure-u-md-1-5">
-								<VxBarChart data={gini} zScale={zScale} />
+							<div className="pure-u-1">
+								<BarChart data={gini} zScale={zScale} />
 							</div>
 						</div>
 						<div className="pure-g">
+							<VariableForm handleFieldSelect={this.handleVariableFieldSelect} variableValue={variableValue} />
 							<div className="pure-u-1">
 								<ChloroplethMapWithSize data={happiness} mapValue="Happiness" />
 							</div>
