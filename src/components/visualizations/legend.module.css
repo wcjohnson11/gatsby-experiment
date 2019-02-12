@@ -4,6 +4,10 @@
     justify-content: center;
     border: 1px solid black;
     border-radius: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: white;
 }
 
 .title {
@@ -17,16 +21,4 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-}
-
-.legend-item {
-    margin: 0 15px;
-}
-
-.legend-item > svg {
-    margin-right: 5px;
-}
-
-.legend-label {
-    margin: 0 10px !important;
 }
