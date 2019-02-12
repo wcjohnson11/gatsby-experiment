@@ -1,9 +1,10 @@
 import React from 'react';
 import * as d3 from 'd3';
+import {withParentSize} from '@vx/responsive';
 
 const width = 650;
 const height = 1500;
-const margin = { top: 20, right: 45, bottom: 20, left: 125 };
+const margin = { top: 20, right: 105, bottom: 20, left: 125 };
 
 class BarChart extends React.Component {
 	state = {
@@ -14,8 +15,9 @@ class BarChart extends React.Component {
 	yAxis = d3.axisLeft();
 
 	static getDerivedStateFromProps(nextProps, prevState) {
-		const { data, zScale } = nextProps;
-		if (!data) return {};
+		const { data, zScale, parentWidth } = nextProps;
+        if (!data) return {};
+        
 		const sortedData = data.sort((a, b) => {
 			if (a.y < b.y) return 1;
 			if (a.y > b.y) return -1;
@@ -23,8 +25,8 @@ class BarChart extends React.Component {
 		});
 
 		// Map the xScale to [0,Y Value max]
-		const dataYMax = d3.max(data, (d) => d.y);
-		const xScale = d3.scaleLinear().domain([ 0, dataYMax ]).range([ margin.left, width - margin.right ]);
+        const dataYMax = d3.max(data, (d) => d.y);
+		const xScale = d3.scaleLinear().domain([ 0, dataYMax ]).range([ margin.left, parentWidth - margin.right ]);
 
 		// Get array of names in dataset
 		const dataNames = sortedData.reduce((result, d) => {
@@ -39,36 +41,53 @@ class BarChart extends React.Component {
 			.range([ height - margin.bottom, margin.top ])
 			.paddingInner([ 0.4 ])
 			.paddingOuter([ 0.2 ]);
-		console.log(yScale.bandwidth());
+
+        // Create bars component
+        // Not sure why width needs to have marginRight subtracted from it
 		const bars = sortedData.map((d) => {
 			return {
 				x: `${margin.left}`,
 				y: yScale(d.name),
 				height: yScale.bandwidth(),
-				width: xScale(d.y),
+				width: xScale(d.y) - margin.right,
 				fill: zScale(d.continent),
 				name: d.name
 			};
 		});
 
-		return { bars, xScale, yScale };
+		return { bars, xScale, yScale, parentWidth };
 	}
 
 	componentDidUpdate() {
 		// Set xAxis to use xScale
-		this.xAxis.scale(this.state.xScale);
+        this.xAxis.scale(this.state.xScale);
+        // Call xAxis on xAxis group element to draw it
 		d3.select(this.refs.xAxis).call(this.xAxis);
 		// Set yAxis to use yScale
-		this.yAxis.scale(this.state.yScale);
-		d3.select(this.refs.yAxis).call(this.yAxis);
+        this.yAxis.scale(this.state.yScale);
+        // Call yAxis on yAxis group element to draw it
+        d3.select(this.refs.yAxis).call(this.yAxis);
+        
+        // Set up transition for bars
+        d3.select(this.refs.bars)
+            .selectAll('rect')
+            .data(this.state.bars)
+            .transition()
+            .attr('y', d => d.y)
+            .attr('height', d => d.height)
+            .attr('width', d => d.width)
+            .attr('fill', d => d.fill)
 	}
 
 	render() {
+        const {parentWidth} = this.state;
 		return (
-			<svg width={width} height={height}>
-				{this.state.bars.map((d) => (
-					<rect x={d.x} y={d.y} key={d.name} width={d.width} height={d.height} fill={d.fill} />
-				))}
+			<svg width={parentWidth} height={height}>
+                <g ref="bars">
+                    {this.state.bars.map((d) => (
+                        <rect key={d.name} x={d.x} />
+                    ))}
+                </g>
 				<g ref="xAxis" transform={`translate(0, ${margin.top})`} />
 				<g ref="yAxis" transform={`translate(${margin.left}, 0)`} />
 			</svg>
@@ -76,4 +95,6 @@ class BarChart extends React.Component {
 	}
 }
 
-export default BarChart;
+const BarChartWithSize = withParentSize(BarChart);
+
+export default BarChartWithSize;

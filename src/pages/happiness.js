@@ -4,7 +4,6 @@ import Layout from '../components/layout';
 import VariableForm from '../components/variableForm';
 import VxScatterplotWithSize from '../components/visualizations/vxscatterplot';
 import ChloroplethMapWithSize from '../components/visualizations/chloroplethMap';
-import VxBarChart from '../components/visualizations/vxbarchart'
 import Legend from '../components/visualizations/legend';
 import { scaleOrdinal } from '@vx/scale';
 import style from './happiness.module.css';
