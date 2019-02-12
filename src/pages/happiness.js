@@ -23,7 +23,22 @@ class Happiness extends React.Component {
 			currentCountry: false,
 			currentContinent: false,
 			isPromiseResolved: false,
-			variableValue: 'Gini'
+			metricVariables: [
+				{ value: 'Gini', label: 'GINI Index'},
+				{ value: 'WorldHappiness', label: 'World Happiness Report'},
+				{ value: 'HappyPlanet', label: 'Happy Planet Index'},
+				{ value: 'HumanDevIndex', label: 'Human Development Index'},
+				{ value: 'Seda', label: 'Sustainable Economic Development Index'},
+				{ value: 'EconomicFreedom', label: 'Overall Economic Freedom Score'},
+			],
+			activeMetric: 'Gini',
+			barChartVariables: [
+				{value:'lowHigh', label: 'Low to High'},
+				{value:'highLow', label: 'High to Low'},
+				{value:'continent', label: 'Group by Continent'},
+				{value:'alphabetical', label: 'Alphabetical'}
+			],
+			activeBarChart: 'lowhigh'
 		};
 
 		this.handleLegendClick = this.handleLegendClick.bind(this)
@@ -200,7 +215,11 @@ class Happiness extends React.Component {
 					civilLiberties: CivilLiberties,
 					politicalRights: PoliticalRights,
 					Seda: Seda
-				}
+				},
+				metricVariables: this.state.metricVariables,
+				activeMetric: this.state.activeMetric,
+				barChartVariables: this.state.barChartVariables,
+				activeBarChart: this.state.activeBarChart
 			});
 		});
 	}
@@ -216,11 +235,17 @@ class Happiness extends React.Component {
 	}
 
 	handleVariableFieldSelect(variable) {
-		this.setState({variableValue: variable})
+		const {metricVariables } = this.state
+		if (metricVariables.find((variable) => variable.value === variable))
+		{
+			this.setState({activeMetric: variable})
+		} else {
+			this.setState({activeBarChart: variable})
+		}
 	}
 
 	render() {
-		const { currentContinent, zScale, isPromiseResolved, variableValue } = this.state;
+		const { currentContinent, zScale, isPromiseResolved, metricVariables, activeMetric, barChartVariables, activeBarChart } = this.state;
 		const { happiness, gini, happyPlanet, humanDevIndex, Seda, economicFreedom, civilLiberties, politicalRights } = this.state.datasets;
 
 		return (
@@ -275,12 +300,13 @@ class Happiness extends React.Component {
 				{isPromiseResolved && (
 					<React.Fragment>
 						<div className="pure-g">
+							<VariableForm handleFieldSelect={this.handleVariableFieldSelect} variableValues={barChartVariables} active={activeBarChart} />
 							<div className="pure-u-1">
-								<BarChart data={gini} zScale={zScale} />
+								<BarChart data={gini} sortType={activeBarChart} currentContinent={currentContinent} zScale={zScale} />
 							</div>
 						</div>
 						<div className="pure-g">
-							<VariableForm handleFieldSelect={this.handleVariableFieldSelect} variableValue={variableValue} />
+							<VariableForm handleFieldSelect={this.handleVariableFieldSelect} variableValues={metricVariables} active={activeMetric}/>
 							<div className="pure-u-1">
 								<ChloroplethMapWithSize data={happiness} mapValue="Happiness" />
 							</div>
