@@ -177,6 +177,7 @@ class VxScatterplot extends React.Component {
 						top={tooltipTop}
 						left={tooltipLeft}
 						style={{
+							zIndex: 2,
 							opacity: 1,
 							letterSpacing: 'normal'
 						}}
