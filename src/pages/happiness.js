@@ -1,6 +1,7 @@
 import React from 'react';
 import { csv } from 'd3';
 import Layout from '../components/layout';
+import VariableForm from '../components/variableForm';
 import VxScatterplotWithSize from '../components/visualizations/vxscatterplot';
 import ChloroplethMapWithSize from '../components/visualizations/chloroplethMap';
 import VxBarChart from '../components/visualizations/vxbarchart'
@@ -13,13 +14,21 @@ const cleanNumbers = (string) => {
 };
 
 class Happiness extends React.Component {
-	state = {
-		categories: [],
-		categoryInfo: [],
-		datasets: {},
-		currentCountry: false,
-		isPromiseResolved: false
-	};
+	constructor(){
+		super();
+		this.state = {
+			categories: [],
+			categoryInfo: [],
+			datasets: {},
+			currentCountry: false,
+			currentContinent: false,
+			isPromiseResolved: false,
+			variableValue: 'Gini'
+		};
+
+		this.handleLegendClick = this.handleLegendClick.bind(this)
+		this.handleVariableFieldSelect = this.handleVariableFieldSelect.bind(this)
+	}
 
 	componentDidMount() {
 		Promise.all([ csv('countrycodes.csv'), csv('happy2.csv') ]).then((allData) => {
@@ -56,7 +65,6 @@ class Happiness extends React.Component {
 				domain: continentNames,
 				range: [ 'orange', 'yellow', 'blue', 'purple', 'green', 'red' ]
 			});
-			console.log(happy, happySub5Mil);
 
 			// Set X and Y values for world happiness
 			const worldHappinessData = happy.reduce((result, d) => {
@@ -163,7 +171,7 @@ class Happiness extends React.Component {
 			CivilLiberties.x = 'GDP per Capita';
 			CivilLiberties.y = 'Civil Liberties Score';
 			
-			const PoliticalRights = happy.reduce((result, d) => {
+			const PoliticalRights = happySub5Mil.reduce((result, d) => {
 				if (d['political rights score'] !== 'FALSE' && d['GDP per capita (PPP)']) {
 					result.push({
 						name: d.indicator,
@@ -198,11 +206,21 @@ class Happiness extends React.Component {
 	}
 
 	handleLegendClick(label) {
+		const {currentContinent} = this.state
 		const continentName = label.datum;
+		if (continentName === currentContinent) {
+			this.setState({currentContinent: false})
+		} else {
+			this.setState({currentContinent: continentName})
+		}
+	}
+
+	handleVariableFieldSelect(variable) {
+		this.setState({variableValue: variable})
 	}
 
 	render() {
-		const { zScale, isPromiseResolved } = this.state;
+		const { currentContinent, zScale, isPromiseResolved, variableValue } = this.state;
 		const { happiness, gini, happyPlanet, humanDevIndex, Seda, economicFreedom, civilLiberties, politicalRights } = this.state.datasets;
 
 		return (
@@ -217,24 +235,25 @@ class Happiness extends React.Component {
 				<p>I like this definition of happiness, it clearly seperates happiness into two main parts, positive emotions such as joy, contentment, interest and love and then the sense of satisfaction that comes with achieving life goals. The emotional aspect is universal while the second is more variable depending on a person's values. Different cultures and life experiences will lead to different values. For instance, in a survey that 
 					. It's an entirely different question, although very interesting, if we can view what is happiness as a view into what people feel like is missing from their lives, or what gives them purpose. For interest, when Sonja Lyubomirsky did a research project asking people in America and Russia to define this, she received very different answers. American people said money, family, success, having fun, Russian people said spiritual salvation, a world of peace and beauty, mutual understanding among people. It's interesting to think about what </p>
 				<p>Happines is cultural (america > money, family, success, having fun,,,, spiritual salvation, a world of peace and beauty, mutual understanding among people</p>
+				<VariableForm handleFieldSelect={this.handleVariableFieldSelect} variableValue={variableValue} />
 				{isPromiseResolved && (
 					<React.Fragment>
 						<div className="pure-g">
 							<Legend scale={zScale} legendClick={this.handleLegendClick} />
 							<div className="pure-u-1 pure-u-md-1-5">
-								<VxScatterplotWithSize data={happyPlanet} zScale={zScale} useGrid={false} />
+								<VxScatterplotWithSize data={happyPlanet} currentContinent={currentContinent} zScale={zScale} useGrid={false} />
 							</div>
 							<div className="pure-u-1 pure-u-md-1-5">
-								<VxScatterplotWithSize data={humanDevIndex} zScale={zScale} useGrid={false} />
+								<VxScatterplotWithSize data={humanDevIndex} currentContinent={currentContinent} zScale={zScale} useGrid={false} />
 							</div>
 							<div className="pure-u-1 pure-u-md-1-5">
-								<VxScatterplotWithSize data={Seda} zScale={zScale} useGrid={false} />
+								<VxScatterplotWithSize data={Seda} currentContinent={currentContinent} zScale={zScale} useGrid={false} />
 							</div>
 							<div className="pure-u-1 pure-u-md-1-5">
-								<VxScatterplotWithSize data={happiness} zScale={zScale} useGrid={false} />
+								<VxScatterplotWithSize data={happiness} currentContinent={currentContinent} zScale={zScale} useGrid={false} />
 							</div>
 							<div className="pure-u-1 pure-u-md-1-5">
-								<VxScatterplotWithSize data={economicFreedom} zScale={zScale} useGrid={false} />
+								<VxScatterplotWithSize data={economicFreedom} currentContinent={currentContinent} zScale={zScale} useGrid={false} />
 							</div>
 						</div>
 						<div className="pure-g">
