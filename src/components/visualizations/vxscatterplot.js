@@ -21,28 +21,51 @@ class VxScatterplot extends React.Component {
 		cicles: [],
 		labels: {},
 		xScale: false,
-		yScale: false
+		yScale: false,
+		currentContinent: false
 	};
 
 	static getDerivedStateFromProps(nextProps, prevState) {
-        const { data, parentWidth, zScale } = nextProps;
+        const { data, parentWidth, zScale, currentContinent } = nextProps;
         const parentHeight = parentWidth
 		if (!data) return {};
-
-		const xScale = scaleLinear({
-			domain: [ 0, max(data, (d) => d.x) ],
-			range: [ margin, parentWidth - margin - margin ]
-		});
-
-		const yScale = scaleLinear({
-			domain: [ 0, max(data, (d) => d.y) ],
-			range: [ parentHeight - margin, margin ]
-		});
 
 		const labels = {
 			x: data.x,
 			y: data.y
 		};
+
+		const xScale = scaleLinear({
+			domain: [0, max(data, (d) => d.x)],
+			range: [margin, parentWidth - margin - margin]
+		});
+
+		const yScale = scaleLinear({
+			domain: [0, max(data, (d) => d.y)],
+			range: [parentHeight - margin, margin]
+		});
+
+		if (currentContinent) {
+			const filteredData = data.filter(d => currentContinent === d.continent)
+			const circles = filteredData.map((d) => {
+				return {
+					cx: xScale(d.x),
+					cy: yScale(d.y),
+					x: `$${formatMoney(d.x, 2)}`,
+					y: d.y,
+					color: zScale(d.continent),
+					r: 3,
+					key: d.name
+				};
+			});
+			return {
+				labels,
+				circles,
+				xScale,
+				yScale,
+				parentHeight
+			};
+		}
 
 		const circles = data.map((d) => {
 			return {
@@ -139,7 +162,7 @@ class VxScatterplot extends React.Component {
 										cy={d.cy}
 										r={d.r}
 										x={d.x}
-										y={d.x}
+										y={d.y}
 										onMouseOver={(e) => this.handleMouseOver(e, d)}
 										onMouseOut={() => this.handleMouseOut()}
 									/>
