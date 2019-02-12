@@ -19,3 +19,8 @@
     text-align: center;
     margin-bottom: 2rem;
 }
+
+.wrapper {
+    display: flex;
+    align-items: flex-start;
+}

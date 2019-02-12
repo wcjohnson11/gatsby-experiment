@@ -241,7 +241,7 @@ class Happiness extends React.Component {
 				<h3>Different Ways of Measuring Wellbeing</h3>
 				<p>There have been different attempts at measuring wellbeing and they will be described below. By visualizing these metrics of wellbeing alongside the GDP per capita, we can see that there is a rough correlation between increased GDP per capita and improved scores on these wellbeing metrics.</p>
 				{isPromiseResolved && (
-					<div className="pure-g">
+					<div className={`pure-g ${style.wrapper}`}>
 						<Legend scale={zScale} legendClick={this.handleLegendClick} />
 						<div className="pure-u-1 pure-u-md-1-5">
 							<VxScatterplotWithSize data={happyPlanet} currentContinent={currentContinent} zScale={zScale} useGrid={false} />
@@ -258,11 +258,7 @@ class Happiness extends React.Component {
 						<div className="pure-u-1 pure-u-md-1-5">
 							<VxScatterplotWithSize data={economicFreedom} currentContinent={currentContinent} zScale={zScale} useGrid={false} />
 						</div>
-					</div>
-				)}
-				The below metrics are structured in such a way that lower values are better. A similar correlation with GDP per capita can be seen for these metrics.
-				{ isPromiseResolved && (
-					<div className="pure-g">
+						<p>The below metrics are structured in such a way that lower values are better. A similar correlation with GDP per capita can be seen for these metrics.</p>
 						<div className="pure-u-1 pure-u-md-1-5">
 							<VxScatterplotWithSize data={gini} currentContinent={currentContinent} zScale={zScale} useGrid={false} />
 						</div>
