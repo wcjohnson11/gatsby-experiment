@@ -3,10 +3,9 @@ import React from 'react';
 class VariableForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { value: props.variableValue };
+        this.state = { value: props.active, variables: props.variableValues };
         this.handleChange = this.handleChange.bind(this)
     }
-
 
 	handleChange(event) {
         this.setState({ value: event.target.value });
@@ -14,17 +13,18 @@ class VariableForm extends React.Component {
 	}
 
 	render() {
+        const { variables } = this.state;
+        const variableOptions = variables.map((variable, index) => {
+            return (
+                <option key={index} value={variable.value}>{variable.label}</option>
+            )
+        })
 		return (
 			<label>
 				Pick your measurement:
 				<select value={this.state.value} onChange={this.handleChange}>
-					<option value="Gini">GINI Index</option>
-					<option value="WorldHappiness">World Happiness Report</option>
-					<option value="HappyPlanet">Happy Planet Index</option>
-					<option value="HumanDevIndex">Human Development Index</option>
-					<option value="Seda">Sustainable Economic Development Index</option>
-					<option value="EconomicFreedom">Overall Economic Freedom Score</option>
-				</select>
+                    {variableOptions}
+                </select>
 			</label>
 		);
 	}
