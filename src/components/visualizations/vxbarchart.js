@@ -1,16 +1,16 @@
 import React from 'react';
-import { max } from 'd3';
+import { max, median } from 'd3';
 import { localPoint } from '@vx/event';
 import { TooltipWithBounds, withTooltip } from '@vx/tooltip';
-import { Bar } from '@vx/shape';
+import { Bar, Line } from '@vx/shape';
 import { AxisLeft, AxisTop } from '@vx/axis';
 import { scaleLinear, scaleBand } from '@vx/scale';
 import { withParentSize } from '@vx/responsive';
 import { Group } from '@vx/group';
 import numTicksForWidth from '../../utils/numTicksForWidth';
-import styles from './scatterplot.module.css';
+import style from './scatterplot.module.css';
 
-const margin = 25;
+// const margin = 25;
 
 class VxBarChart extends React.Component {
 	state = {
@@ -18,49 +18,65 @@ class VxBarChart extends React.Component {
 		xScale: false,
 		labels: []
 	};
-
+	
 	static getDerivedStateFromProps(nextProps, prevState) {
-		const { data, parentWidth } = nextProps;
-		const parentHeight = parentWidth;
+		const { data, parentWidth, currentContinent } = nextProps;
 		if (!data) return {};
-
 		const sortedData = data
-			.sort((a, b) => {
-				if (data.y === 'GINI index') {
-					if (a.y > b.y) return 1;
-					if (a.y < b.y) return -1;
-				} else {
-					if (a.y > b.y) return -1;
-					if (a.y < b.y) return 1;
-				}
-			})
-			.slice(0, 20);
-
-		const dataMax = max(sortedData, (d) => d.y);
+		.sort((a, b) => {
+			if (a.y > b.y) return 1;
+			if (a.y < b.y) return -1;
+			return 0;
+		})
+		// .slice(0, 30);
+		const dataMedian = median(data, (d) => d.y);
+		const dataMax = max(data, (d) => d.y);
+		
+		const labels = {
+			x: data.x,
+			y: data.y
+		};
+		const margin = parentWidth / 18
 		const innerWidth = parentWidth - margin;
+		const parentHeight = sortedData.length * 20;
 		const innerHeight = parentHeight - margin;
-		const barHeight = Math.max(15, innerHeight / sortedData.length);
 
+		
+		
+		
 		// Get min, max of x value
 		// and map to X-position
 		const xScale = scaleLinear({
-			domain: [ 0, max(sortedData, (d) => d.y) ],
+			domain: [ 0, max(data, (d) => d.y) ],
 			range: [ margin, innerWidth ]
 		});
+		if (currentContinent) {
+			console.log('hi')
+			const filteredData = data.filter((d) => d.continent === currentContinent)
+			const yScale = scaleBand({
+				domain: filteredData.reduce((result, d) => {
+					result.push(d.name);
+					return result;
+				}, []),
+				rangeRound: [0, innerHeight]
+			});
 
+			const barHeight = yScale.bandwidth();
+			const sortedData = filteredData
+			return { xScale, yScale, data, labels, margin, dataMax, dataMedian, innerWidth, innerHeight, barHeight, sortedData, parentHeight };
+		}
+		
 		const yScale = scaleBand({
 			domain: sortedData.reduce((result, d) => {
 				result.push(d.name);
 				return result;
 			}, []),
-			rangeRound: [ margin, innerHeight ]
+			rangeRound: [ 0, innerHeight ]
 		});
-
-		const labels = {
-			x: data.x,
-			y: data.y
-		};
-		return { xScale, yScale, data, labels, dataMax, innerWidth, innerHeight, barHeight, sortedData, parentHeight };
+		
+		const barHeight = yScale.bandwidth();
+		
+		return { xScale, yScale, data, labels, margin, dataMax, dataMedian, innerWidth, innerHeight, barHeight, sortedData, parentHeight };
 	}
 
 	handleMouseOverBar(event, datum) {
@@ -88,21 +104,33 @@ class VxBarChart extends React.Component {
 			zScale
 		} = this.props;
 
-		const { barHeight, dataMax, innerWidth, innerHeight, xScale, yScale, sortedData, parentHeight, labels } = this.state;
+		const {
+			barHeight,
+			dataMax,
+			dataMedian,
+			innerWidth,
+			innerHeight,
+			xScale,
+			yScale,
+			sortedData,
+			parentHeight,
+			labels,
+			margin
+		} = this.state;
 
 		return (
 			<React.Fragment>
-				<svg width={parentWidth} height={parentHeight}>
-					<Group top={margin + margin} left={margin}>
+				<svg width={parentWidth} height={parentHeight} style={{display: 'block', margin: 'auto', overflowY: 'scroll'}}>
+					<Group top={margin * .5} left={margin + margin + margin}>
 						{sortedData.map((d, i) => {
 							return (
 								<Bar
 									key={d.name}
-									width={innerWidth * d.x / dataMax}
+									width={innerWidth * d.y / dataMax}
 									left={margin}
 									height={barHeight}
 									x={margin}
-									y={i * barHeight}
+									y={yScale(d.name)}
 									stroke="#fff"
 									strokeWidth={2}
 									fill={zScale(d.continent)}
@@ -111,15 +139,21 @@ class VxBarChart extends React.Component {
 								/>
 							);
 						})}
-					</Group>
-					<Group top={margin} left={margin}>
+						<Line
+							fill="black"
+							from={{x: xScale(dataMedian), y: margin}}
+							to={{x: xScale(dataMedian), y: innerHeight - margin}}
+							strokeWidth={4}
+							label="median"
+							strokeDasharray="4,6"
+						/>
 						<AxisTop
 							scale={xScale}
 							axisClassName="axis-class"
 							labelClassName="axis-label-class"
 							label={data.y}
 							tickClassName="tick-label-class"
-							top={margin}
+							top={margin * 1.2}
 							stroke="#333333"
 							tickStroke="#333333"
 							numTicks={numTicksForWidth(innerWidth)}
@@ -146,21 +180,21 @@ class VxBarChart extends React.Component {
 				{tooltipOpen && (
 					<TooltipWithBounds
 						key="tooltip"
+						top={tooltipTop}
+						left={tooltipLeft}
 						style={{
-							top: tooltipTop,
-							left: tooltipLeft,
 							letterSpacing: 'normal'
 						}}
 					>
 						{tooltipData && (
 							<div>
-								<p className={styles.tooltipP}>
+								<p className={style.tooltipP}>
 									Country <strong>{tooltipData.name}</strong>
 								</p>
-								<p className={styles.tooltipP}>
+								<p className={style.tooltipP}>
 									{labels.x} <strong>{tooltipData.x}</strong>
 								</p>
-								<p className={styles.tooltipP}>
+								<p className={style.tooltipP}>
 									{labels.y} <strong>{tooltipData.y}</strong>
 								</p>
 							</div>
@@ -171,7 +205,7 @@ class VxBarChart extends React.Component {
 		);
 	}
 }
-const VxBarChartWithTooltip = withTooltip(VxBarChart)
+const VxBarChartWithTooltip = withTooltip(VxBarChart);
 const VxBarChartWithSize = withParentSize(VxBarChartWithTooltip);
 
 export default VxBarChartWithSize;
