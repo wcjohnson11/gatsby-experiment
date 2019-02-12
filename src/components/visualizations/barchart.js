@@ -1,9 +1,6 @@
 import React from 'react';
 import * as d3 from 'd3';
 import {withParentSize} from '@vx/responsive';
-
-const width = 650;
-const height = 1500;
 const margin = { top: 20, right: 105, bottom: 20, left: 125 };
 
 class BarChart extends React.Component {
@@ -15,12 +12,29 @@ class BarChart extends React.Component {
 	yAxis = d3.axisLeft();
 
 	static getDerivedStateFromProps(nextProps, prevState) {
-		const { data, zScale, parentWidth } = nextProps;
+		const { currentContinent, data, zScale, parentWidth, sortType } = nextProps;
         if (!data) return {};
+        // If currentContinent is set, 
+        const formattedData = currentContinent ? data.filter(d => d.continent === currentContinent) : data
         
-		const sortedData = data.sort((a, b) => {
-			if (a.y < b.y) return 1;
-			if (a.y > b.y) return -1;
+        // Set Height of Div according to datalength
+        const formattedHeight = formattedData.length * 15
+        
+        // Sort Data
+		const sortedData = formattedData.sort((a, b) => {
+            if (sortType === 'lowHigh') {
+			    if (a.y < b.y) return 1;
+			    if (a.y > b.y) return -1;
+            } else if (sortType === 'highLow') {
+                if (a.y < b.y) return -1;
+			    if (a.y > b.y) return 1;
+            } else if (sortType === 'alphabetical') {
+                if (a.name < b.name) return 1;
+			    if (a.name > b.name) return -1;
+            } else if (sortType === 'continent') {
+                 if (a.continent < b.continent) return 1;
+			    if (a.continent > b.continent) return -1;
+            }
 			return 0;
 		});
 
@@ -38,7 +52,7 @@ class BarChart extends React.Component {
 		const yScale = d3
 			.scaleBand()
 			.domain(dataNames)
-			.range([ height - margin.bottom, margin.top ])
+			.range([ formattedHeight - margin.bottom, margin.top ])
 			.paddingInner([ 0.4 ])
 			.paddingOuter([ 0.2 ]);
 
@@ -55,7 +69,7 @@ class BarChart extends React.Component {
 			};
 		});
 
-		return { bars, xScale, yScale, parentWidth };
+		return { bars, formattedHeight, xScale, yScale, parentWidth };
 	}
 
 	componentDidUpdate() {
@@ -80,9 +94,10 @@ class BarChart extends React.Component {
 	}
 
 	render() {
-        const {parentWidth} = this.state;
+        const {formattedHeight, parentWidth} = this.state;
 		return (
-			<svg width={parentWidth} height={height}>
+            <React.Fragment>
+			<svg width={parentWidth} height={formattedHeight}>
                 <g ref="bars">
                     {this.state.bars.map((d) => (
                         <rect key={d.name} x={d.x} />
@@ -91,6 +106,7 @@ class BarChart extends React.Component {
 				<g ref="xAxis" transform={`translate(0, ${margin.top})`} />
 				<g ref="yAxis" transform={`translate(${margin.left}, 0)`} />
 			</svg>
+            </React.Fragment>
 		);
 	}
 }
