@@ -22,6 +22,10 @@ https://github.com/yahoo/pure/blob/master/LICENSE.md
     letter-spacing: normal;
 }
 
+.vx-legend-item {
+    cursor: pointer;
+}
+
 .vx-tooltip-portal > p {
     margin-bottom: 1rem;
 }
