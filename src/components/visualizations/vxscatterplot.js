@@ -174,9 +174,9 @@ class VxScatterplot extends React.Component {
 				{tooltipOpen && (
 					<TooltipWithBounds
 						key={Math.random()}
+						top={tooltipTop}
+						left={tooltipLeft}
 						style={{
-							top: tooltipTop,
-							left: tooltipLeft,
 							opacity: 1,
 							letterSpacing: 'normal'
 						}}
