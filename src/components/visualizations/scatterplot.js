@@ -19,7 +19,7 @@ class Scatterplot extends React.Component {
   yAxis = d3.axisLeft();
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { data, className, handleMouseOver, zScale, parentWidth } = nextProps;
+    const { data, handleMouseOver, zScale, parentWidth } = nextProps;
     if (!data) return {};
     const width = parentWidth;
     const height = parentWidth * 0.75;
@@ -60,7 +60,6 @@ class Scatterplot extends React.Component {
       xScale,
       yScale,
       labels,
-      className,
       handleMouseOver,
       width,
       height
@@ -99,8 +98,7 @@ class Scatterplot extends React.Component {
       // Turn highlighted circle red
       d3.select(this)
         .transition()
-        .duration(450)
-        .attr("fill", chroma(d.fill).darken(2));
+        .attr("fill", chroma(d.fill).darken(1));
 
       // Show Tooltip
       showTooltip({
@@ -127,10 +125,10 @@ class Scatterplot extends React.Component {
 
   render() {
     const { tooltipData, tooltipLeft, tooltipOpen, tooltipTop } = this.props;
-    const { className, circles, width, height } = this.state;
+    const { circles, width, height } = this.state;
     return (
       <React.Fragment>
-        <svg className={className} width={width} height={height}>
+        <svg width={width} height={height}>
           <g ref={this.circleRef}>
             {circles.map((d, i) => (
               <circle
