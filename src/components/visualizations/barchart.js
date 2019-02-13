@@ -1,7 +1,15 @@
 import React from "react";
 import * as d3 from "d3";
+import { localPoint } from "@vx/event";
 import { withParentSize } from "@vx/responsive";
+import { withTooltip } from "@vx/tooltip";
+import BoundedToolTip from "./boundedTooltip";
+import style from "./barchart.module.css";
 const margin = { top: 20, right: 105, bottom: 20, left: 125 };
+
+// TODO
+// Create Legend
+// Style
 
 class BarChart extends React.Component {
   state = {
@@ -14,6 +22,12 @@ class BarChart extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const { currentContinent, data, zScale, parentWidth, sortType } = nextProps;
     if (!data) return {};
+
+    // Create Data Labels
+    const labels = {
+      x: data.x,
+      y: data.y
+    };
     // If currentContinent is set,
     const formattedData = currentContinent
       ? data.filter(d => d.continent === currentContinent)
@@ -70,11 +84,24 @@ class BarChart extends React.Component {
         height: yScale.bandwidth(),
         width: xScale(d.y) - margin.right,
         fill: zScale(d.continent),
-        name: d.name
+        name: d.name,
+        xRaw: d.x,
+        yRaw: d.y
       };
     });
 
-    return { bars, formattedHeight, xScale, yScale, parentWidth };
+    // Get dataMedian value for medianLine
+    const dataMedian = d3.median(sortedData, d => d.y);
+
+    return {
+      bars,
+      dataMedian,
+      labels,
+      formattedHeight,
+      xScale,
+      yScale,
+      parentWidth
+    };
   }
 
   componentDidUpdate() {
@@ -98,24 +125,65 @@ class BarChart extends React.Component {
       .attr("fill", d => d.fill);
   }
 
+  handleMouseOverBar(event, datum) {
+    const coords = localPoint(event.target.ownerSVGElement, event);
+    this.props.showTooltip({
+      tooltipLeft: coords.x,
+      tooltipTop: coords.y,
+      tooltipData: {
+        name: datum.name,
+        x: datum.xRaw,
+        y: datum.yRaw,
+        labels: this.state.labels
+      }
+    });
+  }
+
   render() {
-    const { formattedHeight, parentWidth } = this.state;
+    const {
+      tooltipData,
+      tooltipLeft,
+      tooltipOpen,
+      tooltipTop,
+      hideTooltip
+    } = this.props;
+    const { dataMedian, formattedHeight, parentWidth, xScale } = this.state;
     return (
       <React.Fragment>
         <svg width={parentWidth} height={formattedHeight}>
+          <line
+            className={style.medianLine}
+            x1={xScale(dataMedian)}
+            y1={margin.top}
+            x2={xScale(dataMedian)}
+            y2={formattedHeight - margin.bottom}
+          />
           <g ref="bars">
             {this.state.bars.map(d => (
-              <rect key={d.name} x={d.x} />
+              <rect
+                key={d.name}
+                x={d.x}
+                onMouseOver={e => this.handleMouseOverBar(e, d)}
+                onMouseOut={() => hideTooltip()}
+              />
             ))}
           </g>
           <g ref="xAxis" transform={`translate(0, ${margin.top})`} />
           <g ref="yAxis" transform={`translate(${margin.left}, 0)`} />
         </svg>
+        {tooltipOpen && (
+          <BoundedToolTip
+            tooltipTop={tooltipTop}
+            tooltipLeft={tooltipLeft}
+            tooltipData={tooltipData}
+          />
+        )}
       </React.Fragment>
     );
   }
 }
 
-const BarChartWithSize = withParentSize(BarChart);
+const BarChartWithTooltip = withTooltip(BarChart);
+const BarChartWithSize = withParentSize(BarChartWithTooltip);
 
 export default BarChartWithSize;
