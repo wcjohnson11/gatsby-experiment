@@ -12,9 +12,13 @@ const margin = { top: 20, right: 105, bottom: 20, left: 125 };
 // Style
 
 class BarChart extends React.Component {
-  state = {
-    bars: []
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      bars: []
+    };
+    this.barRef = React.createRef();
+  }
 
   xAxis = d3.axisTop();
   yAxis = d3.axisLeft();
@@ -115,7 +119,7 @@ class BarChart extends React.Component {
     d3.select(this.refs.yAxis).call(this.yAxis);
 
     // Set up transition for bars
-    d3.select(this.refs.bars)
+    d3.select(this.barRef.current)
       .selectAll("rect")
       .data(this.state.bars)
       .transition()
@@ -158,7 +162,7 @@ class BarChart extends React.Component {
             x2={xScale(dataMedian)}
             y2={formattedHeight - margin.bottom}
           />
-          <g ref="bars">
+          <g ref={this.barRef}>
             {this.state.bars.map(d => (
               <rect
                 key={d.name}

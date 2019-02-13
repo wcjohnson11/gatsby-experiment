@@ -112,7 +112,7 @@ class Scatterplot extends React.Component {
               r={width / 200}
               fill={d.fill}
               strokeWidth={1}
-              stroke={chroma(d.fill).darken()}
+              stroke={chroma(d.fill).darken(4)}
               onMouseOver={e => this.handleMouseOverBar(e, d)}
               onMouseOut={() => hideTooltip()}
             />
