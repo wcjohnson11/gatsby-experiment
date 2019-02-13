@@ -2,7 +2,6 @@ import React from "react";
 import * as d3 from "d3";
 import { withParentSize } from "@vx/responsive";
 import { withTooltip } from "@vx/tooltip";
-import { localPoint } from "@vx/event";
 import * as chroma from "chroma-js";
 import BoundedToolTip from "./boundedTooltip";
 import styles from "./scatterplot.module.css";
@@ -13,6 +12,7 @@ class Scatterplot extends React.Component {
   state = {
     circles: []
   };
+  circleRef = React.createRef();
 
   // Initialize Axes
   xAxis = d3.axisBottom().ticks(5);
@@ -24,6 +24,11 @@ class Scatterplot extends React.Component {
     const width = parentWidth;
     const height = parentWidth * 0.75;
 
+    // Create data labels
+    const labels = {
+      x: data.x,
+      y: data.y
+    };
     // Get min, max of x value
     // and map to X-position
     const xScale = d3
@@ -38,6 +43,7 @@ class Scatterplot extends React.Component {
       .domain([0, d3.max(data, d => d.y)])
       .range([height - padding, padding]);
 
+    // Create circle elements
     const circles = data.map(d => {
       return {
         cx: xScale(d.x),
@@ -49,10 +55,6 @@ class Scatterplot extends React.Component {
       };
     });
 
-    const labels = {
-      x: data.x,
-      y: data.y
-    };
     return {
       circles,
       xScale,
@@ -66,57 +68,84 @@ class Scatterplot extends React.Component {
   }
 
   componentDidUpdate() {
-    const { xScale, yScale, labels } = this.state;
+    const { hideTooltip, showTooltip } = this.props;
+    const { circles, xScale, yScale, labels } = this.state;
+    // Set xAxis to use xScale
     this.xAxis.scale(xScale);
+    // Call xAxis on xAxis group element to draw it
     d3.select(this.refs.xAxis).call(this.xAxis);
+    // Set yAxis to use yScale
     this.yAxis.scale(yScale);
+    // Call yAxis on yAxis group element to draw it
     d3.select(this.refs.yAxis).call(this.yAxis);
     d3.select(this.refs.xAxisLabel).text(labels.x);
     d3.select(this.refs.yAxisLabel).text(labels.y);
-  }
 
-  handleMouseOverBar(event, datum) {
-    const coords = localPoint(event.target.ownerSVGElement, event);
-    this.props.showTooltip({
-      tooltipLeft: coords.x,
-      tooltipTop: coords.y,
-      tooltipData: {
-        name: datum.name,
-        x: datum.x,
-        y: datum.y,
-        labels: this.state.labels
-      }
+    // Create D3 color functions
+    const circleSelection = d3
+      .select(this.circleRef.current)
+      .selectAll("circle")
+      .data(circles);
+
+    circleSelection.attr("fill", d => d.fill);
+
+    // Handle Mouseover
+    circleSelection.on("mouseover", function(d) {
+      // Turn all circles gray
+      circleSelection
+        .transition()
+        .duration(450)
+        .attr("fill", d => chroma("gray").brighten(1));
+      // Turn highlighted circle red
+      d3.select(this)
+        .transition()
+        .duration(450)
+        .attr("fill", chroma(d.fill).darken(2));
+
+      // Show Tooltip
+      showTooltip({
+        tooltipLeft: d.cx,
+        tooltipTop: d.cy,
+        tooltipData: {
+          name: d.name,
+          x: d.x,
+          y: d.y,
+          labels: labels
+        }
+      });
+    });
+
+    circleSelection.on("mouseout", function(d) {
+      d3.select(this)
+        .transition()
+        .duration(450)
+        .attr("fill", d => d.fill);
+
+      hideTooltip();
     });
   }
 
   render() {
-    const {
-      tooltipData,
-      tooltipLeft,
-      tooltipOpen,
-      tooltipTop,
-      hideTooltip
-    } = this.props;
+    const { tooltipData, tooltipLeft, tooltipOpen, tooltipTop } = this.props;
     const { className, circles, width, height } = this.state;
     return (
       <React.Fragment>
         <svg className={className} width={width} height={height}>
-          {circles.map(d => (
-            <circle
-              key={d.key}
-              className={styles.circle}
-              cx={d.cx}
-              x={d.x}
-              cy={d.cy}
-              y={d.y}
-              r={width / 200}
-              fill={d.fill}
-              strokeWidth={1}
-              stroke={chroma(d.fill).darken(4)}
-              onMouseOver={e => this.handleMouseOverBar(e, d)}
-              onMouseOut={() => hideTooltip()}
-            />
-          ))}
+          <g ref={this.circleRef}>
+            {circles.map((d, i) => (
+              <circle
+                key={d.key}
+                className={styles.circle}
+                cx={d.cx}
+                x={d.x}
+                cy={d.cy}
+                y={d.y}
+                r={width / 200}
+                strokeWidth={1}
+                stroke={chroma(d.fill).darken(4)}
+              />
+            ))}
+          </g>
           <g
             ref="xAxis"
             className={styles.axis}
