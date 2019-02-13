@@ -109,7 +109,7 @@ class Scatterplot extends React.Component {
               x={d.x}
               cy={d.cy}
               y={d.y}
-              r={3}
+              r={width / 200}
               fill={d.fill}
               strokeWidth={1}
               stroke={chroma(d.fill).darken()}
