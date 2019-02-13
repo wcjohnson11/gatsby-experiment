@@ -3,6 +3,7 @@ import { csv } from "d3";
 import Layout from "../components/layout";
 import VariableForm from "../components/variableForm";
 import VxScatterplotWithSize from "../components/visualizations/vxscatterplot";
+import Scatterplot from "../components/visualizations/scatterplot";
 import ChloroplethMapWithSize from "../components/visualizations/chloroplethMap";
 import Legend from "../components/visualizations/legend";
 import { scaleOrdinal } from "@vx/scale";
@@ -446,6 +447,9 @@ class Happiness extends React.Component {
             </div>
           </div>
         )}
+        <div className="pure-u-1">
+          <Scatterplot data={gini} className="test" zScale={zScale} />
+        </div>
         <h4>GINI index</h4>
         <p>
           One of the oldest measurements of wellbeing is The GINI index,
