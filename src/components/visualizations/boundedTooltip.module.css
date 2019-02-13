@@ -1,0 +1,15 @@
+.tooltip {
+    display: block;
+    box-shadow: 0 0 4 4 rgba(0,0,0,0.5);
+}
+
+.tooltip > p {
+    margin-bottom: .3rem;
+    text-decoration: underline;
+}
+
+.tooltip > p > span {
+    font-weight: bold;
+    float: right;
+    padding-left: 10px;
+}
