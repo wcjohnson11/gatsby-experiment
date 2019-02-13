@@ -7,27 +7,6 @@
     fill: #0B0414;
 }
 
-.circle {
-    stroke: #0B0414;
-    stroke-width: 1;
-}
-
-@keyframes fadeOut {
-    0%   { opacity: 1; }
-    100% { opacity: 0; }
-}
-
-.circle:hover {
-    stroke: #FC4616;
-    stroke-width: 4;
-}
-
-.fade {
-    stroke: gray;
-    fill: gray;
-    animation: fadeOut 1s ease-in 1;
-}
-
 .ticklabel > text {
     transform: rotate(-65);
 }

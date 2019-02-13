@@ -7,7 +7,6 @@ import {
 } from "react-simple-maps";
 import { localPoint } from "@vx/event";
 import { TooltipWithBounds } from "@vx/tooltip";
-import BoundedToolTip from "./boundedTooltip";
 import { withTooltip } from "@vx/tooltip";
 import { withParentSize } from "@vx/responsive";
 import { scaleLinear } from "d3-scale";
