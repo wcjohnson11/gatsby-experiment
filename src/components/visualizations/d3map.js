@@ -1,7 +1,8 @@
 import React from "react";
 import * as d3 from "d3";
+import * as topojson from "topojson-client";
 import { withParentSize } from "@vx/responsive";
-import topology from "../../../static/world-geo-pop.json";
+import topology from "../../../static/world-topology.json";
 
 class D3Map extends React.Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class D3Map extends React.Component {
     this.state = {};
     this.containerRef = React.createRef();
     this.legendRef = React.createRef();
+    this.mapRef = React.createRef();
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -16,6 +18,19 @@ class D3Map extends React.Component {
 
     const width = parentWidth;
     const height = parentWidth * 0.75;
+
+    // Create Value Map
+    const valueMap = {};
+    data.forEach(country => (valueMap[country.code] = {value: country.y, name: country.name}));
+
+    // Add value to Topojson
+    // topology.objects.geometries.forEach((geography, i) => {
+    //   const continentCode = geography.properties.iso_a3;
+    //   geography.properties.mapValue = valueMap[continentCode];
+    // });
+    console.log(topology)
+    // Create world countries object
+    const countryFeatures = topojson.feature(topology, topology.objects.countries).features;
 
     // Declare Projection
     const projection = d3
@@ -48,11 +63,22 @@ class D3Map extends React.Component {
     // Update D3
     // Update Domain of Scale
     // Recenter Map on windowResize
-    return { width, height, projection, color, x, geoPath, ticks, axisBottom };
+    return {
+      width,
+      height,
+      projection,
+      color,
+      x,
+      geoPath,
+      ticks,
+      axisBottom,
+      countryFeatures,
+      valueMap
+    };
   }
 
   componentDidMount() {
-    const { geoPath, color, ticks } = this.state;
+    const { geoPath, color, ticks, countryFeatures, colorScale, valueMap } = this.state;
     const { mapValue } = this.props;
 
     // Create Circle
@@ -74,28 +100,46 @@ class D3Map extends React.Component {
       .attr("offset", d => d.offset)
       .attr("stop-color", d => d.color);
 
-    // Update caption
+    // Add caption
     d3.select(".caption").text(`${mapValue}`);
+        
+
+    console.log('1', countryFeatures)
+    // Add Country fills
+    d3.select(this.mapRef.current)
+        .append('g')
+      .selectAll("path")
+      .data(countryFeatures)
+      .enter()
+      .append("path")
+      .attr("fill", (d) => {
+          console.log(d.id, valueMap,valueMap[d.id])
+          return colorScale(valueMap[`${d.id}`].value)
+        })
+      .attr("path", geoPath)
+      .append("title")
+      .text(d => valueMap[d.id].name);
   }
 
   componentDidUpdate() {
     const { axisBottom } = this.state;
-    // axisBottom(this.legendRef.current).select('.domain').remove();
-    const xAxis = d3.select(this.legendRef.current);
 
+    // Get Legend
+    const xAxis = d3.select(this.legendRef.current);
+    // Draw xAxis
     xAxis
       .call(axisBottom)
       .select(".domain")
       .remove();
-    // d3.select(this.legendRef.current)
-    //   .call(axisBottom)
-    //   .select(".domain")
-    //   .remove();
   }
 
   render() {
     const { width, height, x, ticks } = this.state;
-    console.log(x(ticks[ticks.length - 1]), x(ticks[0]));
+
+    // const paths = countryFeatures.map((d) => {
+    //     console.log(d)
+    // })
+
     return (
       <svg width={width} height={height}>
         <path
@@ -123,6 +167,7 @@ class D3Map extends React.Component {
             fontWeight="bold"
           />
         </g>
+        <g ref={this.mapRef}></g>
       </svg>
     );
   }
