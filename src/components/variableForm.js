@@ -15,9 +15,11 @@ class VariableForm extends React.Component {
   render() {
     const { variables } = this.state;
     const variableOptions = variables.map((variable, index) => {
+      var label = variable.label;
       return (
         <option key={index} value={variable.value}>
-          {variable.label}
+          {label}
+          {variable.description && `  -  ${variable.description}`}
         </option>
       );
     });
