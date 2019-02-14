@@ -8,7 +8,8 @@ import { localPoint } from "@vx/event";
 import BoundedToolTip from "./boundedTooltip";
 import { withTooltip } from "@vx/tooltip";
 import { withParentSize } from "@vx/responsive";
-import { max } from "d3";
+import * as chroma from "chroma-js";
+import { max, select } from "d3";
 import formatMoney from "../../utils/formatMoney";
 import numTicksForHeight from "../../utils/numTicksForHeight";
 import numTicksForWidth from "../../utils/numTicksForWidth";
@@ -16,17 +17,61 @@ import style from "./scatterplot.module.css";
 
 const margin = 30;
 
+const colorFunction = (currentCountry, d) => {
+  if (currentCountry) {
+    if (currentCountry === d.key) {
+      return d.color;
+    } else {
+      return "gray";
+    }
+  } else {
+    return d.color;
+  }
+};
+
+const radiusFunction = (currentCountry, d) => {
+  if (currentCountry) {
+    if (currentCountry === d.key) {
+      return 4;
+    } else {
+      return d.r;
+    }
+  } else {
+    return d.r;
+  }
+};
+
+const strokeWidthFunction = (currentCountry, d) => {
+  if (currentCountry) {
+    if (currentCountry === d.key) {
+      return 2;
+    } else {
+      return 1;
+    }
+  } else {
+    return 2;
+  }
+};
+
 class VxScatterplot extends React.Component {
   state = {
     cicles: [],
     labels: {},
     xScale: false,
     yScale: false,
-    currentContinent: false
+    currentContinent: false,
+    currentCountry: false
   };
+  circleRef = React.createRef();
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { data, parentWidth, zScale, currentContinent } = nextProps;
+    const {
+      data,
+      parentWidth,
+      zScale,
+      currentContinent,
+      currentCountry
+    } = nextProps;
     const parentHeight = parentWidth;
     if (!data) return {};
 
@@ -61,6 +106,7 @@ class VxScatterplot extends React.Component {
       return {
         labels,
         circles,
+        currentCountry,
         xScale,
         yScale,
         parentHeight
@@ -88,7 +134,39 @@ class VxScatterplot extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const { circles } = this.state;
+    const { currentCountry } = this.props;
+
+    const circleSelection = select(this.circleRef.current)
+      .selectAll("circle")
+      .data(circles);
+
+    circleSelection
+      .attr("fill", d => d.color)
+      .attr("r", d => d.r)
+      .attr("strokeWidth", d => 1);
+  }
+
+  componentDidUpdate() {
+    const { circles } = this.state;
+    const { currentCountry } = this.props;
+
+    const circleSelection = select(this.circleRef.current)
+      .selectAll("circle")
+      .data(circles);
+
+    circleSelection
+      .transition()
+      .duration(450)
+      .attr("fill", d => colorFunction(currentCountry, d))
+      .attr("r", d => radiusFunction(currentCountry, d))
+      .attr("strokeWidth", d => strokeWidthFunction(currentCountry, d));
+  }
+
   handleMouseOver(event, datum) {
+    const { handleCircleOver } = this.props;
+    handleCircleOver(datum.key);
     const coords = localPoint(event.target.ownerSVGElement, event);
     this.props.showTooltip({
       tooltipLeft: coords.x,
@@ -104,6 +182,8 @@ class VxScatterplot extends React.Component {
 
   handleMouseOut() {
     // TODO: create animation w opacity
+    const { handleCircleOver } = this.props;
+    handleCircleOver(false);
     setTimeout(() => this.props.hideTooltip(), 300);
   }
 
@@ -117,7 +197,14 @@ class VxScatterplot extends React.Component {
       useGrid
     } = this.props;
 
-    const { xScale, yScale, labels, circles, parentHeight } = this.state;
+    const {
+      xScale,
+      yScale,
+      labels,
+      circles,
+      parentHeight,
+      currentCountry
+    } = this.state;
 
     return (
       <React.Fragment>
@@ -160,22 +247,22 @@ class VxScatterplot extends React.Component {
                 tickStroke="#333333"
                 numTicks={numTicksForWidth(parentWidth)}
               />
-              {circles.map((d, i) => {
-                return (
-                  <Circle
-                    key={d.key}
-                    className={style.circle}
-                    fill={d.color}
-                    cx={d.cx}
-                    cy={d.cy}
-                    r={d.r}
-                    x={d.x}
-                    y={d.y}
-                    onMouseOver={e => this.handleMouseOver(e, d)}
-                    onMouseOut={() => this.handleMouseOut()}
-                  />
-                );
-              })}
+              <g ref={this.circleRef}>
+                {circles.map(d => {
+                  return (
+                    <Circle
+                      key={d.key}
+                      stroke={chroma("gray").darken(2)}
+                      cx={d.cx}
+                      cy={d.cy}
+                      x={d.x}
+                      y={d.y}
+                      onMouseEnter={e => this.handleMouseOver(e, d)}
+                      onMouseLeave={() => this.handleMouseOut()}
+                    />
+                  );
+                })}
+              </g>
             </Group>
           )}
         </svg>
