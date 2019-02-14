@@ -26,6 +26,7 @@
     "@vx/tooltip": "0.0.184",
     "chroma-js": "^2.0.2",
     "d3": "^5.8.0",
+    "eslint": "^5.13.0",
     "g": "^2.0.1",
     "gatsby": "^2.0.76",
     "gatsby-plugin-typography": "^2.2.5",
