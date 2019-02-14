@@ -5,6 +5,7 @@ import VariableForm from "../components/variableForm";
 import VxScatterplotWithSize from "../components/visualizations/vxscatterplot";
 import Scatterplot from "../components/visualizations/scatterplot";
 import ChloroplethMapWithSize from "../components/visualizations/chloroplethMap";
+import D3Map from "../components/visualizations/D3Map";
 import Legend from "../components/visualizations/legend";
 import { scaleOrdinal } from "@vx/scale";
 import style from "./happiness.module.css";
@@ -34,12 +35,38 @@ class Happiness extends React.Component {
       currentContinent: false,
       isPromiseResolved: false,
       metricVariables: [
-        { value: "Gini", label: "GINI Index" },
-        { value: "WorldHappiness", label: "World Happiness Report" },
-        { value: "HappyPlanet", label: "Happy Planet Index" },
-        { value: "HumanDevIndex", label: "Human Development Index" },
-        { value: "Seda", label: "Sustainable Economic Development Index" },
-        { value: "EconomicFreedom", label: "Overall Economic Freedom Score" }
+        {
+          value: "HappyPlanet",
+          label: "Happy Planet Index",
+          description:
+            "Wellbeing, Life Expectancy, Inequality, Ecological Footprint"
+        },
+        {
+          value: "HumanDevIndex",
+          label: "Human Development Index",
+          description: "Healthy Life, Education, Standard of Living"
+        },
+        {
+          value: "Seda",
+          label: "Sustainable Economic Development Index",
+          description: "Sustainability, Economics, Investments"
+        },
+        {
+          value: "WorldHappiness",
+          label: "World Happiness Report",
+          description: "Quality of Life Survey"
+        },
+        {
+          value: "Gini",
+          label: "GINI Index",
+          description: "Inequality in Distribution of Family Income"
+        },
+        {
+          value: "EconomicFreedom",
+          label: "Overall Economic Freedom Score",
+          description:
+            "Rule of Law, Government Size, Regulatory Efficiency, Open Markets"
+        }
       ],
       activeMetric: "Gini",
       barChartVariables: [
@@ -117,7 +144,7 @@ class Happiness extends React.Component {
         if (d["world happiness report score"] && d["GDP per capita (PPP)"]) {
           result.push({
             name: d.indicator,
-            code: d["ISO Country code"],
+            code: d["ISO Number"],
             y: d["world happiness report score"],
             x: d["GDP per capita (PPP)"],
             continent: d.continentName
@@ -131,7 +158,7 @@ class Happiness extends React.Component {
         if (d["GINI index"] && d["GDP per capita (PPP)"]) {
           result.push({
             name: d.indicator,
-            code: d["ISO Country code"],
+            code: d["ISO Number"],
             y: d["GINI index"],
             x: d["GDP per capita (PPP)"],
             continent: d.continentName
@@ -146,7 +173,7 @@ class Happiness extends React.Component {
         if (d["happy planet index"] !== "FALSE" && d["GDP per capita (PPP)"]) {
           result.push({
             name: d.indicator,
-            code: d["ISO Country code"],
+            code: d["ISO Number"],
             y: d["happy planet index"],
             x: d["GDP per capita (PPP)"],
             continent: d.continentName
@@ -164,7 +191,7 @@ class Happiness extends React.Component {
         ) {
           result.push({
             name: d.indicator,
-            code: d["ISO Country code"],
+            code: d["ISO Number"],
             y: d["human development index"],
             x: d["GDP per capita (PPP)"],
             continent: d.continentName
@@ -182,7 +209,7 @@ class Happiness extends React.Component {
         ) {
           result.push({
             name: d.indicator,
-            code: d["ISO Country code"],
+            code: d["ISO Number"],
             y: d["sustainable economic development assessment (SEDA)"],
             x: d["GDP per capita (PPP)"],
             continent: d.continentName
@@ -200,7 +227,7 @@ class Happiness extends React.Component {
         ) {
           result.push({
             name: d.indicator,
-            code: d["ISO Country code"],
+            code: d["ISO Number"],
             y: d["overall economic freedom score"],
             x: d["GDP per capita (PPP)"],
             continent: d.continentName
@@ -218,7 +245,7 @@ class Happiness extends React.Component {
         ) {
           result.push({
             name: d.indicator,
-            code: d["ISO Country code"],
+            code: d["ISO Number"],
             y: d["civil liberties score"],
             x: d["GDP per capita (PPP)"],
             continent: d.continentName
@@ -236,7 +263,7 @@ class Happiness extends React.Component {
         ) {
           result.push({
             name: d.indicator,
-            code: d["ISO Country code"],
+            code: d["ISO Number"],
             y: d["political rights score"],
             x: d["GDP per capita (PPP)"],
             continent: d.continentName
@@ -289,7 +316,7 @@ class Happiness extends React.Component {
 
   handleVariableFieldSelect(variable) {
     const { metricVariables } = this.state;
-    if (metricVariables.find(variable => variable.value === variable)) {
+    if (metricVariables.find(metric => metric.value === variable)) {
       this.setState({ activeMetric: variable });
     } else {
       this.setState({ activeBarChart: variable });
@@ -317,6 +344,15 @@ class Happiness extends React.Component {
       civilLiberties,
       politicalRights
     } = this.state.datasets;
+
+    const metricMap = {
+      HappyPlanet: happyPlanet,
+      HumanDevIndex: humanDevIndex,
+      Seda: Seda,
+      WorldHappiness: happiness,
+      Gini: gini,
+      EconomicFreedom: economicFreedom
+    };
 
     return (
       <Layout>
@@ -490,8 +526,14 @@ class Happiness extends React.Component {
             </div>
           </div>
         )}
-        <div className="pure-u-1">
-          <Scatterplot data={gini} zScale={zScale} />
+        <div className="pure-g">
+          <div className="pure-u-1">
+            <VariableForm
+              handleFieldSelect={this.handleVariableFieldSelect}
+              variableValues={metricVariables}
+              active={activeMetric}
+            />
+          </div>
         </div>
         <h4>GINI index</h4>
         <p>
@@ -514,11 +556,27 @@ class Happiness extends React.Component {
             <div className="pure-g">
               <VariableForm
                 handleFieldSelect={this.handleVariableFieldSelect}
+                variableValues={metricVariables}
+                active={activeMetric}
+              />
+              <div className="pure-u-1">
+                <ChloroplethMapWithSize
+                  data={metricMap[activeMetric]}
+                  mapValue={activeMetric}
+                />
+              </div>
+              <div className="pure-u-1">
+                <D3Map data={metricMap[activeMetric]} mapValue={activeMetric} />
+              </div>
+            </div>
+            <div className="pure-g">
+              <VariableForm
+                handleFieldSelect={this.handleVariableFieldSelect}
                 variableValues={barChartVariables}
                 active={activeBarChart}
               />
               <Legend scale={zScale} legendClick={this.handleLegendClick} />
-              <div className="pure-u-1">
+              <div className="pure-u-4-5">
                 <BarChart
                   data={gini}
                   sortType={activeBarChart}
@@ -526,15 +584,8 @@ class Happiness extends React.Component {
                   zScale={zScale}
                 />
               </div>
-            </div>
-            <div className="pure-g">
-              <VariableForm
-                handleFieldSelect={this.handleVariableFieldSelect}
-                variableValues={metricVariables}
-                active={activeMetric}
-              />
-              <div className="pure-u-1">
-                <ChloroplethMapWithSize data={happiness} mapValue="Happiness" />
+              <div className="pure-u-4-5">
+                <Scatterplot data={gini} zScale={zScale} />
               </div>
             </div>
           </React.Fragment>
