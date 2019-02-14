@@ -70,7 +70,8 @@ class VxScatterplot extends React.Component {
       parentWidth,
       zScale,
       currentContinent,
-      currentCountry
+      currentCountry,
+      linkHighlighting
     } = nextProps;
     const parentHeight = parentWidth;
     if (!data) return {};
@@ -109,7 +110,8 @@ class VxScatterplot extends React.Component {
         currentCountry,
         xScale,
         yScale,
-        parentHeight
+        parentHeight,
+        linkHighlighting
       };
     }
 
@@ -149,19 +151,20 @@ class VxScatterplot extends React.Component {
   }
 
   componentDidUpdate() {
-    const { circles } = this.state;
+    const { circles, linkHighlighting } = this.state;
     const { currentCountry } = this.props;
+    if (linkHighlighting) {
+      const circleSelection = select(this.circleRef.current)
+        .selectAll("circle")
+        .data(circles);
 
-    const circleSelection = select(this.circleRef.current)
-      .selectAll("circle")
-      .data(circles);
-
-    circleSelection
-      .transition()
-      .duration(450)
-      .attr("fill", d => colorFunction(currentCountry, d))
-      .attr("r", d => radiusFunction(currentCountry, d))
-      .attr("strokeWidth", d => strokeWidthFunction(currentCountry, d));
+      circleSelection
+        .transition()
+        .duration(450)
+        .attr("fill", d => colorFunction(currentCountry, d))
+        .attr("r", d => radiusFunction(currentCountry, d))
+        .attr("strokeWidth", d => strokeWidthFunction(currentCountry, d));
+    }
   }
 
   handleMouseOver(event, datum) {

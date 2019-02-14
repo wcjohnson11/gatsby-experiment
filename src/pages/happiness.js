@@ -14,6 +14,15 @@ const cleanNumbers = string => {
   return parseFloat(string.replace(/,/g, ""));
 };
 
+const colors = [
+  "#e41a1c",
+  "#377eb8",
+  "#4daf4a",
+  "#984ea3",
+  "#ff7f00",
+  "#ffff33"
+];
+
 class Happiness extends React.Component {
   constructor() {
     super();
@@ -42,6 +51,7 @@ class Happiness extends React.Component {
       activeBarChart: "lowhigh"
     };
 
+    this.handleCircleOver = this.handleCircleOver.bind(this);
     this.handleLegendClick = this.handleLegendClick.bind(this);
     this.handleVariableFieldSelect = this.handleVariableFieldSelect.bind(this);
   }
@@ -96,9 +106,10 @@ class Happiness extends React.Component {
         "North America",
         "Oceania"
       ];
+
       const zScale = scaleOrdinal({
         domain: continentNames,
-        range: ["orange", "yellow", "blue", "purple", "green", "red"]
+        range: colors
       });
 
       // Set X and Y values for world happiness
@@ -259,6 +270,13 @@ class Happiness extends React.Component {
     });
   }
 
+  handleCircleOver(country) {
+    // Country will be the name of a country or null
+    // This sets the currentCountry
+    // VxScatterplot will handle the rest
+    this.setState({ currentCountry: country });
+  }
+
   handleLegendClick(label) {
     const { currentContinent } = this.state;
     const continentName = label.datum;
@@ -286,7 +304,8 @@ class Happiness extends React.Component {
       metricVariables,
       activeMetric,
       barChartVariables,
-      activeBarChart
+      activeBarChart,
+      currentCountry
     } = this.state;
     const {
       happiness,
@@ -382,6 +401,9 @@ class Happiness extends React.Component {
                 currentContinent={currentContinent}
                 zScale={zScale}
                 useGrid={false}
+                handleCircleOver={this.handleCircleOver}
+                currentCountry={currentCountry}
+                linkHighlighting={false}
               />
             </div>
             <div className="pure-u-1 pure-u-md-1-5">
@@ -390,6 +412,9 @@ class Happiness extends React.Component {
                 currentContinent={currentContinent}
                 zScale={zScale}
                 useGrid={false}
+                handleCircleOver={this.handleCircleOver}
+                currentCountry={currentCountry}
+                linkHighlighting={false}
               />
             </div>
             <div className="pure-u-1 pure-u-md-1-5">
@@ -398,6 +423,9 @@ class Happiness extends React.Component {
                 currentContinent={currentContinent}
                 zScale={zScale}
                 useGrid={false}
+                handleCircleOver={this.handleCircleOver}
+                currentCountry={currentCountry}
+                linkHighlighting={false}
               />
             </div>
             <div className="pure-u-1 pure-u-md-1-5">
@@ -406,6 +434,9 @@ class Happiness extends React.Component {
                 currentContinent={currentContinent}
                 zScale={zScale}
                 useGrid={false}
+                handleCircleOver={this.handleCircleOver}
+                currentCountry={currentCountry}
+                linkHighlighting={false}
               />
             </div>
             <div className="pure-u-1 pure-u-md-1-5">
@@ -414,6 +445,9 @@ class Happiness extends React.Component {
                 currentContinent={currentContinent}
                 zScale={zScale}
                 useGrid={false}
+                handleCircleOver={this.handleCircleOver}
+                currentCountry={currentCountry}
+                linkHighlighting={false}
               />
             </div>
             <p>
@@ -427,6 +461,9 @@ class Happiness extends React.Component {
                 currentContinent={currentContinent}
                 zScale={zScale}
                 useGrid={false}
+                handleCircleOver={this.handleCircleOver}
+                currentCountry={currentCountry}
+                linkHighlighting={false}
               />
             </div>
             <div className="pure-u-1 pure-u-md-1-5">
@@ -435,6 +472,9 @@ class Happiness extends React.Component {
                 currentContinent={currentContinent}
                 zScale={zScale}
                 useGrid={false}
+                handleCircleOver={this.handleCircleOver}
+                currentCountry={currentCountry}
+                linkHighlighting={false}
               />
             </div>
             <div className="pure-u-1 pure-u-md-1-5">
@@ -443,12 +483,15 @@ class Happiness extends React.Component {
                 currentContinent={currentContinent}
                 zScale={zScale}
                 useGrid={false}
+                handleCircleOver={this.handleCircleOver}
+                currentCountry={currentCountry}
+                linkHighlighting={false}
               />
             </div>
           </div>
         )}
         <div className="pure-u-1">
-          <Scatterplot data={gini} className="test" zScale={zScale} />
+          <Scatterplot data={gini} zScale={zScale} />
         </div>
         <h4>GINI index</h4>
         <p>
@@ -474,6 +517,7 @@ class Happiness extends React.Component {
                 variableValues={barChartVariables}
                 active={activeBarChart}
               />
+              <Legend scale={zScale} legendClick={this.handleLegendClick} />
               <div className="pure-u-1">
                 <BarChart
                   data={gini}
