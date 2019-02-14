@@ -10,21 +10,10 @@ import { TooltipWithBounds } from "@vx/tooltip";
 import { withTooltip } from "@vx/tooltip";
 import { withParentSize } from "@vx/responsive";
 import { scaleLinear } from "d3-scale";
-import { max } from "d3";
+import { max, min } from "d3";
 import style from "./chloroplethMap.module.css";
 
 class ChloroplethMap extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      parentWidth: props.parentWidth
-    };
-  }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const { parentWidth } = nextProps;
-
-    return { parentWidth: parentWidth };
-  }
   handleMouseOver(event, datum) {
     const coords = localPoint(event.target.ownerSVGElement, event);
     this.props.showTooltip({
@@ -49,15 +38,17 @@ class ChloroplethMap extends React.Component {
       tooltipLeft,
       tooltipTop,
       tooltipOpen,
-      mapValue
+      mapValue,
+      parentWidth
     } = this.props;
-    const { parentWidth } = this.state;
+    console.log(data.y);
     const colorScale = scaleLinear()
-      .domain([3, max(data, d => d.y)])
+      .domain([min(data, d => d.y), max(data, d => d.y)])
       .range(["white", "orange"]);
 
     const valueMap = {};
     data.forEach(country => (valueMap[country.code] = country.y));
+    console.log(valueMap);
     return (
       <div className={style.wrapper}>
         <div className={style.content}>
