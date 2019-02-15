@@ -194,25 +194,6 @@ class Happiness extends React.Component {
       currentCountry,
       happyData
     } = this.state;
-    const {
-      happiness,
-      gini,
-      happyPlanet,
-      humanDevIndex,
-      Seda,
-      economicFreedom,
-      civilLiberties,
-      politicalRights
-    } = this.state.datasets;
-
-    const metricMap = {
-      HappyPlanet: happyPlanet,
-      HumanDevIndex: humanDevIndex,
-      Seda: Seda,
-      WorldHappiness: happiness,
-      Gini: gini,
-      EconomicFreedom: economicFreedom
-    };
 
     return (
       <Layout>
@@ -290,7 +271,8 @@ class Happiness extends React.Component {
         </p>
         {isPromiseResolved && (
           <div className={`pure-g ${style.wrapper}`}>
-            <div className="pure-u-1 pure-u-md-1-5">
+          <Legend scale={zScale} legendClick={this.handleLegendClick} />
+            <div className="pure-u-1-2 pure-u-md-1-3">
               <VxScatterplotWithSize
                 data={happyData}
                 xVar={"GDP Per Capita"}
@@ -303,7 +285,7 @@ class Happiness extends React.Component {
                 linkHighlighting={false}
               />
             </div>
-                        <div className="pure-u-1 pure-u-md-1-5">
+            <div className="pure-u-1-2 pure-u-md-1-3">
               <VxScatterplotWithSize
                 data={happyData}
                 xVar={"GDP Per Capita"}
@@ -316,7 +298,7 @@ class Happiness extends React.Component {
                 linkHighlighting={false}
               />
             </div>
-                        <div className="pure-u-1 pure-u-md-1-5">
+            <div className="pure-u-1-2 pure-u-md-1-3">
               <VxScatterplotWithSize
                 data={happyData}
                 xVar={"GDP Per Capita"}
@@ -329,7 +311,7 @@ class Happiness extends React.Component {
                 linkHighlighting={false}
               />
             </div>
-                        <div className="pure-u-1 pure-u-md-1-5">
+            <div className="pure-u-1-2 pure-u-md-1-3">
               <VxScatterplotWithSize
                 data={happyData}
                 xVar={"GDP Per Capita"}
@@ -342,7 +324,7 @@ class Happiness extends React.Component {
                 linkHighlighting={false}
               />
             </div>
-                        <div className="pure-u-1 pure-u-md-1-5">
+            <div className="pure-u-1-2 pure-u-md-1-3">
               <VxScatterplotWithSize
                 data={happyData}
                 xVar={"GDP Per Capita"}
@@ -360,7 +342,7 @@ class Happiness extends React.Component {
               are better. A similar correlation with GDP per capita can be seen
               for these metrics.
             </p>
-            <div className="pure-u-1 pure-u-md-1-5">
+            <div className="pure-u-1-2 pure-u-md-1-3">
               <VxScatterplotWithSize
                 data={happyData}
                 xVar={"GDP Per Capita"}
@@ -373,7 +355,7 @@ class Happiness extends React.Component {
                 linkHighlighting={false}
               />
             </div>
-            <div className="pure-u-1 pure-u-md-1-5">
+            <div className="pure-u-1-2 pure-u-md-1-3">
               <VxScatterplotWithSize
                 data={happyData}
                 xVar={"GDP Per Capita"}
@@ -386,7 +368,7 @@ class Happiness extends React.Component {
                 linkHighlighting={false}
               />
             </div>
-            <div className="pure-u-1 pure-u-md-1-5">
+            <div className="pure-u-1-2 pure-u-md-1-3">
               <VxScatterplotWithSize
                 data={happyData}
                 xVar={"GDP Per Capita"}
@@ -429,19 +411,12 @@ class Happiness extends React.Component {
         {isPromiseResolved && (
           <React.Fragment>
             <div className="pure-g">
-              <VariableForm
-                handleFieldSelect={this.handleVariableFieldSelect}
-                variableValues={metricVariables}
-                active={activeMetric}
-              />
-            </div>
-            <div className="pure-g">
-              <VariableForm
-                handleFieldSelect={this.handleVariableFieldSelect}
-                variableValues={barChartVariables}
-                active={activeBarChart}
-              />
-              <div className="pure-u-4-5">
+              <div className="pure-u-1">
+                <VariableForm
+                  handleFieldSelect={this.handleVariableFieldSelect}
+                  variableValues={barChartVariables}
+                  active={activeBarChart}
+                />
                 <BarChart
                   data={happyData}
                   xVar={"GINI Index"}
@@ -451,7 +426,7 @@ class Happiness extends React.Component {
                   zScale={zScale}
                 />
               </div>
-              <div className="pure-u-4-5">
+              <div className="pure-u-1">
                 <Scatterplot data={happyData} xVar={"GDP Per Capita"} yVar={"GINI Index"} zScale={zScale} />
               </div>
             </div>
