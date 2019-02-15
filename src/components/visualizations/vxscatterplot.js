@@ -115,7 +115,7 @@ class VxScatterplot extends React.Component {
         cy: yScale(d[`${yAxis}`]),
         x: `$${formatMoney(d[`${xAxis}`], 2)}`,
         y: d[`${yAxis}`],
-        color: zScale(d.continent),
+        color: zScale(d['Continent Name']),
         r: 3,
         key: d.name
       };
@@ -156,8 +156,7 @@ class VxScatterplot extends React.Component {
       circleSelection
         .transition()
         .duration(450)
-        .attr("fill", d => colorFunction(currentCountry, d
-          ))
+        .attr("fill", d => colorFunction(currentCountry, d))
         .attr("r", d => radiusFunction(currentCountry, d))
         .attr("strokeWidth", d => strokeWidthFunction(currentCountry, d));
     }

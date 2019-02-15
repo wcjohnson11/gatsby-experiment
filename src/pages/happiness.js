@@ -126,17 +126,16 @@ class Happiness extends React.Component {
             "Political Rights Score": cleanNumbers(country["political rights score"])
         }
       })
-      console.log('new', newHappy)
 
       happy.columns.push("Continent Code", "Continent Name");
-      const continentNames = [
-        "Africa",
-        "Asia",
-        "Europe",
-        "South America",
-        "North America",
-        "Oceania"
-      ];
+
+      const continentNames = newHappy.reduce((result, country) => {
+        const continentName = country["Continent Name"];
+        if (result.indexOf(continentName) < 0 && continentName) {
+          result.push(continentName);
+        }
+        return result;
+      } ,[])
 
       const zScale = scaleOrdinal({
         domain: continentNames,
@@ -436,7 +435,6 @@ class Happiness extends React.Component {
         </p>
         {isPromiseResolved && (
           <div className={`pure-g ${style.wrapper}`}>
-            <Legend scale={zScale} legendClick={this.handleLegendClick} />
             <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
                 data={happyData}
@@ -493,7 +491,7 @@ class Happiness extends React.Component {
               <VxScatterplotWithSize
                 data={happyData}
                 xAxis={"GDP Per Capita"}
-                yAxis={"GINI Index"}
+                yAxis={"Economic Freedom Score"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
@@ -511,7 +509,7 @@ class Happiness extends React.Component {
               <VxScatterplotWithSize
                 data={happyData}
                 xAxis={"GDP Per Capita"}
-                yAxis={"Economic Freedom Score"}
+                yAxis={"GINI Index"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
@@ -588,7 +586,6 @@ class Happiness extends React.Component {
                 variableValues={barChartVariables}
                 active={activeBarChart}
               />
-              <Legend scale={zScale} legendClick={this.handleLegendClick} />
               <div className="pure-u-4-5">
                 <BarChart
                   data={gini}
