@@ -1,4 +1,5 @@
 import React from "react";
+import style from './variableForm.module.css';
 
 class VariableForm extends React.Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class VariableForm extends React.Component {
     return (
       <label>
         Pick your measurement:
-        <select value={this.state.value} onChange={this.handleChange}>
+        <select value={this.state.value} onChange={this.handleChange} className={style.select}>
           {variableOptions}
         </select>
       </label>
