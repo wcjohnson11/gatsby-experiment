@@ -25,7 +25,7 @@ class BarChart extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { currentContinent, data, zScale, parentWidth, sortType, xVar, yVar } = nextProps;
-    const { sortType: prevSortType} = prevState;
+    const { sortType: prevSortType, bars: prevBars } = prevState;
     if (!data) return {};
 
     // Create Data Labels
