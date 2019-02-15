@@ -61,7 +61,7 @@ class Happiness extends React.Component {
         },
         {
           value: "EconomicFreedom",
-          label: "Overall Economic Freedom Score",
+          label: "Economic Freedom Score",
           description:
             "Rule of Law, Government Size, Regulatory Efficiency, Open Markets"
         }
@@ -99,30 +99,36 @@ class Happiness extends React.Component {
           country.continentName = result[0].Continent_Name;
           country.continentCode = result[0].Continent_Code;
         }
-
-        country["GDP  (billions PPP)"] = cleanNumbers(
-          country["GDP  (billions PPP)"]
-        );
-        country["GDP per capita (PPP)"] = cleanNumbers(
-          country["GDP per capita (PPP)"]
-        );
-        country["health expenditure  per person"] = cleanNumbers(
-          country["health expenditure  per person"]
-        );
-        country["population"] = cleanNumbers(country["population"]);
-        country["surface area (Km2)"] = cleanNumbers(
-          country["surface area (Km2)"]
-        );
-        country["GINI index"] = cleanNumbers(country["GINI index"]);
-        country["world happiness report score"] = cleanNumbers(
-          country["world happiness report score"]
-        );
       });
 
+      const newHappy = happy.map(country => {
+        return {
+          "name": country.indicator,
+          "code": country["ISO Number"],
+          "Continent Name": country.continentName,
+          "Continent Code": country.continentCode,
+          "GDP" : cleanNumbers(
+          country["GDP  (billions PPP)"]),
+          "GDP Per Capita": cleanNumbers(
+          country["GDP per capita (PPP)"]),
+          "GDP Annual Growth(2018)": country["GDP growth (annual %"],
+          "Health Expenditure Per Person": cleanNumbers(
+          country["health expenditure  per person"]),
+          "Population": cleanNumbers(country["population"]),
+          "GINI Index": cleanNumbers(country["GINI index"]),
+          "World Happiness Report Score": cleanNumbers(
+          country["world happiness report score"]),
+            "Happy Planet Index": cleanNumbers(country["happy planet index"]),
+            "Human Development Index": cleanNumbers(country["human development index"]),
+            "Sustainable Economic Development Index": cleanNumbers(country["sustainable economic development assessment (SEDA)"]),
+            "Economic Freedom Score": cleanNumbers(country["overall economic freedom score"]),
+            "Civil Liberties Score": cleanNumbers(country["civil liberties score"]),
+            "Political Rights Score": cleanNumbers(country["political rights score"])
+        }
+      })
+      console.log('new', newHappy)
+
       happy.columns.push("Continent Code", "Continent Name");
-      const happySub5Mil = happy.filter(
-        country => country.population > 5000000
-      );
       const continentNames = [
         "Africa",
         "Asia",
@@ -254,7 +260,7 @@ class Happiness extends React.Component {
       CivilLiberties.x = "GDP per Capita";
       CivilLiberties.y = "Civil Liberties Score";
 
-      const PoliticalRights = happySub5Mil.reduce((result, d) => {
+      const PoliticalRights = happy.reduce((result, d) => {
         if (
           d["political rights score"] !== "FALSE" &&
           d["GDP per capita (PPP)"]
@@ -277,6 +283,7 @@ class Happiness extends React.Component {
         categoryInfo: categoryInfo,
         zScale: zScale,
         isPromiseResolved: true,
+        happyData: newHappy,
         datasets: {
           happiness: worldHappinessData,
           gini: GINIData,
@@ -330,7 +337,8 @@ class Happiness extends React.Component {
       activeMetric,
       barChartVariables,
       activeBarChart,
-      currentCountry
+      currentCountry,
+      happyData
     } = this.state;
     const {
       happiness,
@@ -431,56 +439,66 @@ class Happiness extends React.Component {
             <Legend scale={zScale} legendClick={this.handleLegendClick} />
             <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
-                data={happyPlanet}
+                data={happyData}
+                xAxis={"GDP Per Capita"}
+                yAxis={"Happy Planet Index"}
+                currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
-                useGrid={false}
                 handleCircleOver={this.handleCircleOver}
-                currentCountry={currentCountry}
+                useGrid={false}
                 linkHighlighting={false}
               />
             </div>
-            <div className="pure-u-1 pure-u-md-1-5">
+                        <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
-                data={humanDevIndex}
+                data={happyData}
+                xAxis={"GDP Per Capita"}
+                yAxis={"Human Development Index"}
+                currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
-                useGrid={false}
                 handleCircleOver={this.handleCircleOver}
-                currentCountry={currentCountry}
+                useGrid={false}
                 linkHighlighting={false}
               />
             </div>
-            <div className="pure-u-1 pure-u-md-1-5">
+                        <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
-                data={Seda}
+                data={happyData}
+                xAxis={"GDP Per Capita"}
+                yAxis={"Sustainable Economic Development Index"}
+                currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
-                useGrid={false}
                 handleCircleOver={this.handleCircleOver}
-                currentCountry={currentCountry}
+                useGrid={false}
                 linkHighlighting={false}
               />
             </div>
-            <div className="pure-u-1 pure-u-md-1-5">
+                        <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
-                data={happiness}
+                data={happyData}
+                xAxis={"GDP Per Capita"}
+                yAxis={"Happy Planet Index"}
+                currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
-                useGrid={false}
                 handleCircleOver={this.handleCircleOver}
-                currentCountry={currentCountry}
+                useGrid={false}
                 linkHighlighting={false}
               />
             </div>
-            <div className="pure-u-1 pure-u-md-1-5">
+                        <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
-                data={economicFreedom}
+                data={happyData}
+                xAxis={"GDP Per Capita"}
+                yAxis={"GINI Index"}
+                currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
-                useGrid={false}
                 handleCircleOver={this.handleCircleOver}
-                currentCountry={currentCountry}
+                useGrid={false}
                 linkHighlighting={false}
               />
             </div>
@@ -491,34 +509,40 @@ class Happiness extends React.Component {
             </p>
             <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
-                data={gini}
+                data={happyData}
+                xAxis={"GDP Per Capita"}
+                yAxis={"Economic Freedom Score"}
+                currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
-                useGrid={false}
                 handleCircleOver={this.handleCircleOver}
-                currentCountry={currentCountry}
+                useGrid={false}
                 linkHighlighting={false}
               />
             </div>
             <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
-                data={civilLiberties}
+                data={happyData}
+                xAxis={"GDP Per Capita"}
+                yAxis={"Civil Liberties Score"}
+                currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
-                useGrid={false}
                 handleCircleOver={this.handleCircleOver}
-                currentCountry={currentCountry}
+                useGrid={false}
                 linkHighlighting={false}
               />
             </div>
             <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
-                data={politicalRights}
+                data={happyData}
+                xAxis={"GDP Per Capita"}
+                yAxis={"Political Rights Score"}
+                currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
-                useGrid={false}
                 handleCircleOver={this.handleCircleOver}
-                currentCountry={currentCountry}
+                useGrid={false}
                 linkHighlighting={false}
               />
             </div>
