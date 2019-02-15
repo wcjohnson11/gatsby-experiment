@@ -4,8 +4,6 @@ import Layout from "../components/layout";
 import VariableForm from "../components/variableForm";
 import VxScatterplotWithSize from "../components/visualizations/vxscatterplot";
 import Scatterplot from "../components/visualizations/scatterplot";
-import ChloroplethMapWithSize from "../components/visualizations/chloroplethMap";
-import D3Map from "../components/visualizations/D3Map";
 import Legend from "../components/visualizations/legend";
 import { scaleOrdinal } from "@vx/scale";
 import style from "./happiness.module.css";
@@ -559,15 +557,6 @@ class Happiness extends React.Component {
                 variableValues={metricVariables}
                 active={activeMetric}
               />
-              <div className="pure-u-1">
-                <ChloroplethMapWithSize
-                  data={metricMap[activeMetric]}
-                  mapValue={activeMetric}
-                />
-              </div>
-              <div className="pure-u-1">
-                <D3Map data={metricMap[activeMetric]} mapValue={activeMetric} />
-              </div>
             </div>
             <div className="pure-g">
               <VariableForm
