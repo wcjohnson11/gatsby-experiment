@@ -46,7 +46,9 @@ class BarChart extends React.Component {
       return false;
     })
     
-    if (prevSortType !== sortType) {
+    // If sort types have changed or there is no previous sort type
+    // Sort data according to sortType
+    if (prevSortType !== sortType && !prevSortType) {
       var sortedData = filteredData.sort((a, b) => {
         if (sortType === "lowHigh") {
           if (a[xVar] < b[xVar]) return 1;
@@ -75,7 +77,7 @@ class BarChart extends React.Component {
       .domain([0, dataXMax])
       .range([margin.left, parentWidth - margin.right]);
 
-      const barData = sortedData || filteredData;
+    const barData = sortedData || filteredData;
     // Get array of names in dataset
     const dataNames = barData.reduce((result, d) => {
       result.push(d[yVar]);

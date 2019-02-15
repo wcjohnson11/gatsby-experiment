@@ -73,7 +73,7 @@ class Happiness extends React.Component {
         { value: "continent", label: "Group by Continent" },
         { value: "alphabetical", label: "Alphabetical" }
       ],
-      activeBarChart: "lowhigh"
+      activeBarChart: "lowHigh"
     };
 
     this.handleCircleOver = this.handleCircleOver.bind(this);
@@ -142,157 +142,12 @@ class Happiness extends React.Component {
         range: colors
       });
 
-      // Set X and Y values for world happiness
-      const worldHappinessData = happy.reduce((result, d) => {
-        if (d["world happiness report score"] && d["GDP per capita (PPP)"]) {
-          result.push({
-            name: d.indicator,
-            code: d["ISO Number"],
-            y: d["world happiness report score"],
-            x: d["GDP per capita (PPP)"],
-            continent: d.continentName
-          });
-        }
-        return result;
-      }, []);
-      worldHappinessData.x = "GDP per Capita";
-      worldHappinessData.y = "World Happiness Report Score";
-      const GINIData = happy.reduce((result, d) => {
-        if (d["GINI index"] && d["GDP per capita (PPP)"]) {
-          result.push({
-            name: d.indicator,
-            code: d["ISO Number"],
-            y: d["GINI index"],
-            x: d["GDP per capita (PPP)"],
-            continent: d.continentName
-          });
-        }
-        return result;
-      }, []);
-      GINIData.x = "GDP per Capita";
-      GINIData.y = "GINI index";
-
-      const happyPlanet = happy.reduce((result, d) => {
-        if (d["happy planet index"] !== "FALSE" && d["GDP per capita (PPP)"]) {
-          result.push({
-            name: d.indicator,
-            code: d["ISO Number"],
-            y: d["happy planet index"],
-            x: d["GDP per capita (PPP)"],
-            continent: d.continentName
-          });
-        }
-        return result;
-      }, []);
-      happyPlanet.x = "GDP per Capita";
-      happyPlanet.y = "happy planet index";
-
-      const humanDevIndex = happy.reduce((result, d) => {
-        if (
-          d["human development index"] !== "FALSE" &&
-          d["GDP per capita (PPP)"]
-        ) {
-          result.push({
-            name: d.indicator,
-            code: d["ISO Number"],
-            y: d["human development index"],
-            x: d["GDP per capita (PPP)"],
-            continent: d.continentName
-          });
-        }
-        return result;
-      }, []);
-      humanDevIndex.x = "GDP per Capita";
-      humanDevIndex.y = "Human Development Index";
-
-      const Seda = happy.reduce((result, d) => {
-        if (
-          d["sustainable economic development assessment (SEDA)"] !== "FALSE" &&
-          d["GDP per capita (PPP)"]
-        ) {
-          result.push({
-            name: d.indicator,
-            code: d["ISO Number"],
-            y: d["sustainable economic development assessment (SEDA)"],
-            x: d["GDP per capita (PPP)"],
-            continent: d.continentName
-          });
-        }
-        return result;
-      }, []);
-      Seda.x = "GDP per Capita";
-      Seda.y = "SEDA";
-
-      const EconomicFreedom = happy.reduce((result, d) => {
-        if (
-          d["overall economic freedom score"] !== "FALSE" &&
-          d["GDP per capita (PPP)"]
-        ) {
-          result.push({
-            name: d.indicator,
-            code: d["ISO Number"],
-            y: d["overall economic freedom score"],
-            x: d["GDP per capita (PPP)"],
-            continent: d.continentName
-          });
-        }
-        return result;
-      }, []);
-      EconomicFreedom.x = "GDP per Capita";
-      EconomicFreedom.y = "Overall Economic Freedom Score";
-
-      const CivilLiberties = happy.reduce((result, d) => {
-        if (
-          d["civil liberties score"] !== "FALSE" &&
-          d["GDP per capita (PPP)"]
-        ) {
-          result.push({
-            name: d.indicator,
-            code: d["ISO Number"],
-            y: d["civil liberties score"],
-            x: d["GDP per capita (PPP)"],
-            continent: d.continentName
-          });
-        }
-        return result;
-      }, []);
-      CivilLiberties.x = "GDP per Capita";
-      CivilLiberties.y = "Civil Liberties Score";
-
-      const PoliticalRights = happy.reduce((result, d) => {
-        if (
-          d["political rights score"] !== "FALSE" &&
-          d["GDP per capita (PPP)"]
-        ) {
-          result.push({
-            name: d.indicator,
-            code: d["ISO Number"],
-            y: d["political rights score"],
-            x: d["GDP per capita (PPP)"],
-            continent: d.continentName
-          });
-        }
-        return result;
-      }, []);
-      PoliticalRights.x = "GDP per Capita";
-      PoliticalRights.y = "Political Rights";
-
       this.setState({
         categories: happy.columns,
         categoryInfo: categoryInfo,
         zScale: zScale,
         isPromiseResolved: true,
         happyData: newHappy,
-        datasets: {
-          happiness: worldHappinessData,
-          gini: GINIData,
-          happyPlanet: happyPlanet,
-          humanDevIndex: humanDevIndex,
-          economicFreedom: EconomicFreedom,
-          civilLiberties: CivilLiberties,
-          politicalRights: PoliticalRights,
-          Seda: Seda
-        },
         metricVariables: this.state.metricVariables,
         activeMetric: this.state.activeMetric,
         barChartVariables: this.state.barChartVariables,
@@ -438,8 +293,8 @@ class Happiness extends React.Component {
             <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
                 data={happyData}
-                xAxis={"GDP Per Capita"}
-                yAxis={"Happy Planet Index"}
+                xVar={"GDP Per Capita"}
+                yVar={"Happy Planet Index"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
@@ -451,8 +306,8 @@ class Happiness extends React.Component {
                         <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
                 data={happyData}
-                xAxis={"GDP Per Capita"}
-                yAxis={"Human Development Index"}
+                xVar={"GDP Per Capita"}
+                yVar={"Human Development Index"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
@@ -464,8 +319,8 @@ class Happiness extends React.Component {
                         <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
                 data={happyData}
-                xAxis={"GDP Per Capita"}
-                yAxis={"Sustainable Economic Development Index"}
+                xVar={"GDP Per Capita"}
+                yVar={"Sustainable Economic Development Index"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
@@ -477,8 +332,8 @@ class Happiness extends React.Component {
                         <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
                 data={happyData}
-                xAxis={"GDP Per Capita"}
-                yAxis={"Happy Planet Index"}
+                xVar={"GDP Per Capita"}
+                yVar={"Happy Planet Index"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
@@ -490,8 +345,8 @@ class Happiness extends React.Component {
                         <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
                 data={happyData}
-                xAxis={"GDP Per Capita"}
-                yAxis={"Economic Freedom Score"}
+                xVar={"GDP Per Capita"}
+                yVar={"Economic Freedom Score"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
@@ -508,8 +363,8 @@ class Happiness extends React.Component {
             <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
                 data={happyData}
-                xAxis={"GDP Per Capita"}
-                yAxis={"GINI Index"}
+                xVar={"GDP Per Capita"}
+                yVar={"GINI Index"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
@@ -521,8 +376,8 @@ class Happiness extends React.Component {
             <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
                 data={happyData}
-                xAxis={"GDP Per Capita"}
-                yAxis={"Civil Liberties Score"}
+                xVar={"GDP Per Capita"}
+                yVar={"Civil Liberties Score"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
@@ -534,8 +389,8 @@ class Happiness extends React.Component {
             <div className="pure-u-1 pure-u-md-1-5">
               <VxScatterplotWithSize
                 data={happyData}
-                xAxis={"GDP Per Capita"}
-                yAxis={"Political Rights Score"}
+                xVar={"GDP Per Capita"}
+                yVar={"Political Rights Score"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 zScale={zScale}
@@ -588,14 +443,16 @@ class Happiness extends React.Component {
               />
               <div className="pure-u-4-5">
                 <BarChart
-                  data={gini}
+                  data={happyData}
+                  xVar={"GINI Index"}
+                  yVar={"name"}
                   sortType={activeBarChart}
                   currentContinent={currentContinent}
                   zScale={zScale}
                 />
               </div>
               <div className="pure-u-4-5">
-                <Scatterplot data={gini} zScale={zScale} />
+                <Scatterplot data={happyData} xVar={"GDP Per Capita"} yVar={"GINI Index"} zScale={zScale} />
               </div>
             </div>
           </React.Fragment>
