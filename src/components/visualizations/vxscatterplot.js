@@ -17,7 +17,7 @@ import style from "./scatterplot.module.css";
 
 const margin = 30;
 
-const colorFunction = (currentCountry, d) => {
+const colorFunction = (d, currentCountry) => {
   if (currentCountry) {
     if (currentCountry === d.key) {
       return d.color;
@@ -29,19 +29,25 @@ const colorFunction = (currentCountry, d) => {
   }
 };
 
-const radiusFunction = (currentCountry, d) => {
-  if (currentCountry) {
-    if (currentCountry === d.key) {
-      return 4;
+const radiusFunction = (d, currentCountry, currentContinent) => {
+  // If there's a current continent that doesn't match the circle return 0
+  // Else, return normal radius value
+  if (currentContinent && currentContinent !== d.continent){
+    return 0;
+  } else {
+    if (currentCountry) {
+      if (currentCountry === d.key) {
+        return 4;
+      } else {
+        return d.r;
+      }
     } else {
       return d.r;
     }
-  } else {
-    return d.r;
   }
 };
 
-const strokeWidthFunction = (currentCountry, d) => {
+const strokeWidthFunction = (d, currentCountry) => {
   if (currentCountry) {
     if (currentCountry === d.key) {
       return 2;
@@ -69,58 +75,44 @@ class VxScatterplot extends React.Component {
       data,
       parentWidth,
       zScale,
-      currentContinent,
-      currentCountry,
-      xAxis,
-      yAxis
+      xVar,
+      yVar
     } = nextProps;
 
     const parentHeight = parentWidth;
     if (!data) return {};
 
     const labels = {
-      x: xAxis,
-      y: yAxis
+      x: xVar,
+      y: yVar
     };
     
     const xScale = scaleLinear({
-      domain: [0, max(data, d => d[`${xAxis}`])],
+      domain: [0, max(data, d => d[xVar])],
       range: [margin, parentWidth - margin - margin]
     });
 
     const yScale = scaleLinear({
-      domain: [0, max(data, d => d[`${yAxis}`])],
+      domain: [0, max(data, d => d[yVar])],
       range: [parentHeight - margin, margin]
     });
 
     const circles = data.filter(d => {
       // return if d has valid y and x values
-      return d[`${yAxis}`] && d[`${xAxis}`]
-    }).filter(d => {
-      // if currentContinent, return if it matches
-      // should this belong elsewhere?
-      // Refactor to use d3 transitions?
-      if (currentContinent) {
-        if (currentContinent === d.continent) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return true
-      }
+      return d[yVar] && d[xVar]
     }).map(d => {
       return {
-        cx: xScale(d[`${xAxis}`]),
-        cy: yScale(d[`${yAxis}`]),
-        x: `$${formatMoney(d[`${xAxis}`], 2)}`,
-        y: d[`${yAxis}`],
+        cx: xScale(d[xVar]),
+        cy: yScale(d[yVar]),
+        x: `$${formatMoney(d[xVar], 2)}`,
+        y: d[yVar],
         color: zScale(d['Continent Name']),
         r: 3,
-        key: d.name
+        key: d.name,
+        continent: d['Continent Name']
       };
     });
-
+  
     return {
       labels,
       circles,
@@ -137,29 +129,26 @@ class VxScatterplot extends React.Component {
       .selectAll("circle")
       .data(circles);
 
-    if (circleSelection.attr) {
-      circleSelection
-        .attr("fill", d => d.color)
-        .attr("r", d => d.r)
-        .attr("strokeWidth", d => 1);
-    }
+    circleSelection
+      .attr("fill", d => d.color)
+      .attr("r", d => d.r)
+      .attr("strokeWidth", d => 1);
   }
 
   componentDidUpdate() {
-    const { circles, linkHighlighting } = this.state;
-    const { currentCountry } = this.props;
-    if (linkHighlighting) {
-      const circleSelection = select(this.circleRef.current)
+    const { circles } = this.state;
+    const { currentCountry, currentContinent } = this.props;
+
+    const circleSelection = select(this.circleRef.current)
         .selectAll("circle")
         .data(circles);
 
-      circleSelection
-        .transition()
-        .duration(450)
-        .attr("fill", d => colorFunction(currentCountry, d))
-        .attr("r", d => radiusFunction(currentCountry, d))
-        .attr("strokeWidth", d => strokeWidthFunction(currentCountry, d));
-    }
+    circleSelection
+      .transition()
+      .duration(450)
+      .attr("fill", d => colorFunction(d, currentCountry))
+      .attr("r", d => radiusFunction(d, currentCountry, currentContinent))
+      .attr("strokeWidth", d => strokeWidthFunction(d, currentCountry));
   }
 
   handleMouseOver(event, datum) {
