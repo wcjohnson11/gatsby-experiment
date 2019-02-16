@@ -3,6 +3,7 @@ import { csv } from "d3";
 import Layout from "../components/layout";
 import VariableForm from "../components/variableForm";
 import VxScatterplotWithSize from "../components/visualizations/vxscatterplot";
+import D3Map from '../components/visualizations/d3map';
 import Scatterplot from "../components/visualizations/scatterplot";
 import Legend from "../components/visualizations/legend";
 import { scaleOrdinal } from "@vx/scale";
@@ -34,39 +35,39 @@ class Happiness extends React.Component {
       isPromiseResolved: false,
       metricVariables: [
         {
-          value: "HappyPlanet",
+          value: "Happy Planet Index",
           label: "Happy Planet Index",
           description:
             "Wellbeing, Life Expectancy, Inequality, Ecological Footprint"
         },
         {
-          value: "HumanDevIndex",
+          value: "Human Development Index",
           label: "Human Development Index",
           description: "Healthy Life, Education, Standard of Living"
         },
         {
-          value: "Seda",
+          value: "Sustainable Economic Development Index",
           label: "Sustainable Economic Development Index",
           description: "Sustainability, Economics, Investments"
         },
         {
-          value: "WorldHappiness",
+          value: "World Happiness Report Score",
           label: "World Happiness Report",
           description: "Quality of Life Survey"
         },
         {
-          value: "Gini",
+          value: "GINI Index",
           label: "GINI Index",
           description: "Inequality in Distribution of Family Income"
         },
         {
-          value: "EconomicFreedom",
+          value: "Economic Freedom Score",
           label: "Economic Freedom Score",
           description:
             "Rule of Law, Government Size, Regulatory Efficiency, Open Markets"
         }
       ],
-      activeMetric: "Gini",
+      activeMetric: "GINI Index",
       barChartVariables: [
         { value: "lowHigh", label: "Low to High" },
         { value: "highLow", label: "High to Low" },
@@ -411,6 +412,12 @@ class Happiness extends React.Component {
         {isPromiseResolved && (
           <React.Fragment>
             <div className="pure-g">
+              <div className="pure-u-1">
+                <D3Map
+                  data={happyData}
+                  mapMetric={activeMetric}
+                />
+              </div>
               <div className="pure-u-1">
                 <VariableForm
                   handleFieldSelect={this.handleVariableFieldSelect}
