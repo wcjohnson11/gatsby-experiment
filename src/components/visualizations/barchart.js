@@ -24,7 +24,15 @@ class BarChart extends React.Component {
   yAxis = d3.axisLeft();
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { currentContinent, data, zScale, parentWidth, sortType, xVar, yVar } = nextProps;
+    const {
+      currentContinent,
+      data,
+      zScale,
+      parentWidth,
+      sortType,
+      xVar,
+      yVar
+    } = nextProps;
     const { sortType: prevSortType } = prevState;
     if (!data) return {};
 
@@ -44,8 +52,8 @@ class BarChart extends React.Component {
         return true;
       }
       return false;
-    })
-    
+    });
+
     // If sort types have changed or there is no previous sort type
     // Sort data according to sortType
     if (prevSortType !== sortType && !prevSortType) {
@@ -60,8 +68,12 @@ class BarChart extends React.Component {
           if (a.name < b.name) return 1;
           if (a.name > b.name) return -1;
         } else if (sortType === "continent") {
-          if (a['Continent Name'] < b['Continent Name']) return 1;
-          if (a['Continent Name'] > b['Continent Name']) return -1;
+          if (a["Continent Name"] === b["Continent Name"]) {
+            if (a[xVar] < b[xVar]) return 1;
+            if (a[xVar] > b[xVar]) return -1;
+          }
+          if (a["Continent Name"] < b["Continent Name"]) return 1;
+          if (a["Continent Name"] > b["Continent Name"]) return -1;
         }
         return 0;
       });
@@ -69,7 +81,7 @@ class BarChart extends React.Component {
 
     // Set Height of Div according to datalength
     const formattedHeight = filteredData.length * 15;
-    
+
     // Map the xScale to [0,Y Value max]
     const dataXMax = d3.max(filteredData, d => d[xVar]);
     const xScale = d3
@@ -163,7 +175,7 @@ class BarChart extends React.Component {
       tooltipLeft,
       tooltipOpen,
       tooltipTop,
-      hideTooltip,
+      hideTooltip
     } = this.props;
     const { dataMedian, formattedHeight, parentWidth, xScale } = this.state;
     return (
