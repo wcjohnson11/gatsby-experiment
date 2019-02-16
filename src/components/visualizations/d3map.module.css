@@ -1,0 +1,16 @@
+.countryShapes:hover {
+    filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
+}
+
+
+.countryShapes > text {
+    fill: black;
+    font-size: 12px;
+    font-family: sans-serif;
+}
+
+.countryShapes > rect {
+    fill: yellow;
+    stroke: blue;
+    filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
+}
