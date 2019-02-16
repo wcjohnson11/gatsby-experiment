@@ -2,28 +2,28 @@ import React from "react";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
 import { withParentSize } from "@vx/responsive";
-import style from './d3map.module.css';
+import style from "./d3map.module.css";
 import topology from "../../../static/world-topology.json";
 
 // Color function for updating topoCountries
 const colorFunction = (id, data, color, mapMetric) => {
   const matchedCountry = data.find(country => {
-    return country.code === id
-  })
+    return country.code === id;
+  });
 
   if (matchedCountry && matchedCountry[mapMetric]) {
     return color(matchedCountry[mapMetric]);
   } else {
     return "#eee";
   }
-}
+};
 
 // Text function for updating text in the hover
 const textFunction = (id, data) => {
-  const text = data.find(country => country.code === id)
+  const text = data.find(country => country.code === id);
   if (text) return text.name;
-  return 'Unknown';
-}
+  return "Unknown";
+};
 
 class D3Map extends React.Component {
   constructor(props) {
@@ -41,8 +41,13 @@ class D3Map extends React.Component {
     const height = parentWidth * 0.75;
 
     // Create world countries object
-    const topoCountries = topojson.feature(topology, topology.objects.countries).features;
-    const mesh = topojson.mesh(topology, topology.objects.countries, (a, b) => a !== b)
+    const topoCountries = topojson.feature(topology, topology.objects.countries)
+      .features;
+    const mesh = topojson.mesh(
+      topology,
+      topology.objects.countries,
+      (a, b) => a !== b
+    );
 
     // Declare Projection
     const projection = d3
@@ -55,7 +60,7 @@ class D3Map extends React.Component {
     const color = d3
       .scaleLinear()
       .domain(d3.extent(data, d => d[mapMetric]))
-      .range(['white', 'orange']);
+      .range(["white", "orange"]);
 
     // Declare X Scale
     const xScale = d3
@@ -116,29 +121,26 @@ class D3Map extends React.Component {
       .append("path")
       .datum({ type: "Sphere" })
       .attr("fill", "lightblue")
-      .attr("fill-rule", 'nonzero')
+      .attr("fill-rule", "nonzero")
       .attr("stroke", "#ccc")
       .attr("stroke-linejoin", "round")
       .attr("d", geoPath);
 
     // Add Country Features
-    const features = d3.select(this.svgRef.current)
-      .append('g')
+    const features = d3
+      .select(this.svgRef.current)
+      .append("g")
       .selectAll("path")
       .data(topoCountries)
       .enter()
       .append("path")
       .classed(`mapValues ${style.countryShapes}`, true)
-      .attr("fill", (d) => colorFunction(d.id, data, color, mapMetric))
-      .attr("d", geoPath)
+      .attr("fill", d => colorFunction(d.id, data, color, mapMetric))
+      .attr("d", geoPath);
 
     // Append text label
-    features.append("rect")
-    features.append("title")
-      .text(d => textFunction(d.id, data))
-
-
-
+    features.append("rect");
+    features.append("title").text(d => textFunction(d.id, data));
 
     // Add Country Mesh
     d3.select(this.svgRef.current)
@@ -148,7 +150,6 @@ class D3Map extends React.Component {
       .attr("stroke", "white")
       .attr("stroke-linejoin", "round")
       .attr("d", geoPath);
-
   }
 
   componentDidUpdate() {
@@ -167,7 +168,7 @@ class D3Map extends React.Component {
     d3.selectAll(".mapValues")
       .data(topoCountries)
       .transition()
-      .attr("fill", (d) => colorFunction(d.id, data, color, mapMetric))
+      .attr("fill", d => colorFunction(d.id, data, color, mapMetric));
 
     // Update Caption
     d3.select(".caption").text(`${mapMetric}`);
