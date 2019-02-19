@@ -7,6 +7,14 @@
     height: 2em;
 }
 
+.a {
+    all: initial;
+}
+
+.a > * {
+    all: unset;
+}
+
 .icon {
     margin-right: 2.5em;
     margin-left: 2.5em;
