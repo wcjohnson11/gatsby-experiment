@@ -1,6 +1,6 @@
-import React from "react"
-import { graphql, Link, StaticQuery } from "gatsby"
-import styles from "./header.module.css"
+import React from "react";
+import { graphql, Link, StaticQuery } from "gatsby";
+import styles from "./header.module.css";
 
 export default () => (
   <StaticQuery
@@ -12,13 +12,13 @@ export default () => (
           }
         }
       }
-    `
-  }
-  render={data => (
-
-    <div className={styles.header}>
-      <Link to="/" className={styles.headerTitle}>{data.site.siteMetadata.title}</Link>
-    </div>
-  )}
+    `}
+    render={data => (
+      <div className={styles.header}>
+        <Link to="/" className={styles.headerTitle}>
+          {data.site.siteMetadata.title}
+        </Link>
+      </div>
+    )}
   />
 );
