@@ -1,0 +1,32 @@
+.title {
+    text-align: center;
+}
+
+.title > h1 {
+    margin-bottom: .2em;
+}
+
+.svg {
+    display: flex;
+    justify-content: center;
+}
+
+.circle {
+    filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
+}
+
+.projects {
+    height: 40vh;
+}
+
+.blog {
+    height: 40vh;
+}
+
+.contentColumns {
+    composes: pure-g from '../components/pure.css';
+}
+
+.contentColumns > div > h3 {
+    text-align: center;
+}
