@@ -49,94 +49,100 @@ class Happiness extends React.Component {
   }
 
   componentDidMount() {
-    Promise.all([csv("countrycodes.csv"), csv("happy2.csv")]).then(allData => {
-      // Get countrycodes data
-      const countryCodes = allData[0];
-      // Get happy data
-      const happy = allData[1];
+    Promise.all([csv("countrycodes.csv"), csv("happy2.csv")])
+      .then(allData => {
+        // Get countrycodes data
+        const countryCodes = allData[0];
+        // Get happy data
+        const happy = allData[1];
 
-      // Get column Info for happiness dataset
-      const columnInfo = [];
-      for (var i = 0; i < 4; i++) {
-        columnInfo.push(happy.shift());
-      }
-
-      // Add Country data to happiness data on ISO Country Code
-      happy.forEach(country => {
-        const result = countryCodes.filter(code => {
-          return code.Three_Letter_Country_Code === country["ISO Country Code"];
-        });
-        if (result[0]) {
-          country["Continent Name"] = result[0].Continent_Name;
-          country["Continent Code"] = result[0].Continent_Code;
+        // Get column Info for happiness dataset
+        const columnInfo = [];
+        for (var i = 0; i < 4; i++) {
+          columnInfo.push(happy.shift());
         }
-      });
 
-      // Clean data for visualization components
-      const newHappy = happy.map(country => {
-        const newCountryData = Object.keys(country).reduce((result, key) => {
-          if (
-            key === "name" ||
-            key === "code" ||
-            key === "ISO Country Code" ||
-            key === "Continent Name" ||
-            key === "Continent Code"
-          ) {
-            result[key] = country[key];
-          } else {
-            result[key] = cleanNumbers(country[key]);
+        // Add Country data to happiness data on ISO Country Code
+        happy.forEach(country => {
+          const result = countryCodes.filter(code => {
+            return (
+              code.Three_Letter_Country_Code === country["ISO Country Code"]
+            );
+          });
+          if (result[0]) {
+            country["Continent Name"] = result[0].Continent_Name;
+            country["Continent Code"] = result[0].Continent_Code;
+          }
+        });
+
+        // Clean data for visualization components
+        const newHappy = happy.map(country => {
+          const newCountryData = Object.keys(country).reduce((result, key) => {
+            if (
+              key === "name" ||
+              key === "code" ||
+              key === "ISO Country Code" ||
+              key === "Continent Name" ||
+              key === "Continent Code"
+            ) {
+              result[key] = country[key];
+            } else {
+              result[key] = cleanNumbers(country[key]);
+            }
+            return result;
+          }, {});
+
+          return newCountryData;
+        });
+
+        // Create list of columns for variable Forms
+        // Add information to columns
+        const columns = happy.columns
+          .filter(
+            column =>
+              column !== "name" &&
+              column !== "code" &&
+              column !== "ISO Country Code" &&
+              column !== "Continent Name" &&
+              column !== "Continent Code"
+          )
+          .map(column => {
+            return {
+              name: column,
+              source: columnInfo[0][column],
+              url: columnInfo[1][column],
+              description: columnInfo[2][column]
+            };
+          });
+
+        // Get list of Continent Names for color scale
+        const continentNames = newHappy.reduce((result, country) => {
+          const continentName = country["Continent Name"];
+          if (result.indexOf(continentName) < 0 && continentName) {
+            result.push(continentName);
           }
           return result;
-        }, {});
+        }, []);
 
-        return newCountryData;
-      });
-
-      // Create list of columns for variable Forms
-      // Add information to columns
-      const columns = happy.columns
-        .filter(
-          column =>
-            column !== "name" &&
-            column !== "code" &&
-            column !== "ISO Country Code" &&
-            column !== "Continent Name" &&
-            column !== "Continent Code"
-        )
-        .map(column => {
-          return {
-            name: column,
-            source: columnInfo[0][column],
-            url: columnInfo[1][column],
-            description: columnInfo[2][column]
-          };
+        // Create ColorScale
+        const colorScale = scaleOrdinal({
+          domain: continentNames,
+          range: colors
         });
 
-      // Get list of Continent Names for color scale
-      const continentNames = newHappy.reduce((result, country) => {
-        const continentName = country["Continent Name"];
-        if (result.indexOf(continentName) < 0 && continentName) {
-          result.push(continentName);
-        }
-        return result;
-      }, []);
-
-      // Create ColorScale
-      const colorScale = scaleOrdinal({
-        domain: continentNames,
-        range: colors
+        this.setState({
+          colorScale: colorScale,
+          isPromiseResolved: true,
+          happyData: newHappy,
+          metricVariables: columns,
+          currentMetric: this.state.currentMetric,
+          barChartVariables: this.state.barChartVariables,
+          currentBarChart: this.state.currentBarChart
+        });
+      })
+      .catch(err => {
+        console.log("woops", err);
       });
-
-      this.setState({
-        colorScale: colorScale,
-        isPromiseResolved: true,
-        happyData: newHappy,
-        metricVariables: columns,
-        currentMetric: this.state.currentMetric,
-        barChartVariables: this.state.barChartVariables,
-        currentBarChart: this.state.currentBarChart
-      });
-    });
   }
 
   handleCircleOver(country) {
