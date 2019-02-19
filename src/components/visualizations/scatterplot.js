@@ -22,7 +22,7 @@ class Scatterplot extends React.Component {
     const {
       data,
       handleMouseOver,
-      zScale,
+      colorScale,
       parentWidth,
       xVar,
       yVar
@@ -61,7 +61,7 @@ class Scatterplot extends React.Component {
           cy: yScale(d[yVar]),
           y: d[yVar],
           key: d.name,
-          fill: zScale(d["Continent Name"])
+          fill: colorScale(d["Continent Name"])
         };
       });
 

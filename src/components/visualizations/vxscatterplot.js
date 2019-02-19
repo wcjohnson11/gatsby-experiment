@@ -32,7 +32,7 @@ const colorFunction = (d, currentCountry) => {
 const radiusFunction = (d, currentCountry, currentContinent) => {
   // If there's a current continent that doesn't match the circle return 0
   // Else, return normal radius value
-  if (currentContinent && currentContinent !== d.continent){
+  if (currentContinent && currentContinent !== d.continent) {
     return 0;
   } else {
     if (currentCountry) {
@@ -71,13 +71,7 @@ class VxScatterplot extends React.Component {
   circleRef = React.createRef();
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const {
-      data,
-      parentWidth,
-      zScale,
-      xVar,
-      yVar
-    } = nextProps;
+    const { data, parentWidth, colorScale, xVar, yVar } = nextProps;
 
     const parentHeight = parentWidth;
     if (!data) return {};
@@ -86,7 +80,7 @@ class VxScatterplot extends React.Component {
       x: xVar,
       y: yVar
     };
-    
+
     const xScale = scaleLinear({
       domain: [0, max(data, d => d[xVar])],
       range: [margin, parentWidth - margin - margin]
@@ -97,22 +91,24 @@ class VxScatterplot extends React.Component {
       range: [parentHeight - margin, margin]
     });
 
-    const circles = data.filter(d => {
-      // return if d has valid y and x values
-      return d[yVar] && d[xVar]
-    }).map(d => {
-      return {
-        cx: xScale(d[xVar]),
-        cy: yScale(d[yVar]),
-        x: `$${formatMoney(d[xVar], 2)}`,
-        y: d[yVar],
-        color: zScale(d['Continent Name']),
-        r: 3,
-        key: d.name,
-        continent: d['Continent Name']
-      };
-    });
-  
+    const circles = data
+      .filter(d => {
+        // return if d has valid y and x values
+        return d[yVar] && d[xVar];
+      })
+      .map(d => {
+        return {
+          cx: xScale(d[xVar]),
+          cy: yScale(d[yVar]),
+          x: `$${formatMoney(d[xVar], 2)}`,
+          y: d[yVar],
+          color: colorScale(d["Continent Name"]),
+          r: 3,
+          key: d.name,
+          continent: d["Continent Name"]
+        };
+      });
+
     return {
       labels,
       circles,
@@ -140,8 +136,8 @@ class VxScatterplot extends React.Component {
     const { currentCountry, currentContinent } = this.props;
 
     const circleSelection = select(this.circleRef.current)
-        .selectAll("circle")
-        .data(circles);
+      .selectAll("circle")
+      .data(circles);
 
     circleSelection
       .transition()
@@ -184,20 +180,14 @@ class VxScatterplot extends React.Component {
       useGrid
     } = this.props;
 
-    const {
-      xScale,
-      yScale,
-      labels,
-      circles,
-      parentHeight
-    } = this.state;
+    const { xScale, yScale, labels, circles, parentHeight } = this.state;
 
     return (
       <React.Fragment>
         <svg width={parentWidth} height={parentHeight + margin + margin}>
-              <Group top={margin} left={margin}>
-              {useGrid && (
-                <Grid
+          <Group top={margin} left={margin}>
+            {useGrid && (
+              <Grid
                 top={0}
                 left={0}
                 className={style.grid}
@@ -208,34 +198,34 @@ class VxScatterplot extends React.Component {
                 height={parentHeight - margin}
                 numTicksRows={numTicksForHeight(parentHeight)}
                 numTicksColumns={numTicksForWidth(parentWidth)}
-                />
-              )}
-              <AxisLeft
-                scale={yScale}
-                axisClassName={style.axis}
-                labelClassName={style["axis-label"]}
-                label={labels.y}
-                left={margin}
-                tickClassName={style["tick-label"]}
-                stroke="#333333"
-                tickStroke="#333333"
-                numTicks={numTicksForHeight(parentHeight)}
-                />
-              <AxisBottom
-                scale={xScale}
-                axisClassName={style.axis}
-                labelClassName={style["axis-label"]}
-                label={labels.x}
-                top={parentHeight - margin}
-                tickClassName={style["tick-label"]}
-                stroke="#333333"
-                tickStroke="#333333"
-                numTicks={numTicksForWidth(parentWidth)}
-                />
-              <g ref={this.circleRef}>
-                {circles.map(d => {
-                  return (
-                    <Circle
+              />
+            )}
+            <AxisLeft
+              scale={yScale}
+              axisClassName={style.axis}
+              labelClassName={style["axis-label"]}
+              label={labels.y}
+              left={margin}
+              tickClassName={style["tick-label"]}
+              stroke="#333333"
+              tickStroke="#333333"
+              numTicks={numTicksForHeight(parentHeight)}
+            />
+            <AxisBottom
+              scale={xScale}
+              axisClassName={style.axis}
+              labelClassName={style["axis-label"]}
+              label={labels.x}
+              top={parentHeight - margin}
+              tickClassName={style["tick-label"]}
+              stroke="#333333"
+              tickStroke="#333333"
+              numTicks={numTicksForWidth(parentWidth)}
+            />
+            <g ref={this.circleRef}>
+              {circles.map(d => {
+                return (
+                  <Circle
                     key={d.key}
                     stroke={chroma("gray").darken(2)}
                     cx={d.cx}
@@ -244,16 +234,16 @@ class VxScatterplot extends React.Component {
                     y={d.y}
                     onMouseEnter={e => this.handleMouseOver(e, d)}
                     onMouseLeave={() => this.handleMouseOut()}
-                    />
-                    );
-                  })}
-              </g>
-            </Group>
+                  />
+                );
+              })}
+            </g>
+          </Group>
         </svg>
         {tooltipOpen && (
           <BoundedToolTip
-          tooltipTop={tooltipTop}
-          tooltipLeft={tooltipLeft}
+            tooltipTop={tooltipTop}
+            tooltipLeft={tooltipLeft}
             tooltipData={tooltipData}
           />
         )}

@@ -27,7 +27,7 @@ class BarChart extends React.Component {
     const {
       currentContinent,
       data,
-      zScale,
+      colorScale,
       parentWidth,
       sortType,
       xVar,
@@ -117,7 +117,7 @@ class BarChart extends React.Component {
         y: yScale(d[yVar]),
         height: yScale.bandwidth(),
         width: xScale(d[xVar]) - margin.right,
-        fill: zScale(d["Continent Name"]),
+        fill: colorScale(d["Continent Name"]),
         name: d[yVar],
         xRaw: d[xVar],
         yRaw: d[yVar]

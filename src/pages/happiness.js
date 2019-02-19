@@ -3,7 +3,7 @@ import { csv } from "d3";
 import Layout from "../components/layout";
 import VariableForm from "../components/variableForm";
 import VxScatterplotWithSize from "../components/visualizations/vxscatterplot";
-import D3Map from '../components/visualizations/d3map';
+import D3Map from "../components/visualizations/d3map";
 import Scatterplot from "../components/visualizations/scatterplot";
 import Legend from "../components/visualizations/legend";
 import { scaleOrdinal } from "@vx/scale";
@@ -27,54 +27,18 @@ class Happiness extends React.Component {
   constructor() {
     super();
     this.state = {
-      categories: [],
-      categoryInfo: [],
       datasets: {},
       currentCountry: false,
       currentContinent: false,
       isPromiseResolved: false,
-      metricVariables: [
-        {
-          value: "Happy Planet Index",
-          label: "Happy Planet Index",
-          description:
-            "Wellbeing, Life Expectancy, Inequality, Ecological Footprint"
-        },
-        {
-          value: "Human Development Index",
-          label: "Human Development Index",
-          description: "Healthy Life, Education, Standard of Living"
-        },
-        {
-          value: "Sustainable Economic Development Index",
-          label: "Sustainable Economic Development Index",
-          description: "Sustainability, Economics, Investments"
-        },
-        {
-          value: "World Happiness Report Score",
-          label: "World Happiness Report",
-          description: "Quality of Life Survey"
-        },
-        {
-          value: "GINI Index",
-          label: "GINI Index",
-          description: "Inequality in Distribution of Family Income"
-        },
-        {
-          value: "Economic Freedom Score",
-          label: "Economic Freedom Score",
-          description:
-            "Rule of Law, Government Size, Regulatory Efficiency, Open Markets"
-        }
-      ],
-      activeMetric: "GINI Index",
+      currentMetric: "GINI Index",
       barChartVariables: [
-        { value: "lowHigh", label: "Low to High" },
-        { value: "highLow", label: "High to Low" },
-        { value: "continent", label: "Group by Continent" },
-        { value: "alphabetical", label: "Alphabetical" }
+        { name: "Low to High" },
+        { name: "High to Low" },
+        { name: "Group by Continent" },
+        { name: "Alphabetical" }
       ],
-      activeBarChart: "lowHigh"
+      currentBarChart: "Group by Continent"
     };
 
     this.handleCircleOver = this.handleCircleOver.bind(this);
@@ -84,51 +48,64 @@ class Happiness extends React.Component {
 
   componentDidMount() {
     Promise.all([csv("countrycodes.csv"), csv("happy2.csv")]).then(allData => {
+      // Get countrycodes data
       const countryCodes = allData[0];
+      // Get happy data
       const happy = allData[1];
 
-      const categoryInfo = [];
+      // Get column Info for happiness dataset
+      const columnInfo = [];
       for (var i = 0; i < 4; i++) {
-        categoryInfo.push(happy.shift());
+        columnInfo.push(happy.shift());
       }
 
+      // Add Country data to happiness data on ISO Country Code
       happy.forEach(country => {
         const result = countryCodes.filter(code => {
-          return code.Three_Letter_Country_Code === country["ISO Country code"];
+          return code.Three_Letter_Country_Code === country["ISO Country Code"];
         });
         if (result[0]) {
-          country.continentName = result[0].Continent_Name;
-          country.continentCode = result[0].Continent_Code;
+          country["Continent Name"] = result[0].Continent_Name;
+          country["Continent Code"] = result[0].Continent_Code;
         }
       });
 
       const newHappy = happy.map(country => {
-        return {
-          "name": country.indicator,
-          "code": country["ISO Number"],
-          "Continent Name": country.continentName,
-          "Continent Code": country.continentCode,
-          "GDP" : cleanNumbers(
-          country["GDP  (billions PPP)"]),
-          "GDP Per Capita": cleanNumbers(
-          country["GDP per capita (PPP)"]),
-          "GDP Annual Growth(2018)": country["GDP growth (annual %"],
-          "Health Expenditure Per Person": cleanNumbers(
-          country["health expenditure  per person"]),
-          "Population": cleanNumbers(country["population"]),
-          "GINI Index": cleanNumbers(country["GINI index"]),
-          "World Happiness Report Score": cleanNumbers(
-          country["world happiness report score"]),
-            "Happy Planet Index": cleanNumbers(country["happy planet index"]),
-            "Human Development Index": cleanNumbers(country["human development index"]),
-            "Sustainable Economic Development Index": cleanNumbers(country["sustainable economic development assessment (SEDA)"]),
-            "Economic Freedom Score": cleanNumbers(country["overall economic freedom score"]),
-            "Civil Liberties Score": cleanNumbers(country["civil liberties score"]),
-            "Political Rights Score": cleanNumbers(country["political rights score"])
-        }
-      })
+        const newCountryData = Object.keys(country).reduce((result, key) => {
+          if (
+            key === "name" ||
+            key === "code" ||
+            key === "ISO Country Code" ||
+            key === "Continent Name" ||
+            key === "Continent Code"
+          ) {
+            result[key] = country[key];
+          } else {
+            result[key] = cleanNumbers(country[key]);
+          }
+          return result;
+        }, {});
 
-      happy.columns.push("Continent Code", "Continent Name");
+        return newCountryData;
+      });
+
+      const columns = happy.columns
+        .filter(
+          column =>
+            column !== "name" &&
+            column !== "code" &&
+            column !== "ISO Country Code" &&
+            column !== "Continent Name" &&
+            column !== "Continent Code"
+        )
+        .map(column => {
+          return {
+            name: column,
+            source: columnInfo[0][column],
+            url: columnInfo[1][column],
+            description: columnInfo[2][column]
+          };
+        });
 
       const continentNames = newHappy.reduce((result, country) => {
         const continentName = country["Continent Name"];
@@ -136,7 +113,7 @@ class Happiness extends React.Component {
           result.push(continentName);
         }
         return result;
-      } ,[])
+      }, []);
 
       const zScale = scaleOrdinal({
         domain: continentNames,
@@ -144,15 +121,13 @@ class Happiness extends React.Component {
       });
 
       this.setState({
-        categories: happy.columns,
-        categoryInfo: categoryInfo,
         zScale: zScale,
         isPromiseResolved: true,
         happyData: newHappy,
-        metricVariables: this.state.metricVariables,
-        activeMetric: this.state.activeMetric,
+        metricVariables: columns,
+        currentMetric: this.state.currentMetric,
         barChartVariables: this.state.barChartVariables,
-        activeBarChart: this.state.activeBarChart
+        currentBarChart: this.state.currentBarChart
       });
     });
   }
@@ -176,10 +151,10 @@ class Happiness extends React.Component {
 
   handleVariableFieldSelect(variable) {
     const { metricVariables } = this.state;
-    if (metricVariables.find(metric => metric.value === variable)) {
-      this.setState({ activeMetric: variable });
+    if (metricVariables.find(metric => metric.name === variable)) {
+      this.setState({ currentMetric: variable });
     } else {
-      this.setState({ activeBarChart: variable });
+      this.setState({ currentBarChart: variable });
     }
   }
 
@@ -189,9 +164,9 @@ class Happiness extends React.Component {
       zScale,
       isPromiseResolved,
       metricVariables,
-      activeMetric,
+      currentMetric,
       barChartVariables,
-      activeBarChart,
+      currentBarChart,
       currentCountry,
       happyData
     } = this.state;
@@ -272,7 +247,7 @@ class Happiness extends React.Component {
         </p>
         {isPromiseResolved && (
           <div className={`pure-g ${style.wrapper}`}>
-          <Legend scale={zScale} legendClick={this.handleLegendClick} />
+            <Legend scale={zScale} legendClick={this.handleLegendClick} />
             <div className="pure-u-1-2 pure-u-md-1-3">
               <VxScatterplotWithSize
                 data={happyData}
@@ -386,11 +361,13 @@ class Happiness extends React.Component {
         )}
         <div className="pure-g">
           <div className="pure-u-1">
-            <VariableForm
-              handleFieldSelect={this.handleVariableFieldSelect}
-              variableValues={metricVariables}
-              active={activeMetric}
-            />
+            {metricVariables && (
+              <VariableForm
+                handleFieldSelect={this.handleVariableFieldSelect}
+                variableValues={metricVariables}
+                active={currentMetric}
+              />
+            )}
           </div>
         </div>
         <h4>GINI index</h4>
@@ -413,28 +390,32 @@ class Happiness extends React.Component {
           <React.Fragment>
             <div className="pure-g">
               <div className="pure-u-1">
-                <D3Map
-                  data={happyData}
-                  mapMetric={activeMetric}
-                />
+                <D3Map data={happyData} mapMetric={currentMetric} />
               </div>
               <div className="pure-u-1">
-                <VariableForm
-                  handleFieldSelect={this.handleVariableFieldSelect}
-                  variableValues={barChartVariables}
-                  active={activeBarChart}
-                />
+                {barChartVariables && (
+                  <VariableForm
+                    handleFieldSelect={this.handleVariableFieldSelect}
+                    variableValues={barChartVariables}
+                    active={currentBarChart}
+                  />
+                )}
                 <BarChart
                   data={happyData}
                   xVar={"GINI Index"}
                   yVar={"name"}
-                  sortType={activeBarChart}
+                  sortType={currentBarChart}
                   currentContinent={currentContinent}
                   zScale={zScale}
                 />
               </div>
               <div className="pure-u-1">
-                <Scatterplot data={happyData} xVar={"GDP Per Capita"} yVar={"GINI Index"} zScale={zScale} />
+                <Scatterplot
+                  data={happyData}
+                  xVar={"GDP Per Capita"}
+                  yVar={"GINI Index"}
+                  zScale={zScale}
+                />
               </div>
             </div>
           </React.Fragment>
