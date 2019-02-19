@@ -262,26 +262,28 @@ class Happiness extends React.Component {
             </div>
           </div>
         )}
-        <div className="pure-g">
-          <div className="pure-u-1">
-            {metricVariables && (
-              <VariableForm
-                handleFieldSelect={this.handleVariableFieldSelect}
-                variableValues={metricVariables}
-                active={currentMetric}
-              />
-            )}
-          </div>
-        </div>
-        <div
-          dangerouslySetInnerHTML={{ __html: markdownDict[currentMetric] }}
-        />
         {isPromiseResolved && (
           <React.Fragment>
             <div className="pure-g">
               <div className="pure-u-1">
+                {metricVariables && (
+                  <VariableForm
+                    handleFieldSelect={this.handleVariableFieldSelect}
+                    variableValues={metricVariables}
+                    active={currentMetric}
+                  />
+                )}
+              </div>
+              <div className="pure-u-1">
+                <h3>{currentMetric}</h3>
                 <D3Map data={happyData} mapMetric={currentMetric} />
               </div>
+              <div
+                className="pure-u-1"
+                dangerouslySetInnerHTML={{
+                  __html: markdownDict[currentMetric]
+                }}
+              />
               <div className="pure-u-1">
                 {barChartVariables && (
                   <VariableForm
