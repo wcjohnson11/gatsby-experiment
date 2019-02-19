@@ -71,3 +71,5 @@ will be described below. By visualizing these metrics of wellbeing
 alongside the GDP per capita, we can see that there is a rough
 correlation between increased GDP per capita and improved scores on
 these wellbeing metrics.
+
+Click on the continents in the legend below to highlight that continent's nations.
