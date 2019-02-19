@@ -51,7 +51,7 @@ const radiusFunction = (d, currentCountry, currentContinent) => {
   } else {
     if (currentCountry) {
       if (currentCountry === d.key) {
-        return 4;
+        return d.r;
       } else {
         return d.r;
       }
