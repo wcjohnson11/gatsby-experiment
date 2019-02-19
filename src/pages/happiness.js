@@ -70,6 +70,7 @@ class Happiness extends React.Component {
         }
       });
 
+      // Clean data for visualization components
       const newHappy = happy.map(country => {
         const newCountryData = Object.keys(country).reduce((result, key) => {
           if (
@@ -89,6 +90,8 @@ class Happiness extends React.Component {
         return newCountryData;
       });
 
+      // Create list of columns for variable Forms
+      // Add information to columns
       const columns = happy.columns
         .filter(
           column =>
@@ -107,6 +110,7 @@ class Happiness extends React.Component {
           };
         });
 
+      // Get list of Continent Names for color scale
       const continentNames = newHappy.reduce((result, country) => {
         const continentName = country["Continent Name"];
         if (result.indexOf(continentName) < 0 && continentName) {
@@ -115,13 +119,14 @@ class Happiness extends React.Component {
         return result;
       }, []);
 
-      const zScale = scaleOrdinal({
+      // Create ColorScale
+      const colorScale = scaleOrdinal({
         domain: continentNames,
         range: colors
       });
 
       this.setState({
-        zScale: zScale,
+        colorScale: colorScale,
         isPromiseResolved: true,
         happyData: newHappy,
         metricVariables: columns,
@@ -161,7 +166,7 @@ class Happiness extends React.Component {
   render() {
     const {
       currentContinent,
-      zScale,
+      colorScale,
       isPromiseResolved,
       metricVariables,
       currentMetric,
@@ -247,7 +252,7 @@ class Happiness extends React.Component {
         </p>
         {isPromiseResolved && (
           <div className={`pure-g ${style.wrapper}`}>
-            <Legend scale={zScale} legendClick={this.handleLegendClick} />
+            <Legend scale={colorScale} legendClick={this.handleLegendClick} />
             <div className="pure-u-1-2 pure-u-md-1-3">
               <VxScatterplotWithSize
                 data={happyData}
@@ -255,7 +260,7 @@ class Happiness extends React.Component {
                 yVar={"Happy Planet Index"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
-                zScale={zScale}
+                colorScale={colorScale}
                 handleCircleOver={this.handleCircleOver}
                 useGrid={false}
                 linkHighlighting={false}
@@ -268,7 +273,7 @@ class Happiness extends React.Component {
                 yVar={"Human Development Index"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
-                zScale={zScale}
+                colorScale={colorScale}
                 handleCircleOver={this.handleCircleOver}
                 useGrid={false}
                 linkHighlighting={false}
@@ -281,7 +286,7 @@ class Happiness extends React.Component {
                 yVar={"Sustainable Economic Development Index"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
-                zScale={zScale}
+                colorScale={colorScale}
                 handleCircleOver={this.handleCircleOver}
                 useGrid={false}
                 linkHighlighting={false}
@@ -294,7 +299,7 @@ class Happiness extends React.Component {
                 yVar={"Happy Planet Index"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
-                zScale={zScale}
+                colorScale={colorScale}
                 handleCircleOver={this.handleCircleOver}
                 useGrid={false}
                 linkHighlighting={false}
@@ -307,7 +312,7 @@ class Happiness extends React.Component {
                 yVar={"Economic Freedom Score"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
-                zScale={zScale}
+                colorScale={colorScale}
                 handleCircleOver={this.handleCircleOver}
                 useGrid={false}
                 linkHighlighting={false}
@@ -325,7 +330,7 @@ class Happiness extends React.Component {
                 yVar={"GINI Index"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
-                zScale={zScale}
+                colorScale={colorScale}
                 handleCircleOver={this.handleCircleOver}
                 useGrid={false}
                 linkHighlighting={false}
@@ -338,7 +343,7 @@ class Happiness extends React.Component {
                 yVar={"Civil Liberties Score"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
-                zScale={zScale}
+                colorScale={colorScale}
                 handleCircleOver={this.handleCircleOver}
                 useGrid={false}
                 linkHighlighting={false}
@@ -351,7 +356,7 @@ class Happiness extends React.Component {
                 yVar={"Political Rights Score"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
-                zScale={zScale}
+                colorScale={colorScale}
                 handleCircleOver={this.handleCircleOver}
                 useGrid={false}
                 linkHighlighting={false}
@@ -406,7 +411,7 @@ class Happiness extends React.Component {
                   yVar={"name"}
                   sortType={currentBarChart}
                   currentContinent={currentContinent}
-                  zScale={zScale}
+                  colorScale={colorScale}
                 />
               </div>
               <div className="pure-u-1">
@@ -414,7 +419,7 @@ class Happiness extends React.Component {
                   data={happyData}
                   xVar={"GDP Per Capita"}
                   yVar={"GINI Index"}
-                  zScale={zScale}
+                  colorScale={colorScale}
                 />
               </div>
             </div>
