@@ -34,6 +34,7 @@ class BarChart extends React.Component {
       yVar
     } = nextProps;
     const { sortType: prevSortType } = prevState;
+
     if (!data) return {};
 
     // Create Data Labels
@@ -43,7 +44,6 @@ class BarChart extends React.Component {
     };
 
     // Filter and Sort Data
-
     const filteredData = data.filter(d => {
       if (d[xVar] && d[yVar]) {
         if (currentContinent) {
@@ -54,20 +54,23 @@ class BarChart extends React.Component {
       return false;
     });
 
+    // Set Height of Div according to length of data
+    const formattedHeight = filteredData.length * 15;
+
     // If sort types have changed or there is no previous sort type
     // Sort data according to sortType
     if (prevSortType !== sortType && !prevSortType) {
       var sortedData = filteredData.sort((a, b) => {
-        if (sortType === "lowHigh") {
+        if (sortType === "Low to High") {
           if (a[xVar] < b[xVar]) return 1;
           if (a[xVar] > b[xVar]) return -1;
-        } else if (sortType === "highLow") {
+        } else if (sortType === "High to Low") {
           if (a[xVar] < b[xVar]) return -1;
           if (a[xVar] > b[xVar]) return 1;
-        } else if (sortType === "alphabetical") {
+        } else if (sortType === "Alphabetical") {
           if (a.name < b.name) return 1;
           if (a.name > b.name) return -1;
-        } else if (sortType === "continent") {
+        } else if (sortType === "Group by Continent") {
           if (a["Continent Name"] === b["Continent Name"]) {
             if (a[xVar] < b[xVar]) return 1;
             if (a[xVar] > b[xVar]) return -1;
@@ -79,17 +82,20 @@ class BarChart extends React.Component {
       });
     }
 
-    // Set Height of Div according to datalength
-    const formattedHeight = filteredData.length * 15;
+    const barData = sortedData || filteredData;
+
+    // Get dataMedian value for medianLine
+    const dataMedian = d3.median(barData, d => d[xVar]);
+
+    // Get Max of X Data for X Scale
+    const dataXMax = d3.max(barData, d => d[xVar]);
 
     // Map the xScale to [0,Y Value max]
-    const dataXMax = d3.max(filteredData, d => d[xVar]);
     const xScale = d3
       .scaleLinear()
       .domain([0, dataXMax])
       .range([margin.left, parentWidth - margin.right]);
 
-    const barData = sortedData || filteredData;
     // Get array of names in dataset
     const dataNames = barData.reduce((result, d) => {
       result.push(d[yVar]);
@@ -105,8 +111,6 @@ class BarChart extends React.Component {
       .paddingOuter([0.2]);
 
     // Create bars component
-    // Not sure why width needs to have marginRight subtracted from it
-
     const bars = barData.map(d => {
       return {
         x: `${margin.left}`,
@@ -119,9 +123,6 @@ class BarChart extends React.Component {
         yRaw: d[yVar]
       };
     });
-
-    // Get dataMedian value for medianLine
-    const dataMedian = d3.median(sortedData, d => d[yVar]);
 
     return {
       bars,
@@ -177,7 +178,9 @@ class BarChart extends React.Component {
       tooltipTop,
       hideTooltip
     } = this.props;
+
     const { dataMedian, formattedHeight, parentWidth, xScale } = this.state;
+
     return (
       <React.Fragment>
         <svg width={parentWidth} height={formattedHeight}>
