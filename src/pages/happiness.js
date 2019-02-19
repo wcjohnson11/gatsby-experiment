@@ -190,128 +190,132 @@ class Happiness extends React.Component {
 
     return (
       <Layout>
-        <h1 className={style.title}>Measuring Wellbeing for a Better World</h1>
-        <div dangerouslySetInnerHTML={{ __html: markdownDict["Intro"] }} />
-        {isPromiseResolved && (
-          <div className={`pure-g ${style.wrapper}`}>
-            <Legend scale={colorScale} legendClick={this.handleLegendClick} />
-            <div className="pure-u-1-2 pure-u-md-1-3">
-              <VxScatterplotWithSize
-                data={happyData}
-                xVar={"GDP Per Capita"}
-                yVar={"Happy Planet Index"}
-                currentCountry={currentCountry}
-                currentContinent={currentContinent}
-                colorScale={colorScale}
-                handleCircleOver={this.handleCircleOver}
-                useGrid={false}
-                linkHighlighting={false}
-              />
-            </div>
-            <div className="pure-u-1-2 pure-u-md-1-3">
-              <VxScatterplotWithSize
-                data={happyData}
-                xVar={"GDP Per Capita"}
-                yVar={"Human Development Index"}
-                currentCountry={currentCountry}
-                currentContinent={currentContinent}
-                colorScale={colorScale}
-                handleCircleOver={this.handleCircleOver}
-                useGrid={false}
-                linkHighlighting={false}
-              />
-            </div>
-            <div className="pure-u-1-2 pure-u-md-1-3">
-              <VxScatterplotWithSize
-                data={happyData}
-                xVar={"GDP Per Capita"}
-                yVar={"Sustainable Economic Development Index"}
-                currentCountry={currentCountry}
-                currentContinent={currentContinent}
-                colorScale={colorScale}
-                handleCircleOver={this.handleCircleOver}
-                useGrid={false}
-                linkHighlighting={false}
-              />
-            </div>
-            <div className="pure-u-1-2 pure-u-md-1-3">
-              <VxScatterplotWithSize
-                data={happyData}
-                xVar={"GDP Per Capita"}
-                yVar={"Happy Planet Index"}
-                currentCountry={currentCountry}
-                currentContinent={currentContinent}
-                colorScale={colorScale}
-                handleCircleOver={this.handleCircleOver}
-                useGrid={false}
-                linkHighlighting={false}
-              />
-            </div>
-            <div className="pure-u-1-2 pure-u-md-1-3">
-              <VxScatterplotWithSize
-                data={happyData}
-                xVar={"GDP Per Capita"}
-                yVar={"GINI Index"}
-                currentCountry={currentCountry}
-                currentContinent={currentContinent}
-                colorScale={colorScale}
-                handleCircleOver={this.handleCircleOver}
-                useGrid={false}
-                linkHighlighting={false}
-              />
-            </div>
-          </div>
-        )}
-        {isPromiseResolved && (
-          <React.Fragment>
-            <div className="pure-g">
-              <div className="pure-u-1">
-                <h2>Explore the Individual Metrics in Greater Detail</h2>
-                {metricVariables && (
-                  <VariableForm
-                    handleFieldSelect={this.handleVariableFieldSelect}
-                    variableValues={metricVariables}
-                    active={currentMetric}
-                  />
-                )}
-              </div>
-              <div
-                className={style.metricDescription}
-                dangerouslySetInnerHTML={{
-                  __html: markdownDict[currentMetric]
-                }}
-              />
-              <div className="pure-u-1">
-                <D3Map data={happyData} mapMetric={currentMetric} />
-              </div>
-              <div className="pure-u-1">
-                {barChartVariables && (
-                  <VariableForm
-                    handleFieldSelect={this.handleVariableFieldSelect}
-                    variableValues={barChartVariables}
-                    active={currentBarChart}
-                  />
-                )}
-                <BarChart
-                  data={happyData}
-                  xVar={currentMetric}
-                  yVar={"name"}
-                  sortType={currentBarChart}
-                  currentContinent={currentContinent}
-                  colorScale={colorScale}
-                />
-              </div>
-              <div className="pure-u-1">
-                <Scatterplot
+        <div className={style.happiness}>
+          <h1 className={style.title}>
+            Measuring Wellbeing for a Better World
+          </h1>
+          <div dangerouslySetInnerHTML={{ __html: markdownDict["Intro"] }} />
+          {isPromiseResolved && (
+            <div className={`pure-g ${style.wrapper}`}>
+              <Legend scale={colorScale} legendClick={this.handleLegendClick} />
+              <div className="pure-u-1-2 pure-u-md-1-3">
+                <VxScatterplotWithSize
                   data={happyData}
                   xVar={"GDP Per Capita"}
-                  yVar={currentMetric}
+                  yVar={"Happy Planet Index"}
+                  currentCountry={currentCountry}
+                  currentContinent={currentContinent}
                   colorScale={colorScale}
+                  handleCircleOver={this.handleCircleOver}
+                  useGrid={false}
+                  linkHighlighting={false}
+                />
+              </div>
+              <div className="pure-u-1-2 pure-u-md-1-3">
+                <VxScatterplotWithSize
+                  data={happyData}
+                  xVar={"GDP Per Capita"}
+                  yVar={"Human Development Index"}
+                  currentCountry={currentCountry}
+                  currentContinent={currentContinent}
+                  colorScale={colorScale}
+                  handleCircleOver={this.handleCircleOver}
+                  useGrid={false}
+                  linkHighlighting={false}
+                />
+              </div>
+              <div className="pure-u-1-2 pure-u-md-1-3">
+                <VxScatterplotWithSize
+                  data={happyData}
+                  xVar={"GDP Per Capita"}
+                  yVar={"Sustainable Economic Development Index"}
+                  currentCountry={currentCountry}
+                  currentContinent={currentContinent}
+                  colorScale={colorScale}
+                  handleCircleOver={this.handleCircleOver}
+                  useGrid={false}
+                  linkHighlighting={false}
+                />
+              </div>
+              <div className="pure-u-1-2 pure-u-md-1-3">
+                <VxScatterplotWithSize
+                  data={happyData}
+                  xVar={"GDP Per Capita"}
+                  yVar={"Happy Planet Index"}
+                  currentCountry={currentCountry}
+                  currentContinent={currentContinent}
+                  colorScale={colorScale}
+                  handleCircleOver={this.handleCircleOver}
+                  useGrid={false}
+                  linkHighlighting={false}
+                />
+              </div>
+              <div className="pure-u-1-2 pure-u-md-1-3">
+                <VxScatterplotWithSize
+                  data={happyData}
+                  xVar={"GDP Per Capita"}
+                  yVar={"GINI Index"}
+                  currentCountry={currentCountry}
+                  currentContinent={currentContinent}
+                  colorScale={colorScale}
+                  handleCircleOver={this.handleCircleOver}
+                  useGrid={false}
+                  linkHighlighting={false}
                 />
               </div>
             </div>
-          </React.Fragment>
-        )}
+          )}
+          {isPromiseResolved && (
+            <React.Fragment>
+              <div className="pure-g">
+                <div className="pure-u-1">
+                  <h2>Explore the Individual Metrics in Greater Detail</h2>
+                  {metricVariables && (
+                    <VariableForm
+                      handleFieldSelect={this.handleVariableFieldSelect}
+                      variableValues={metricVariables}
+                      active={currentMetric}
+                    />
+                  )}
+                </div>
+                <div
+                  className={style.metricDescription}
+                  dangerouslySetInnerHTML={{
+                    __html: markdownDict[currentMetric]
+                  }}
+                />
+                <div className="pure-u-1">
+                  <D3Map data={happyData} mapMetric={currentMetric} />
+                </div>
+                <div className="pure-u-1">
+                  {barChartVariables && (
+                    <VariableForm
+                      handleFieldSelect={this.handleVariableFieldSelect}
+                      variableValues={barChartVariables}
+                      active={currentBarChart}
+                    />
+                  )}
+                  <BarChart
+                    data={happyData}
+                    xVar={currentMetric}
+                    yVar={"name"}
+                    sortType={currentBarChart}
+                    currentContinent={currentContinent}
+                    colorScale={colorScale}
+                  />
+                </div>
+                <div className="pure-u-1">
+                  <Scatterplot
+                    data={happyData}
+                    xVar={"GDP Per Capita"}
+                    yVar={currentMetric}
+                    colorScale={colorScale}
+                  />
+                </div>
+              </div>
+            </React.Fragment>
+          )}
+        </div>
       </Layout>
     );
   }

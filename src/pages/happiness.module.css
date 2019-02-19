@@ -8,6 +8,11 @@
     height: 100%;
 }
 
+.happiness {
+    margin: 0 auto;
+    max-width: 960px;
+}
+
 .pure-u-24-24 {
     height: 600px;
     width: 100%;
