@@ -195,7 +195,10 @@ class D3Map extends React.Component {
         <defs>
           <linearGradient id="linear-gradient" />
         </defs>
-        <g ref={this.legendRef} transform={`translate(0, ${height - 100})`}>
+        <g
+          ref={this.legendRef}
+          transform={`translate(0, ${height - width / 9.3})`}
+        >
           <rect
             height="8"
             width={xScale(ticks[ticks.length - 1]) - xScale(ticks[0])}
