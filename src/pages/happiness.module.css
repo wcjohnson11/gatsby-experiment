@@ -37,3 +37,8 @@
     margin-top: .5em;
     font-size: 95%;
 }
+
+.globe {
+    composes: pure-u-1 from '../components/pure.css';
+    margin-top: 100px;
+}

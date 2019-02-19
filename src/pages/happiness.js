@@ -28,7 +28,7 @@ class Happiness extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      markdownData: props.data.allMarkdownRemark.edges,
+      markdownData: props.data && props.data.allMarkdownRemark.edges,
       datasets: {},
       currentCountry: false,
       currentContinent: false,
@@ -178,11 +178,20 @@ class Happiness extends React.Component {
       happyData,
       markdownData
     } = this.state;
-    console.log(markdownData);
+
+    const markdownDict = {
+      Intro: markdownData[0].node.html,
+      "GINI Index": markdownData[1].node.html,
+      "Happy Planet Index": markdownData[2].node.html,
+      "World Happiness Report Score": markdownData[3].node.html,
+      "Sustainable Economic Development Index": markdownData[4].node.html,
+      "Human Development Index": markdownData[5].node.html
+    };
+
     return (
       <Layout>
         <h1 className={style.title}>Measuring Wellbeing for a Better World</h1>
-        <div dangerouslySetInnerHTML={{ __html: markdownData[0].node.html }} />
+        <div dangerouslySetInnerHTML={{ __html: markdownDict["Intro"] }} />
         {isPromiseResolved && (
           <div className={`pure-g ${style.wrapper}`}>
             <Legend scale={colorScale} legendClick={this.handleLegendClick} />
@@ -225,7 +234,7 @@ class Happiness extends React.Component {
                 linkHighlighting={false}
               />
             </div>
-            <div className="pure-u-1-2 pure-u-md-1-3">
+            <div className="pure-u-1-2 pure-u-md-1-2">
               <VxScatterplotWithSize
                 data={happyData}
                 xVar={"GDP Per Capita"}
@@ -238,55 +247,11 @@ class Happiness extends React.Component {
                 linkHighlighting={false}
               />
             </div>
-            <div className="pure-u-1-2 pure-u-md-1-3">
-              <VxScatterplotWithSize
-                data={happyData}
-                xVar={"GDP Per Capita"}
-                yVar={"Economic Freedom Score"}
-                currentCountry={currentCountry}
-                currentContinent={currentContinent}
-                colorScale={colorScale}
-                handleCircleOver={this.handleCircleOver}
-                useGrid={false}
-                linkHighlighting={false}
-              />
-            </div>
-            <p>
-              The below metrics are structured in such a way that lower values
-              are better. A similar correlation with GDP per capita can be seen
-              for these metrics.
-            </p>
-            <div className="pure-u-1-2 pure-u-md-1-3">
+            <div className="pure-u-1-2 pure-u-md-1-2">
               <VxScatterplotWithSize
                 data={happyData}
                 xVar={"GDP Per Capita"}
                 yVar={"GINI Index"}
-                currentCountry={currentCountry}
-                currentContinent={currentContinent}
-                colorScale={colorScale}
-                handleCircleOver={this.handleCircleOver}
-                useGrid={false}
-                linkHighlighting={false}
-              />
-            </div>
-            <div className="pure-u-1-2 pure-u-md-1-3">
-              <VxScatterplotWithSize
-                data={happyData}
-                xVar={"GDP Per Capita"}
-                yVar={"Civil Liberties Score"}
-                currentCountry={currentCountry}
-                currentContinent={currentContinent}
-                colorScale={colorScale}
-                handleCircleOver={this.handleCircleOver}
-                useGrid={false}
-                linkHighlighting={false}
-              />
-            </div>
-            <div className="pure-u-1-2 pure-u-md-1-3">
-              <VxScatterplotWithSize
-                data={happyData}
-                xVar={"GDP Per Capita"}
-                yVar={"Political Rights Score"}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
                 colorScale={colorScale}
@@ -308,22 +273,9 @@ class Happiness extends React.Component {
             )}
           </div>
         </div>
-        <h4>GINI index</h4>
-        <p>
-          One of the oldest measurements of wellbeing is The GINI index,
-          developed by Italian Statistician Corrado Gini in 1912, measures
-          inequality in income distribution in family income, with 0
-          representing perfect equality (everyone earns exactly the same) and 1
-          representing perfect inequality (one family earns everything, everyone
-          else earns nothing). The GINI index is an imperfect measurement
-          because it focuses on income, rather than wealth, which is much harder
-          to measure because of unreliable GDP and income data. Shadow economies
-          and tax havens make it hard to measure income and wealth, particularly
-          in developing countries. Despite this, it appears to be fairly well
-          correlated to GDP per capita, meaning that countries with a higher GDP
-          per capita tend to have less inequality, at least as far as it can be
-          measured.
-        </p>
+        <div
+          dangerouslySetInnerHTML={{ __html: markdownDict[currentMetric] }}
+        />
         {isPromiseResolved && (
           <React.Fragment>
             <div className="pure-g">
@@ -340,7 +292,7 @@ class Happiness extends React.Component {
                 )}
                 <BarChart
                   data={happyData}
-                  xVar={"GINI Index"}
+                  xVar={currentMetric}
                   yVar={"name"}
                   sortType={currentBarChart}
                   currentContinent={currentContinent}
@@ -351,7 +303,7 @@ class Happiness extends React.Component {
                 <Scatterplot
                   data={happyData}
                   xVar={"GDP Per Capita"}
-                  yVar={"GINI Index"}
+                  yVar={currentMetric}
                   colorScale={colorScale}
                 />
               </div>
