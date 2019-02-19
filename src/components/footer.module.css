@@ -1,5 +1,5 @@
 .footer {
-    background-color: #03B0F0;
+    background-color: #0D030D;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -18,10 +18,11 @@
 .icon {
     margin-right: 2.5em;
     margin-left: 2.5em;
+    fill: #8490A7;
 }
 
 .icon:hover {
-    fill: white;
+    fill: #592037;
     cursor: pointer;
     justify-content: space-between;
 }
