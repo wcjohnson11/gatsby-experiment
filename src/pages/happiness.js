@@ -180,12 +180,12 @@ class Happiness extends React.Component {
     } = this.state;
 
     const markdownDict = {
-      Intro: markdownData[0].node.html,
-      "GINI Index": markdownData[1].node.html,
-      "Happy Planet Index": markdownData[2].node.html,
-      "World Happiness Report Score": markdownData[3].node.html,
-      "Sustainable Economic Development Index": markdownData[4].node.html,
-      "Human Development Index": markdownData[5].node.html
+      "GINI Index": markdownData[0].node.html,
+      "Happy Planet Index": markdownData[1].node.html,
+      "Human Development Index": markdownData[2].node.html,
+      "Sustainable Economic Development Index": markdownData[3].node.html,
+      "World Happiness Report Score": markdownData[4].node.html,
+      Intro: markdownData[5].node.html
     };
 
     return (
