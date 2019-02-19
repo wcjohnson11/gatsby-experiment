@@ -3,7 +3,7 @@ title: "GINI"
 date: "2019-04-18"
 category: "Happiness"
 ---
-<h4>GINI index</h4>
+<h3>GINI Index</h3>
 <p>
     One of the oldest measurements of wellbeing is The GINI index,
     developed by Italian Statistician Corrado Gini in 1912, measures
