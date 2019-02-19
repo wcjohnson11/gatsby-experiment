@@ -19,7 +19,14 @@ class Scatterplot extends React.Component {
   yAxis = d3.axisLeft();
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { data, handleMouseOver, zScale, parentWidth, xVar, yVar } = nextProps;
+    const {
+      data,
+      handleMouseOver,
+      zScale,
+      parentWidth,
+      xVar,
+      yVar
+    } = nextProps;
     if (!data) return {};
     const width = parentWidth;
     const height = parentWidth * 0.75;
@@ -44,16 +51,19 @@ class Scatterplot extends React.Component {
       .range([height - padding, padding]);
 
     // Create circle elements
-    const circles = data.filter(d => d[xVar] && d[yVar]).map(d => {
-      return {
-        cx: xScale(d[xVar]),
-        x: d[xVar],
-        cy: yScale(d[yVar]),
-        y: d[yVar],
-        key: d.name,
-        fill: zScale(d["Continent Name"])
-      };
-    });
+    const circles = data
+      .filter(d => d[xVar] && d[yVar])
+      .map(d => {
+        if (!d.name) console.log(d);
+        return {
+          cx: xScale(d[xVar]),
+          x: d[xVar],
+          cy: yScale(d[yVar]),
+          y: d[yVar],
+          key: d.name,
+          fill: zScale(d["Continent Name"])
+        };
+      });
 
     return {
       circles,
