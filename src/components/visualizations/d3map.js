@@ -197,7 +197,7 @@ class D3Map extends React.Component {
         </defs>
         <g
           ref={this.legendRef}
-          transform={`translate(0, ${height - width / 9.3})`}
+          transform={`translate(0, ${height - width / 9})`}
         >
           <rect
             height="8"
