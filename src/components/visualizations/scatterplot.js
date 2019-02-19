@@ -19,41 +19,51 @@ class Scatterplot extends React.Component {
   yAxis = d3.axisLeft();
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { data, handleMouseOver, zScale, parentWidth } = nextProps;
+    const {
+      data,
+      handleMouseOver,
+      colorScale,
+      parentWidth,
+      xVar,
+      yVar
+    } = nextProps;
     if (!data) return {};
     const width = parentWidth;
     const height = parentWidth * 0.75;
 
     // Create data labels
     const labels = {
-      x: data.x,
-      y: data.y
+      x: xVar,
+      y: yVar
     };
     // Get min, max of x value
     // and map to X-position
     const xScale = d3
       .scaleLinear()
-      .domain([-1000, d3.max(data, d => d.x)])
+      .domain([-1000, d3.max(data, d => d[xVar])])
       .range([padding, width - padding]);
 
     // 2. Initialize scale of Y Position
     // and map to Y-position
     const yScale = d3
       .scaleLinear()
-      .domain([0, d3.max(data, d => d.y)])
+      .domain([0, d3.max(data, d => d[yVar])])
       .range([height - padding, padding]);
 
     // Create circle elements
-    const circles = data.map(d => {
-      return {
-        cx: xScale(d.x),
-        x: d.x,
-        cy: yScale(d.y),
-        y: d.y,
-        key: d.name,
-        fill: zScale(d.continent)
-      };
-    });
+    const circles = data
+      .filter(d => d[xVar] && d[yVar])
+      .map(d => {
+        if (!d.name) console.log(d);
+        return {
+          cx: xScale(d[xVar]),
+          x: d[xVar],
+          cy: yScale(d[yVar]),
+          y: d[yVar],
+          key: d.name,
+          fill: colorScale(d["Continent Name"])
+        };
+      });
 
     return {
       circles,

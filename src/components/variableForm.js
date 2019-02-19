@@ -1,9 +1,10 @@
 import React from "react";
+import style from "./variableForm.module.css";
 
 class VariableForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: props.active, variables: props.variableValues };
+    this.state = { value: props.active };
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -13,20 +14,26 @@ class VariableForm extends React.Component {
   }
 
   render() {
-    const { variables } = this.state;
-    const variableOptions = variables.map((variable, index) => {
-      var label = variable.label;
+    const { value } = this.state;
+    const { variableValues } = this.props;
+    const variableOptions = variableValues.map((variable, index) => {
+      const { name, description } = variable;
       return (
-        <option key={index} value={variable.value}>
-          {label}
-          {variable.description && `  -  ${variable.description}`}
+        <option key={index} value={name}>
+          {name}
+          {description && `  -  ${description}`}
         </option>
       );
     });
+
     return (
       <label>
         Pick your measurement:
-        <select value={this.state.value} onChange={this.handleChange}>
+        <select
+          value={value}
+          onChange={this.handleChange}
+          className={style.select}
+        >
           {variableOptions}
         </select>
       </label>

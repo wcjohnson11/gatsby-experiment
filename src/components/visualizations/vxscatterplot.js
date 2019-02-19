@@ -17,7 +17,7 @@ import style from "./scatterplot.module.css";
 
 const margin = 30;
 
-const colorFunction = (currentCountry, d) => {
+const colorFunction = (d, currentCountry) => {
   if (currentCountry) {
     if (currentCountry === d.key) {
       return d.color;
@@ -29,19 +29,25 @@ const colorFunction = (currentCountry, d) => {
   }
 };
 
-const radiusFunction = (currentCountry, d) => {
-  if (currentCountry) {
-    if (currentCountry === d.key) {
-      return 4;
+const radiusFunction = (d, currentCountry, currentContinent) => {
+  // If there's a current continent that doesn't match the circle return 0
+  // Else, return normal radius value
+  if (currentContinent && currentContinent !== d.continent) {
+    return 0;
+  } else {
+    if (currentCountry) {
+      if (currentCountry === d.key) {
+        return 4;
+      } else {
+        return d.r;
+      }
     } else {
       return d.r;
     }
-  } else {
-    return d.r;
   }
 };
 
-const strokeWidthFunction = (currentCountry, d) => {
+const strokeWidthFunction = (d, currentCountry) => {
   if (currentCountry) {
     if (currentCountry === d.key) {
       return 2;
@@ -65,67 +71,43 @@ class VxScatterplot extends React.Component {
   circleRef = React.createRef();
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const {
-      data,
-      parentWidth,
-      zScale,
-      currentContinent,
-      currentCountry,
-      linkHighlighting
-    } = nextProps;
+    const { data, parentWidth, colorScale, xVar, yVar } = nextProps;
+
     const parentHeight = parentWidth;
     if (!data) return {};
 
     const labels = {
-      x: data.x,
-      y: data.y
+      x: xVar,
+      y: yVar
     };
 
     const xScale = scaleLinear({
-      domain: [0, max(data, d => d.x)],
+      domain: [0, max(data, d => d[xVar])],
       range: [margin, parentWidth - margin - margin]
     });
 
     const yScale = scaleLinear({
-      domain: [0, max(data, d => d.y)],
+      domain: [0, max(data, d => d[yVar])],
       range: [parentHeight - margin, margin]
     });
 
-    if (currentContinent) {
-      const filteredData = data.filter(d => currentContinent === d.continent);
-      const circles = filteredData.map(d => {
+    const circles = data
+      .filter(d => {
+        // return if d has valid y and x values
+        return d[yVar] && d[xVar];
+      })
+      .map(d => {
         return {
-          cx: xScale(d.x),
-          cy: yScale(d.y),
-          x: `$${formatMoney(d.x, 2)}`,
-          y: d.y,
-          color: zScale(d.continent),
+          cx: xScale(d[xVar]),
+          cy: yScale(d[yVar]),
+          x: `$${formatMoney(d[xVar], 2)}`,
+          y: d[yVar],
+          color: colorScale(d["Continent Name"]),
           r: 3,
-          key: d.name
+          key: d.name,
+          continent: d["Continent Name"]
         };
       });
-      return {
-        labels,
-        circles,
-        currentCountry,
-        xScale,
-        yScale,
-        parentHeight,
-        linkHighlighting
-      };
-    }
-
-    const circles = data.map(d => {
-      return {
-        cx: xScale(d.x),
-        cy: yScale(d.y),
-        x: `$${formatMoney(d.x, 2)}`,
-        y: d.y,
-        color: zScale(d.continent),
-        r: 3,
-        key: d.name
-      };
-    });
 
     return {
       labels,
@@ -138,7 +120,6 @@ class VxScatterplot extends React.Component {
 
   componentDidMount() {
     const { circles } = this.state;
-    const { currentCountry } = this.props;
 
     const circleSelection = select(this.circleRef.current)
       .selectAll("circle")
@@ -151,20 +132,19 @@ class VxScatterplot extends React.Component {
   }
 
   componentDidUpdate() {
-    const { circles, linkHighlighting } = this.state;
-    const { currentCountry } = this.props;
-    if (linkHighlighting) {
-      const circleSelection = select(this.circleRef.current)
-        .selectAll("circle")
-        .data(circles);
+    const { circles } = this.state;
+    const { currentCountry, currentContinent } = this.props;
 
-      circleSelection
-        .transition()
-        .duration(450)
-        .attr("fill", d => colorFunction(currentCountry, d))
-        .attr("r", d => radiusFunction(currentCountry, d))
-        .attr("strokeWidth", d => strokeWidthFunction(currentCountry, d));
-    }
+    const circleSelection = select(this.circleRef.current)
+      .selectAll("circle")
+      .data(circles);
+
+    circleSelection
+      .transition()
+      .duration(450)
+      .attr("fill", d => colorFunction(d, currentCountry))
+      .attr("r", d => radiusFunction(d, currentCountry, currentContinent))
+      .attr("strokeWidth", d => strokeWidthFunction(d, currentCountry));
   }
 
   handleMouseOver(event, datum) {
@@ -200,74 +180,65 @@ class VxScatterplot extends React.Component {
       useGrid
     } = this.props;
 
-    const {
-      xScale,
-      yScale,
-      labels,
-      circles,
-      parentHeight,
-      currentCountry
-    } = this.state;
+    const { xScale, yScale, labels, circles, parentHeight } = this.state;
 
     return (
       <React.Fragment>
         <svg width={parentWidth} height={parentHeight + margin + margin}>
-          {circles && (
-            <Group top={margin} left={margin}>
-              {useGrid && (
-                <Grid
-                  top={0}
-                  left={0}
-                  className={style.grid}
-                  xScale={xScale}
-                  yScale={yScale}
-                  stroke="rgba(142, 32, 95, 0.3)"
-                  width={parentWidth - margin * 2}
-                  height={parentHeight - margin}
-                  numTicksRows={numTicksForHeight(parentHeight)}
-                  numTicksColumns={numTicksForWidth(parentWidth)}
-                />
-              )}
-              <AxisLeft
-                scale={yScale}
-                axisClassName={style.axis}
-                labelClassName={style["axis-label"]}
-                label={labels.y}
-                left={margin}
-                tickClassName={style["tick-label"]}
-                stroke="#333333"
-                tickStroke="#333333"
-                numTicks={numTicksForHeight(parentHeight)}
+          <Group top={margin} left={margin}>
+            {useGrid && (
+              <Grid
+                top={0}
+                left={0}
+                className={style.grid}
+                xScale={xScale}
+                yScale={yScale}
+                stroke="rgba(142, 32, 95, 0.3)"
+                width={parentWidth - margin * 2}
+                height={parentHeight - margin}
+                numTicksRows={numTicksForHeight(parentHeight)}
+                numTicksColumns={numTicksForWidth(parentWidth)}
               />
-              <AxisBottom
-                scale={xScale}
-                axisClassName={style.axis}
-                labelClassName={style["axis-label"]}
-                label={labels.x}
-                top={parentHeight - margin}
-                tickClassName={style["tick-label"]}
-                stroke="#333333"
-                tickStroke="#333333"
-                numTicks={numTicksForWidth(parentWidth)}
-              />
-              <g ref={this.circleRef}>
-                {circles.map(d => {
-                  return (
-                    <Circle
-                      key={d.key}
-                      stroke={chroma("gray").darken(2)}
-                      cx={d.cx}
-                      cy={d.cy}
-                      x={d.x}
-                      y={d.y}
-                      onMouseEnter={e => this.handleMouseOver(e, d)}
-                      onMouseLeave={() => this.handleMouseOut()}
-                    />
-                  );
-                })}
-              </g>
-            </Group>
-          )}
+            )}
+            <AxisLeft
+              scale={yScale}
+              axisClassName={style.axis}
+              labelClassName={style["axis-label"]}
+              label={labels.y}
+              left={margin}
+              tickClassName={style["tick-label"]}
+              stroke="#333333"
+              tickStroke="#333333"
+              numTicks={numTicksForHeight(parentHeight)}
+            />
+            <AxisBottom
+              scale={xScale}
+              axisClassName={style.axis}
+              labelClassName={style["axis-label"]}
+              label={labels.x}
+              top={parentHeight - margin}
+              tickClassName={style["tick-label"]}
+              stroke="#333333"
+              tickStroke="#333333"
+              numTicks={numTicksForWidth(parentWidth)}
+            />
+            <g ref={this.circleRef}>
+              {circles.map(d => {
+                return (
+                  <Circle
+                    key={d.key}
+                    stroke={chroma("gray").darken(2)}
+                    cx={d.cx}
+                    cy={d.cy}
+                    x={d.x}
+                    y={d.y}
+                    onMouseEnter={e => this.handleMouseOver(e, d)}
+                    onMouseLeave={() => this.handleMouseOut()}
+                  />
+                );
+              })}
+            </g>
+          </Group>
         </svg>
         {tooltipOpen && (
           <BoundedToolTip
