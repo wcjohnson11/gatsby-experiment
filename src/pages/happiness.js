@@ -234,7 +234,7 @@ class Happiness extends React.Component {
                 linkHighlighting={false}
               />
             </div>
-            <div className="pure-u-1-2 pure-u-md-1-2">
+            <div className="pure-u-1-2 pure-u-md-1-3">
               <VxScatterplotWithSize
                 data={happyData}
                 xVar={"GDP Per Capita"}
@@ -247,7 +247,7 @@ class Happiness extends React.Component {
                 linkHighlighting={false}
               />
             </div>
-            <div className="pure-u-1-2 pure-u-md-1-2">
+            <div className="pure-u-1-2 pure-u-md-1-3">
               <VxScatterplotWithSize
                 data={happyData}
                 xVar={"GDP Per Capita"}
@@ -266,6 +266,7 @@ class Happiness extends React.Component {
           <React.Fragment>
             <div className="pure-g">
               <div className="pure-u-1">
+                <h2>Explore the Individual Metrics in Greater Detail</h2>
                 {metricVariables && (
                   <VariableForm
                     handleFieldSelect={this.handleVariableFieldSelect}
@@ -274,16 +275,15 @@ class Happiness extends React.Component {
                   />
                 )}
               </div>
-              <div className="pure-u-1">
-                <h3>{currentMetric}</h3>
-                <D3Map data={happyData} mapMetric={currentMetric} />
-              </div>
               <div
-                className="pure-u-1"
+                className={style.metricDescription}
                 dangerouslySetInnerHTML={{
                   __html: markdownDict[currentMetric]
                 }}
               />
+              <div className="pure-u-1">
+                <D3Map data={happyData} mapMetric={currentMetric} />
+              </div>
               <div className="pure-u-1">
                 {barChartVariables && (
                   <VariableForm

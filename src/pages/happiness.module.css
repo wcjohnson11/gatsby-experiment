@@ -40,5 +40,19 @@
 
 .globe {
     composes: pure-u-1 from '../components/pure.css';
-    margin-top: 100px;
+}
+
+.metricDescription {
+    composes: pure-u-1 from '../components/pure.css';
+    margin-top: 2em;
+}
+
+.metricDescription > p {
+    margin-bottom: 0px;
+}
+
+.secondScatterRow {
+    composes: pure-u-md-1-3 from '../components/pure.css';
+    composes: pure-u-1-2 from '../components/pure.css';
+    background-color: red;
 }
