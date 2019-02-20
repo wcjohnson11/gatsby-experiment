@@ -64,12 +64,12 @@ quality of life, observe changes over time, refine our models and
 maximize for policies that lead to more happiness and avoid policies
 that lead to less happiness.
 
-### Different Ways of Measuring Wellbeing
+### Metrics for Measuring Wellbeing
 
-There have been different attempts at measuring wellbeing and they
-will be described below. By visualizing these metrics of wellbeing
-alongside the GDP per capita, we can see that there is a rough
-correlation between increased GDP per capita and improved scores on
-these wellbeing metrics.
+Several groups have developed metrics for measuring wellbeing in a country. The differences between thesemetrics represent the different ideas of how to measure a country's quality of life in comparison to others and to itself over time as well as what should be focused on in policy to improve the quality of life.
 
-Click on the continent names in the legend below to highlight that continent's nations. Click again to unhighlight.
+- **The GINI Index** measures inequality in distribution of family income
+- **The Happy Planet Index** measures a combination of wellbeing, health/life expectancy, inequality and ecologicaly footprint
+- **The Human Development Index** measures health/life expectancy, standard of living
+- **The World Happiness Report Score** measures people's experiences of the quality of their lives
+- **The Sustainable Economic Development Assessment** measures sustainability, economics and Sustainability
