@@ -199,6 +199,60 @@ class Happiness extends React.Component {
           </h1>
           <div dangerouslySetInnerHTML={{ __html: markdownDict["Intro"] }} />
           {isPromiseResolved && (
+            <React.Fragment>
+              <div className="pure-g">
+                <div className="pure-u-1">
+                  <h3>Explore the Individual Metrics in Greater Detail</h3>
+                  <p>
+                    Select a metric from the dropdown and explore the data
+                    visualizations below to see geographic trends and a more
+                    detailed look into how country's scores relate to one
+                    another.
+                  </p>
+                  {metricVariables && (
+                    <VariableForm
+                      handleFieldSelect={this.handleVariableFieldSelect}
+                      variableValues={metricVariables}
+                      active={currentMetric}
+                    />
+                  )}
+                </div>
+                <div
+                  className={style.metricDescription}
+                  dangerouslySetInnerHTML={{
+                    __html: markdownDict[currentMetric]
+                  }}
+                />
+                <D3Map data={happyData} mapMetric={currentMetric} />
+                <div className="pure-u-1">
+                  {barChartVariables && (
+                    <VariableForm
+                      handleFieldSelect={this.handleVariableFieldSelect}
+                      variableValues={barChartVariables}
+                      active={currentBarChart}
+                    />
+                  )}
+                  <BarChart
+                    data={happyData}
+                    xVar={currentMetric}
+                    yVar={"name"}
+                    sortType={currentBarChart}
+                    currentContinent={currentContinent}
+                    colorScale={colorScale}
+                  />
+                </div>
+                <div className="pure-u-1">
+                  <Scatterplot
+                    data={happyData}
+                    xVar={"GDP Per Capita"}
+                    yVar={currentMetric}
+                    colorScale={colorScale}
+                  />
+                </div>
+              </div>
+            </React.Fragment>
+          )}
+          {isPromiseResolved && (
             <div className={`pure-g ${style.wrapper}`}>
               <Legend scale={colorScale} legendClick={this.handleLegendClick} />
               <div className="pure-u-1-2 pure-u-md-1-3">
@@ -267,60 +321,6 @@ class Happiness extends React.Component {
                 />
               </div>
             </div>
-          )}
-          {isPromiseResolved && (
-            <React.Fragment>
-              <div className="pure-g">
-                <div className="pure-u-1">
-                  <h3>Explore the Individual Metrics in Greater Detail</h3>
-                  <p>
-                    Select a metric from the dropdown and explore the data
-                    visualizations below to see geographic trends and a more
-                    detailed look into how country's scores relate to one
-                    another.
-                  </p>
-                  {metricVariables && (
-                    <VariableForm
-                      handleFieldSelect={this.handleVariableFieldSelect}
-                      variableValues={metricVariables}
-                      active={currentMetric}
-                    />
-                  )}
-                </div>
-                <div
-                  className={style.metricDescription}
-                  dangerouslySetInnerHTML={{
-                    __html: markdownDict[currentMetric]
-                  }}
-                />
-                <D3Map data={happyData} mapMetric={currentMetric} />
-                <div className="pure-u-1">
-                  {barChartVariables && (
-                    <VariableForm
-                      handleFieldSelect={this.handleVariableFieldSelect}
-                      variableValues={barChartVariables}
-                      active={currentBarChart}
-                    />
-                  )}
-                  <BarChart
-                    data={happyData}
-                    xVar={currentMetric}
-                    yVar={"name"}
-                    sortType={currentBarChart}
-                    currentContinent={currentContinent}
-                    colorScale={colorScale}
-                  />
-                </div>
-                <div className="pure-u-1">
-                  <Scatterplot
-                    data={happyData}
-                    xVar={"GDP Per Capita"}
-                    yVar={currentMetric}
-                    colorScale={colorScale}
-                  />
-                </div>
-              </div>
-            </React.Fragment>
           )}
         </div>
       </Layout>
