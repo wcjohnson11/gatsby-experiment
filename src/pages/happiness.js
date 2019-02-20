@@ -49,12 +49,15 @@ class Happiness extends React.Component {
   }
 
   componentDidMount() {
-    Promise.all([csv(withPrefix("countrycodes.csv")), csv(withPrefix("happy2.csv"))]).then(allData => {
+    Promise.all([
+      csv(withPrefix("countrycodes.csv")),
+      csv(withPrefix("happy2.csv"))
+    ]).then(allData => {
       // Get countrycodes data
       const countryCodes = allData[0];
       // Get happy data
       const happy = allData[1];
-
+      console.log(this.state.markdownData);
       // Get column Info for happiness dataset
       const columnInfo = [];
       for (var i = 0; i < 4; i++) {
@@ -269,7 +272,13 @@ class Happiness extends React.Component {
             <React.Fragment>
               <div className="pure-g">
                 <div className="pure-u-1">
-                  <h2>Explore the Individual Metrics in Greater Detail</h2>
+                  <h3>Explore the Individual Metrics in Greater Detail</h3>
+                  <p>
+                    Select a metric from the dropdown and explore the data
+                    visualizations below to see geographic trends and a more
+                    detailed look into how country's scores relate to one
+                    another.
+                  </p>
                   {metricVariables && (
                     <VariableForm
                       handleFieldSelect={this.handleVariableFieldSelect}
@@ -284,9 +293,7 @@ class Happiness extends React.Component {
                     __html: markdownDict[currentMetric]
                   }}
                 />
-                <div className="pure-u-1">
-                  <D3Map data={happyData} mapMetric={currentMetric} />
-                </div>
+                <D3Map data={happyData} mapMetric={currentMetric} />
                 <div className="pure-u-1">
                   {barChartVariables && (
                     <VariableForm
@@ -329,6 +336,9 @@ export const query = graphql`
       edges {
         node {
           html
+          fields {
+            slug
+          }
         }
       }
     }

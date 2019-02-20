@@ -49,7 +49,6 @@
 
 .metricDescription {
     composes: pure-u-1 from '../components/pure.css';
-    margin-top: 2em;
 }
 
 .metricDescription > p {
