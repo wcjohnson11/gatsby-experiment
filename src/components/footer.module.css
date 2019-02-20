@@ -16,8 +16,10 @@
 }
 
 .icon {
-    margin-right: 2.5em;
-    margin-left: 2.5em;
+    height: 1em;
+    width: 1em;
+    margin-right: 2.1em;
+    margin-left: 2.1em;
     fill: #8490A7;
 }
 
