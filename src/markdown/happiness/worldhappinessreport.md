@@ -3,6 +3,7 @@ title: "World Happiness Report Score"
 date: "2019-04-18"
 category: "Happiness"
 ---
+
 <h3>World Happiness Report Score</h3>
 <p>
     The <a href="http://worldhappiness.report/">World Happiness Report</a> uses data from the <a href="https://www.gallup.com/analytics/232838/world-poll.aspx">Gallup World Poll</a> question focusing on life evaluation, called the Cantril ladder. In this question, respondents rate their lives on a scale of 0 to 10 where 10 is the best possible life and 0 is the worst.

@@ -35,7 +35,7 @@ importance of making happiness a goal of public policy.
     meaningful, and worthwhile.
     </p>
     <footer>
-    Psychologist Sonja Lyubomirsky in her book{" "}
+    Psychologist Sonja Lyubomirsky in her book
     <cite>
         <a href="https://www.amazon.com/gp/product/0143114956">
         The How of Happiness
@@ -44,7 +44,7 @@ importance of making happiness a goal of public policy.
     </footer>
 </blockquote>
 
-This definition clearly seperates happiness into two main parts, the
+This definition clearly separates happiness into two main parts, the
 first, happiness as positive emotions such as joy, contentment,
 interest and love and the second, as an evaluation of human wellbeing,
 a sense of fulfillment and satisfaction that comes from living a good
@@ -58,7 +58,7 @@ having fun while Russian people said spiritual salvation, a world of
 peace and beauty, mutual understanding among people.
 
 Happiness is difficult to measure but if there is a strong
-corrollation between happiness and quality of life, then if we can
+correllation between happiness and quality of life, then if we can
 find a way to model happiness in a society, then we can measure it's
 quality of life, observe changes over time, refine our models and
 maximize for policies that lead to more happiness and avoid policies
@@ -72,4 +72,4 @@ alongside the GDP per capita, we can see that there is a rough
 correlation between increased GDP per capita and improved scores on
 these wellbeing metrics.
 
-Click on the continents in the legend below to highlight that continent's nations.
+Click on the continent names in the legend below to highlight that continent's nations. Click again to unhighlight.
