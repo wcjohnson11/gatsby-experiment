@@ -15,10 +15,12 @@
     text-decoration: none;
 }
 
-.headerTitle > a {
-    font-size: 1.5rem;
+.headerTitle {
+    font-size: 1.2rem;
+    text-decoration: none;
 }
 
-.headerTitle > a:hover {
-    color: #FF530D;
+.headerTitle:hover {
+    color: #F52B86;
+    text-decoration-color: #F6E444;
 }
