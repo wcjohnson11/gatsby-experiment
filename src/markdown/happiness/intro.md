@@ -70,6 +70,8 @@ Several groups have developed metrics for measuring wellbeing in a country. The 
 
 - **The GINI Index** measures inequality in distribution of family income
 - **The Happy Planet Index** measures a combination of wellbeing, health/life expectancy, inequality and ecologicaly footprint
-- **The Human Development Index** measures health/life expectancy, standard of living
+- **The Human Development Index** measures health/life expectancy, standard of living, amount of education received
+- **The Sustainable Economic Development Assessment** focuses on Economic factors, Investments in Social Services like education, health and infrastructure and Sustainability.
 - **The World Happiness Report Score** measures people's experiences of the quality of their lives
-- **The Sustainable Economic Development Assessment** measures sustainability, economics and Sustainability
+
+See the below legend for a visual representation of what each metric measures.
