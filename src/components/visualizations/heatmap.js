@@ -20,8 +20,8 @@ class Heatmap extends React.Component {
     this.yAxisRef = React.createRef();
   }
 
-  xAxis = axisTop();
-  yAxis = axisLeft();
+  xAxis = axisTop().tickSizeOuter(0);
+  yAxis = axisLeft().tickSizeOuter(0);
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { data, columns } = nextProps;
@@ -108,6 +108,30 @@ class Heatmap extends React.Component {
       .attr("width", d => d.width)
       .attr("height", d => d.height)
       .attr("fill", d => d.fill);
+
+    // add X gridlines
+    select("svg")
+      .append("g")
+      .attr("class", "grid")
+      .attr("transform", `translate(0, ${height - margin.top})`)
+      .call(
+        axisTop(xScale)
+          .ticks(xScale.domain().length)
+          .tickSize(height - margin.top)
+          .tickFormat("")
+      );
+
+    // add Y Gridlines
+    select("svg")
+      .append("g")
+      .attr("class", "grid")
+      .attr("transform", `translate(${width - margin.left}, 0)`)
+      .call(
+        axisLeft(yScale)
+          .ticks(yScale.domain().length)
+          .tickSize(width - margin.left)
+          .tickFormat("")
+      );
   }
 
   render() {
