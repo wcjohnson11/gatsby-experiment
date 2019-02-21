@@ -1,9 +1,16 @@
 import React from "react";
 import { axisLeft, axisTop, select, scaleBand } from "d3";
 
-const height = 450;
+const height = 400;
 const width = 400;
-const margin = { left: 90, top: 90 };
+const margin = { top: 160, left: 175 };
+const yMap = {
+  "GINI Index": "GINI",
+  "Happy Planet Index": "Happy Planet",
+  "Human Development Index": "Human Development",
+  "Sustainable Economic Development Index": "SEDA",
+  "World Happiness Report Score": "World Happiness"
+};
 
 class Heatmap extends React.Component {
   constructor(props) {
@@ -21,11 +28,11 @@ class Heatmap extends React.Component {
     if (!data) return {};
 
     const xValues = [
-      "economics",
-      "healthLifeExpectancy",
-      "inequality",
-      "sustainability",
-      "reportedHappiness"
+      "Economics",
+      "Health Expectancy",
+      "Inequality",
+      "Sustainability",
+      "Happiness"
     ];
 
     const yValues = [
@@ -51,15 +58,16 @@ class Heatmap extends React.Component {
       .reduce((result, d) => {
         const yValue = d.name;
         for (var key in d) {
-          console.log(key);
-          if (xValues.indexOf(key) >= 0 && d[key] == "TRUE") {
-            console.log(key, xScale(key), yValue, yScale(yValue));
+          if (
+            (xValues.indexOf(key) >= 0 && d[key] === "TRUE") ||
+            d[key] === "CAVEAT"
+          ) {
             result.push({
               x: xScale(key),
               y: yScale(yValue),
               width: xScale.bandwidth(),
               height: yScale.bandwidth(),
-              fill: "black"
+              fill: d[key] == "TRUE" ? "#0D030D" : "#592037"
             });
           }
         }
@@ -80,16 +88,15 @@ class Heatmap extends React.Component {
       .attr("x", 9)
       .attr("dy", ".35em")
       .attr("transform", "rotate(-45)")
-      .style("text-anchor", "start");
+      .style("text-anchor", "start")
+      .style("font-size", "16px");
     this.yAxis.scale(yScale);
     select(this.yAxisRef.current)
       .call(this.yAxis)
       .selectAll("text")
-      .attr("y", -9)
-      .attr("x", -9)
+      .text(d => yMap[d])
       .attr("dy", ".35em")
-      .attr("transform", "rotate(-45)")
-      .style("text-anchor", "end");
+      .style("font-size", "16px");
 
     select("svg")
       .selectAll("rect")
@@ -106,7 +113,8 @@ class Heatmap extends React.Component {
   render() {
     return (
       <svg
-        viewBox={`-${margin.left} -${margin.top} ${width} ${height}`}
+        viewBox={`-${margin.left} -${margin.top} ${width +
+          margin.left} ${height + margin.top}`}
         height={height}
         width={width}
       >
