@@ -4,6 +4,7 @@ import { csv } from "d3";
 import Layout from "../components/layout";
 import VariableForm from "../components/variableForm";
 import VxScatterplotWithSize from "../components/visualizations/vxscatterplot";
+import Heatmap from "../components/visualizations/heatmap";
 import D3Map from "../components/visualizations/d3map";
 import Scatterplot from "../components/visualizations/scatterplot";
 import Legend from "../components/visualizations/legend";
@@ -57,10 +58,9 @@ class Happiness extends React.Component {
       const countryCodes = allData[0];
       // Get happy data
       const happy = allData[1];
-      console.log(this.state.markdownData);
       // Get column Info for happiness dataset
       const columnInfo = [];
-      for (var i = 0; i < 4; i++) {
+      for (var i = 0; i < 9; i++) {
         columnInfo.push(happy.shift());
       }
 
@@ -104,14 +104,24 @@ class Happiness extends React.Component {
             column !== "code" &&
             column !== "ISO Country Code" &&
             column !== "Continent Name" &&
-            column !== "Continent Code"
+            column !== "Continent Code" &&
+            column !== "Population" &&
+            column !== "surface area (Km2)" &&
+            column !== "GDP  (billions PPP)" &&
+            column !== ""
         )
         .map(column => {
           return {
             name: column,
             source: columnInfo[0][column],
             url: columnInfo[1][column],
-            description: columnInfo[2][column]
+            description: columnInfo[2][column],
+            Economics: columnInfo[3][column],
+            ["Health Expectancy"]: columnInfo[4][column],
+            Inequality: columnInfo[5][column],
+            Sustainability: columnInfo[6][column],
+            Happiness: columnInfo[7][column],
+            dataYear: columnInfo[8][column]
           };
         });
 
@@ -193,62 +203,65 @@ class Happiness extends React.Component {
 
     return (
       <Layout>
-        <div className={style.happiness}>
+        <div className={`pure-g ${style.happiness}`}>
           <h1 className={style.title}>
             Measuring Wellbeing for a Better World
           </h1>
-          <div dangerouslySetInnerHTML={{ __html: markdownDict["Intro"] }} />
+          <div
+            className="pure-u-1"
+            dangerouslySetInnerHTML={{ __html: markdownDict["Intro"] }}
+          />
+          <div className={`pure-u-1 ${style.center}`}>
+            <Heatmap data={happyData} columns={metricVariables} />
+          </div>
           {isPromiseResolved && (
             <React.Fragment>
-              <div className="pure-g">
-                <div className="pure-u-1">
-                  <h3>Explore the Individual Metrics in Greater Detail</h3>
-                  <p>
-                    Select a metric from the dropdown and explore the data
-                    visualizations below to see geographic trends and a more
-                    detailed look into how country's scores relate to one
-                    another.
-                  </p>
-                  {metricVariables && (
-                    <VariableForm
-                      handleFieldSelect={this.handleVariableFieldSelect}
-                      variableValues={metricVariables}
-                      active={currentMetric}
-                    />
-                  )}
-                </div>
-                <div
-                  className={style.metricDescription}
-                  dangerouslySetInnerHTML={{
-                    __html: markdownDict[currentMetric]
-                  }}
+              <div className="pure-u-1">
+                <h3>Explore the Individual Metrics in Greater Detail</h3>
+                <p>
+                  Select a metric from the dropdown and explore the data
+                  visualizations below to see geographic trends and a more
+                  detailed look into how country's scores relate to one another.
+                </p>
+                {metricVariables && (
+                  <VariableForm
+                    handleFieldSelect={this.handleVariableFieldSelect}
+                    variableValues={metricVariables}
+                    active={currentMetric}
+                  />
+                )}
+              </div>
+              <div
+                className={style.metricDescription}
+                dangerouslySetInnerHTML={{
+                  __html: markdownDict[currentMetric]
+                }}
+              />
+              <D3Map data={happyData} mapMetric={currentMetric} />
+              <div className="pure-u-1">
+                {barChartVariables && (
+                  <VariableForm
+                    handleFieldSelect={this.handleVariableFieldSelect}
+                    variableValues={barChartVariables}
+                    active={currentBarChart}
+                  />
+                )}
+                <BarChart
+                  data={happyData}
+                  xVar={currentMetric}
+                  yVar={"name"}
+                  sortType={currentBarChart}
+                  currentContinent={currentContinent}
+                  colorScale={colorScale}
                 />
-                <D3Map data={happyData} mapMetric={currentMetric} />
-                <div className="pure-u-1">
-                  {barChartVariables && (
-                    <VariableForm
-                      handleFieldSelect={this.handleVariableFieldSelect}
-                      variableValues={barChartVariables}
-                      active={currentBarChart}
-                    />
-                  )}
-                  <BarChart
-                    data={happyData}
-                    xVar={currentMetric}
-                    yVar={"name"}
-                    sortType={currentBarChart}
-                    currentContinent={currentContinent}
-                    colorScale={colorScale}
-                  />
-                </div>
-                <div className="pure-u-1">
-                  <Scatterplot
-                    data={happyData}
-                    xVar={"GDP Per Capita"}
-                    yVar={currentMetric}
-                    colorScale={colorScale}
-                  />
-                </div>
+              </div>
+              <div className="pure-u-1">
+                <Scatterplot
+                  data={happyData}
+                  xVar={"GDP Per Capita"}
+                  yVar={currentMetric}
+                  colorScale={colorScale}
+                />
               </div>
             </React.Fragment>
           )}
