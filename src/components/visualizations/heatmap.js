@@ -98,7 +98,7 @@ class Heatmap extends React.Component {
       .attr("dy", ".35em")
       .style("font-size", "16px");
 
-    select("svg")
+    select("#heatmap")
       .selectAll("rect")
       .data(rects)
       .enter()
@@ -110,7 +110,7 @@ class Heatmap extends React.Component {
       .attr("fill", d => d.fill);
 
     // add X gridlines
-    select("svg")
+    select("#heatmap")
       .append("g")
       .attr("class", "grid")
       .attr("transform", `translate(0, ${height - margin.top})`)
@@ -122,7 +122,7 @@ class Heatmap extends React.Component {
       );
 
     // add Y Gridlines
-    select("svg")
+    select("#heatmap")
       .append("g")
       .attr("class", "grid")
       .attr("transform", `translate(${width - margin.left}, 0)`)
@@ -137,6 +137,7 @@ class Heatmap extends React.Component {
   render() {
     return (
       <svg
+        id="heatmap"
         viewBox={`-${margin.left} -${margin.top} ${width +
           margin.left} ${height + margin.top}`}
         height={height}
