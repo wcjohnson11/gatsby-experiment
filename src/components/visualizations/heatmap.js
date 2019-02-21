@@ -67,7 +67,7 @@ class Heatmap extends React.Component {
               y: yScale(yValue),
               width: xScale.bandwidth(),
               height: yScale.bandwidth(),
-              fill: d[key] == "TRUE" ? "#0D030D" : "#592037"
+              fill: d[key] === "TRUE" ? "#0D030D" : "#592037"
             });
           }
         }
