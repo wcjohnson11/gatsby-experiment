@@ -1,7 +1,8 @@
 import React from "react";
 import { graphql, withPrefix } from "gatsby";
-import { csv } from "d3";
+import { csv, timeParse } from "d3";
 import Layout from "../components/layout";
+import MultiLine from "../components/visualizations/multiline";
 import VariableForm from "../components/variableForm";
 import VxScatterplotWithSize from "../components/visualizations/vxscatterplot";
 import Heatmap from "../components/visualizations/heatmap";
@@ -15,6 +16,7 @@ import BarChart from "../components/visualizations/barchart";
 const cleanNumbers = string => {
   return parseFloat(string.replace(/,/g, ""));
 };
+const parseTime = timeParse("%Y");
 
 const colors = [
   "#e41a1c",
@@ -52,12 +54,22 @@ class Happiness extends React.Component {
   componentDidMount() {
     Promise.all([
       csv(withPrefix("countrycodes.csv")),
-      csv(withPrefix("happy2.csv"))
+      csv(withPrefix("happy2.csv")),
+      csv(withPrefix("gdpovertime.csv"))
     ]).then(allData => {
       // Get countrycodes data
       const countryCodes = allData[0];
       // Get happy data
       const happy = allData[1];
+      // get gdp over time data
+      const gdp = allData[2].map(d => {
+        return {
+          Entity: d.Entity,
+          Code: d.Code,
+          Year: parseTime(d.Year),
+          "GDP per capita": cleanNumbers(d["GDP per capita"])
+        };
+      });
       // Get column Info for happiness dataset
       const columnInfo = [];
       for (var i = 0; i < 9; i++) {
@@ -117,7 +129,7 @@ class Happiness extends React.Component {
             url: columnInfo[1][column],
             description: columnInfo[2][column],
             Economics: columnInfo[3][column],
-            ["Health Expectancy"]: columnInfo[4][column],
+            "Health Expectancy": columnInfo[4][column],
             Inequality: columnInfo[5][column],
             Sustainability: columnInfo[6][column],
             Happiness: columnInfo[7][column],
@@ -144,6 +156,7 @@ class Happiness extends React.Component {
         colorScale: colorScale,
         isPromiseResolved: true,
         happyData: newHappy,
+        gdp: gdp,
         metricVariables: columns,
         currentMetric: this.state.currentMetric,
         barChartVariables: this.state.barChartVariables,
@@ -189,6 +202,7 @@ class Happiness extends React.Component {
       currentBarChart,
       currentCountry,
       happyData,
+      gdp,
       markdownData
     } = this.state;
 
@@ -207,6 +221,7 @@ class Happiness extends React.Component {
           <h1 className={style.title}>
             Measuring Wellbeing for a Better World
           </h1>
+          <MultiLine data={gdp} />
           <div
             className="pure-u-1"
             dangerouslySetInnerHTML={{ __html: markdownDict["Intro"] }}
