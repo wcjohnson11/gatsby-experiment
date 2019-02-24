@@ -16,6 +16,7 @@ import {
 import { merge } from "d3-array";
 import Select from "react-select";
 import { withParentSize } from "@vx/responsive";
+import style from "./multiline.module.css";
 
 const margin = { top: 20, right: 20, bottom: 40, left: 40 };
 class MultiLine extends React.Component {
@@ -47,7 +48,7 @@ class MultiLine extends React.Component {
 
   mouseover(d, xScale, yScale) {
     selectAll(".line").attr("stroke", el => {
-      if (d.data.Entity == el.key) {
+      if (d.data.Entity === el.key) {
         return "steelblue";
       }
       return "#ddd";
@@ -398,7 +399,7 @@ class MultiLine extends React.Component {
   render() {
     const { countryOptions, height, selectedOptions, width } = this.state;
     return (
-      <React.Fragment>
+      <div className={style.wrapper}>
         <Select
           value={selectedOptions}
           onChange={this.handleChange}
@@ -429,7 +430,7 @@ class MultiLine extends React.Component {
           </g>
           <g className="voronoi" fill="none" />
         </svg>
-      </React.Fragment>
+      </div>
     );
   }
 }
