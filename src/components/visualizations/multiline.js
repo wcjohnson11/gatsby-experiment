@@ -4,14 +4,17 @@ import {
   axisLeft,
   bisectLeft,
   curveCatmullRom,
+  voronoi,
   extent,
   line,
   nest,
   select as d3Select,
+  selectAll,
   set,
   scaleLinear,
   scaleTime
 } from "d3";
+import { merge } from "d3-array";
 import Select from "react-select";
 import { event as currentEvent } from "d3-selection";
 import { withParentSize } from "@vx/responsive";
@@ -37,10 +40,29 @@ class MultiLine extends React.Component {
     this.mulitilineXRef = React.createRef();
     this.multilineYRef = React.createRef();
     this.handleChange = this.handleChange.bind(this);
+    this.mouseover = this.mouseover.bind(this);
+    this.mouseout = this.mouseout.bind(this);
   }
 
   xAxis = axisBottom().tickSizeOuter(0);
   yAxis = axisLeft().tickSizeOuter(0);
+
+  mouseover(d, xScale, yScale) {
+    d3Select(d.data.line).classed("hover", true);
+    d.data.line.parentNode.appendChild(d.data.line);
+    d3Select(".focus")
+      .attr(
+        "transform",
+        `translate(${xScale(d.data.Year)}, ${yScale(d.data["GDP per capita"])})`
+      )
+      .select("text")
+      .text(d.data.Entity);
+  }
+
+  mouseout(d) {
+    d3Select(d.data.line).text("hover", false);
+    d3Select(".focus").attr("transform", "translate(-100,-100)");
+  }
 
   // Hover function for country paths
   hover(svg, path, xScale, yScale, nestedData) {
@@ -112,12 +134,11 @@ class MultiLine extends React.Component {
     const { data, parentWidth } = nextProps;
     if (!data) return {};
 
-    const height = parentWidth * 0.6;
-    const width = parentWidth;
+    const height = parentWidth * 0.6 - margin.top - margin.bottom;
+    const width = parentWidth - margin.left - margin.right;
 
     // Get list of countries
     const countries = set(data.map(d => d.Entity)).values();
-
     // Create array of options for multiselect
     const countryOptions = countries.map(d => {
       return {
@@ -145,6 +166,15 @@ class MultiLine extends React.Component {
       .nice()
       .range([height - margin.bottom, margin.top]);
 
+    // Declare Voronoi Function
+    const voronoiFn = voronoi()
+      .x(d => xScale(d.Year))
+      .y(d => yScale(d["GDP per capita"]))
+      .extent([
+        [-margin.left, -margin.top],
+        [width + margin.right, height + margin.bottom]
+      ]);
+
     // Declare line function
     const lineFn = line()
       .curve(curveCatmullRom)
@@ -162,6 +192,7 @@ class MultiLine extends React.Component {
       height,
       lineFn,
       nestedData,
+      voronoiFn,
       width,
       xScale,
       yScale
@@ -173,7 +204,7 @@ class MultiLine extends React.Component {
   }
 
   componentDidMount() {
-    const { lineFn, nestedData, xScale, yScale } = this.state;
+    const { lineFn, nestedData, voronoiFn, xScale, yScale } = this.state;
 
     // Add axis and attributes to xAxis
     this.xAxis.scale(xScale);
@@ -211,7 +242,13 @@ class MultiLine extends React.Component {
       .append("path")
       .attr("class", "line")
       .style("mix-blend-mode", "multiply")
-      .attr("d", d => lineFn(d.values));
+      .attr("d", function(d) {
+        d.values.forEach(country => {
+          country.line = this;
+          return country;
+        });
+        return lineFn(d.values);
+      });
 
     // Add text label for each line path
     country
@@ -236,44 +273,54 @@ class MultiLine extends React.Component {
       .style("font-weight", "normal")
       .text(d => d.name);
 
-    // Add Hover functionality to chart
-    d3Select("#multiLine").call(
-      this.hover,
-      country,
-      xScale,
-      yScale,
-      nestedData
-    );
+    // Add Voronoi paths for handling mouse events
+    // Uncomment stroke to show voronoi
+    d3Select(".voronoi")
+      .selectAll("path")
+      .data(voronoiFn.polygons(merge(nestedData.map(d => d.values))))
+      .enter()
+      .append("path")
+      .classed("voronoi-path", true)
+      .style("pointer-events", "all")
+      .attr("d", d => (d ? "M" + d.join("L") + "Z" : null))
+      //   .attr("stroke", "red")
+      // .attr("stroke-width", "0.2")
+      .attr("fill", "none")
+      .on("mouseover", d => this.mouseover(d, xScale, yScale))
+      .on("mouseout", d => this.mouseout(d));
   }
 
   componentDidUpdate() {
-    const { lineFn, nestedData, xScale, yScale } = this.state;
+    const { lineFn, nestedData, voronoiFn, xScale, yScale } = this.state;
 
     const svg = d3Select("#multiLine").transition();
 
-    // Add axis and attributes to xAxis
+    // Add axis and attributes to Axes
     this.xAxis.scale(xScale);
-
     svg
       .select(".xAxis")
       .duration(750)
       .call(this.xAxis);
 
+    this.yAxis.scale(yScale);
     svg
       .select(".yAxis")
       .duration(750)
       .call(this.yAxis);
 
+    // Bind data to .country elements
     const countries = d3Select("#multiLine")
       .selectAll(".country")
       .data(nestedData, d => d.key);
 
+    // Remove exiting elements
     countries
       .exit()
       .attr("class", "exit")
       .transition(750)
       .remove();
 
+    // Adding new elements
     const newCountries = countries
       .enter()
       .append("g")
@@ -304,7 +351,13 @@ class MultiLine extends React.Component {
       .select("path")
       .attr("class", "line")
       .style("mix-blend-mode", "multiply")
-      .attr("d", d => lineFn(d.values));
+      .attr("d", function(d) {
+        d.values.forEach(country => {
+          country.line = this;
+          return country;
+        });
+        return lineFn(d.values);
+      });
 
     // Merge text and add text
     countries
@@ -330,14 +383,23 @@ class MultiLine extends React.Component {
       .style("font-weight", "normal")
       .text(d => d.name);
 
-    // Add Hover functionality to chart
-    d3Select("#multiLine").call(
-      this.hover,
-      countries.merge(newCountries),
-      xScale,
-      yScale,
-      nestedData
-    );
+    // Remove old voronoi
+    selectAll(".voronoi-path").remove();
+
+    // Add new voronoi
+    d3Select(".voronoi")
+      .selectAll("path")
+      .data(voronoiFn.polygons(merge(nestedData.map(d => d.values))))
+      .enter()
+      .append("path")
+      .classed("voronoi-path", true)
+      .style("pointer-events", "all")
+      .attr("d", d => (d ? "M" + d.join("L") + "Z" : null))
+      //   .attr("stroke", "red")
+      //   .attr("stroke-width", "0.2")
+      .attr("fill", "none")
+      .on("mouseover", d => this.mouseover(d, xScale, yScale))
+      .on("mouseout", d => this.mouseout(d));
   }
 
   render() {
@@ -362,6 +424,11 @@ class MultiLine extends React.Component {
             ref={this.multilineYRef}
             transform={`translate(${margin.left}, 0)`}
           />
+          <g className="focus" transform={`translate(-100, -100)`}>
+            <circle r={3.5} />
+            <text y={-10} />
+          </g>
+          <g className="voronoi" fill="none" />
         </svg>
       </React.Fragment>
     );
