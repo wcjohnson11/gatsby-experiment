@@ -4,74 +4,33 @@ date: "2019-04-18"
 category: "Happiness"
 ---
 
-### The history of measuring human wellbeing
+### What is well-being
 
-The history of attempting to measure human wellbeing on a global scale
+Well-being is a very broad concept used to refer to a quality of life that is comprised two major spheres, objective and subjective. 
+
+**Objective well-being** is comprised of things like the level of education, economic stability and sufficiency, the standard of living, safety from crime and war, health and life expectancy, social services and infrastructure.
+
+**Subjective well-being** is different in that it is based on an individuals subjective assessment of the quality of their life. This generally includes factors such as a sense that a person's life has meaning, that they are growing as individuals, that they are in control of their life, that they have community and feel happy or optimistic about the future.
+
+### Why Measuring well-being can create a better world
+
+If we can understand the building blocks of well-being, then we can measure them and create policies with the aim of increasing objective well-being and create societies where people are more likely to feel subjective well-being.
+
+By measuring well-being we can also see the results of different policies and compare countries to their past performance and against other countries in these well-being indicators. Having a focus on increasing the quality of life should be a key focus of our governments and the more we attempt to measure and improve well-being, the more we will learn about how to measure and improve well-being which will hopefully lead to a better world.
+
+### The history of measuring human well-being
+
+The history of attempting to measure human well-being on a global scale
 is still relatively new. After World War 2 and the Great Depression,
 when countries were attempting to find ways to measure their
 recoveries, economist Simon Kuznets developed the concept of a Gross
 Domestic Product (GDP) to capture all economic production by
 individuals, companies and the government in a single statistic. He
-theorized that it should correlate to wellbeing since it would rise in
-good times and fall in bad.
+theorized that it should correlate to well-being since it would rise in good times and fall in bad.
 
 This was easily measurable and served as the primary measure of a
-country's wellbeing for many years but over time, criticism arose that
+country's well-being for many years but over time, criticism arose that
 growth in a country's economic output doesn't necessarily mean a
 better life for it's citizens.
 
-In 1990, UN economist Mahbub ul Haq created the Human Development
-Index (HDI) to more accurately measure human wellbeing, which focused
-on education, health expectancy, gender equality, and standard of
-living. In 2012, UN Secretary General Ban Ki Moon recognized the
-importance of making happiness a goal of public policy.
-
-### What is Happiness anyway?
-
-<blockquote>
-    <p>
-    Happiness is the experience of joy, contentment, or positive
-    well-being, combined with a sense that one’s life is good,
-    meaningful, and worthwhile.
-    </p>
-    <footer>
-    Psychologist Sonja Lyubomirsky in her book
-    <cite>
-        <a href="https://www.amazon.com/gp/product/0143114956">
-        The How of Happiness
-        </a>
-    </cite>
-    </footer>
-</blockquote>
-
-This definition clearly separates happiness into two main parts, the
-first, happiness as positive emotions such as joy, contentment,
-interest and love and the second, as an evaluation of human wellbeing,
-a sense of fulfillment and satisfaction that comes from living a good
-life.
-
-The emotional aspect is universal while the second depends on a
-person's culture and life experiences. For example, when Sonja
-Lyubomirsky did a research project asking people in America and Russia
-to define happiness,American people said money, family, success,
-having fun while Russian people said spiritual salvation, a world of
-peace and beauty, mutual understanding among people.
-
-Happiness is difficult to measure but if there is a strong
-correllation between happiness and quality of life, then if we can
-find a way to model happiness in a society, then we can measure it's
-quality of life, observe changes over time, refine our models and
-maximize for policies that lead to more happiness and avoid policies
-that lead to less happiness.
-
-### Metrics for Measuring Wellbeing
-
-Several groups have developed metrics for measuring wellbeing in a country. The differences between thesemetrics represent the different ideas of how to measure a country's quality of life in comparison to others and to itself over time as well as what should be focused on in policy to improve the quality of life.
-
-- **The GINI Index** measures inequality in distribution of family income
-- **The Happy Planet Index** measures a combination of wellbeing, health/life expectancy, inequality and ecologicaly footprint
-- **The Human Development Index** measures health/life expectancy, standard of living, amount of education received
-- **The Sustainable Economic Development Assessment** focuses on Economic factors, Investments in Social Services like education, health and infrastructure and Sustainability.
-- **The World Happiness Report Score** measures people's experiences of the quality of their lives
-
-See the below legend for a visual representation of what each metric measures.
+The linechart below allows you to observe countries GDP per capita(adjusted for inflation and Purchasing Power Parity) over time since 1950. You can add or remove countries using the select bar to inspect specific countries' GDP.
