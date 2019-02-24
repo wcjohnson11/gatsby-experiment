@@ -1,5 +1,5 @@
 ---
-title: "GINI"
+title: "GINI Index"
 date: "2019-04-18"
 category: "Happiness"
 ---
