@@ -7,14 +7,16 @@ import {
   extent,
   line,
   nest,
-  select,
+  select as d3Select,
+  set,
   scaleLinear,
   scaleTime
 } from "d3";
+import Select from "react-select";
 import { event as currentEvent } from "d3-selection";
 import { withParentSize } from "@vx/responsive";
 
-const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+const margin = { top: 20, right: 20, bottom: 40, left: 40 };
 class MultiLine extends React.Component {
   constructor(props) {
     super(props);
@@ -22,20 +24,19 @@ class MultiLine extends React.Component {
       height: 0,
       width: 0,
       lines: [],
-      activeCountries: [
-        "United States",
-        "England",
-        "Australia",
-        "Japan",
-        "India",
-        "Germany",
-        "Switzerland",
-        "China",
-        "Brazil"
+      selectedOptions: [
+        { label: "United States", value: "United States" },
+        { label: "England", value: "England" },
+        { label: "Japan", value: "Japan" },
+        { label: "India", value: "India" },
+        { label: "China", value: "China" },
+        { label: "Germany", value: "Germany" },
+        { label: "Switzerland", value: "Switzerland" }
       ]
     };
     this.mulitilineXRef = React.createRef();
     this.multilineYRef = React.createRef();
+    this.handleChange = this.handleChange.bind(this);
   }
 
   xAxis = axisBottom().tickSizeOuter(0);
@@ -107,12 +108,26 @@ class MultiLine extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { activeCountries } = prevState;
+    const { selectedOptions } = prevState;
     const { data, parentWidth } = nextProps;
     if (!data) return {};
 
     const height = parentWidth * 0.6;
     const width = parentWidth;
+
+    // Get list of countries
+    const countries = set(data.map(d => d.Entity)).values();
+
+    // Create array of options for multiselect
+    const countryOptions = countries.map(d => {
+      return {
+        label: d,
+        value: d
+      };
+    });
+
+    // Get list of activeCountries from selectedOptions
+    const activeCountries = selectedOptions.map(d => d.value);
 
     // Filter out nonActive countries
     const filteredData = data.filter(
@@ -142,7 +157,8 @@ class MultiLine extends React.Component {
       .entries(filteredData);
 
     return {
-      activeCountries,
+      countryOptions,
+      selectedOptions,
       height,
       lineFn,
       nestedData,
@@ -152,12 +168,16 @@ class MultiLine extends React.Component {
     };
   }
 
-  componentDidUpdate() {
+  handleChange(selectedOptions) {
+    this.setState({ selectedOptions });
+  }
+
+  componentDidMount() {
     const { lineFn, nestedData, xScale, yScale } = this.state;
 
     // Add axis and attributes to xAxis
     this.xAxis.scale(xScale);
-    select(this.mulitilineXRef.current)
+    d3Select(this.mulitilineXRef.current)
       .call(this.xAxis)
       .selectAll("text")
       .attr("y", 3)
@@ -168,18 +188,17 @@ class MultiLine extends React.Component {
 
     // Add axis and attributes to yAxis
     this.yAxis.scale(yScale);
-    select(this.multilineYRef.current)
+    d3Select(this.multilineYRef.current)
       .call(this.yAxis)
       .selectAll("text")
       .attr("dy", ".35em")
       .attr("font-weight", "bold");
 
     // Add data and G for each country
-    const country = select("#multiLine")
+    const country = d3Select("#multiLine")
       .selectAll(".country")
-      .data(nestedData)
-      .enter()
-      .append("g")
+      .data(nestedData, d => d.key)
+      .join("g")
       .attr("class", "country")
       .attr("fill", "none")
       .attr("stroke", "steelblue")
@@ -218,22 +237,133 @@ class MultiLine extends React.Component {
       .text(d => d.name);
 
     // Add Hover functionality to chart
-    select("#multiLine").call(this.hover, country, xScale, yScale, nestedData);
+    d3Select("#multiLine").call(
+      this.hover,
+      country,
+      xScale,
+      yScale,
+      nestedData
+    );
+  }
+
+  componentDidUpdate() {
+    const { lineFn, nestedData, xScale, yScale } = this.state;
+
+    const svg = d3Select("#multiLine").transition();
+
+    // Add axis and attributes to xAxis
+    this.xAxis.scale(xScale);
+
+    svg
+      .select(".xAxis")
+      .duration(750)
+      .call(this.xAxis);
+
+    svg
+      .select(".yAxis")
+      .duration(750)
+      .call(this.yAxis);
+
+    const countries = d3Select("#multiLine")
+      .selectAll(".country")
+      .data(nestedData, d => d.key);
+
+    countries
+      .exit()
+      .attr("class", "exit")
+      .transition(750)
+      .remove();
+
+    const newCountries = countries
+      .enter()
+      .append("g")
+      .attr("class", "country")
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round");
+
+    newCountries.append("path");
+    newCountries.append("text");
+
+    // Merge g values
+    countries
+      .merge(newCountries)
+      .select("g")
+      .attr("class", "country")
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round");
+
+    // Merge paths and draw
+    countries
+      .merge(newCountries)
+      .select("path")
+      .attr("class", "line")
+      .style("mix-blend-mode", "multiply")
+      .attr("d", d => lineFn(d.values));
+
+    // Merge text and add text
+    countries
+      .merge(newCountries)
+      .select("text")
+      .datum(d => {
+        return {
+          name: d.key,
+          value: d.values[d.values.length - 1]
+        };
+      })
+      .attr("transform", d => {
+        const yValue = yScale(d.value["GDP per capita"]);
+        const xValue = xScale(d.value.Year);
+        return `translate(${xValue}, ${yValue})`;
+      })
+      .attr("x", 3)
+      .attr("dy", ".35em")
+      .attr("fill", "black")
+      .attr("stroke-width", 0)
+      .style("font-size", "10px")
+      .style("font-style", "sans-serif")
+      .style("font-weight", "normal")
+      .text(d => d.name);
+
+    // Add Hover functionality to chart
+    d3Select("#multiLine").call(
+      this.hover,
+      countries.merge(newCountries),
+      xScale,
+      yScale,
+      nestedData
+    );
   }
 
   render() {
-    const { height, width } = this.state;
+    const { countryOptions, height, selectedOptions, width } = this.state;
     return (
-      <svg id="multiLine" height={height} width={width}>
-        <g
-          ref={this.mulitilineXRef}
-          transform={`translate(0, ${height - margin.bottom})`}
+      <React.Fragment>
+        <Select
+          value={selectedOptions}
+          onChange={this.handleChange}
+          options={countryOptions}
+          isMulti={true}
+          isSearchable={true}
         />
-        <g
-          ref={this.multilineYRef}
-          transform={`translate(${margin.left}, 0)`}
-        />
-      </svg>
+        <svg id="multiLine" height={height} width={width}>
+          <g
+            className="xAxis"
+            ref={this.mulitilineXRef}
+            transform={`translate(0, ${height - margin.bottom})`}
+          />
+          <g
+            className="yAxis"
+            ref={this.multilineYRef}
+            transform={`translate(${margin.left}, 0)`}
+          />
+        </svg>
+      </React.Fragment>
     );
   }
 }
