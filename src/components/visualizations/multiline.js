@@ -2,7 +2,6 @@ import React from "react";
 import {
   axisBottom,
   axisLeft,
-  bisectLeft,
   curveCatmullRom,
   voronoi,
   extent,
@@ -16,7 +15,6 @@ import {
 } from "d3";
 import { merge } from "d3-array";
 import Select from "react-select";
-import { event as currentEvent } from "d3-selection";
 import { withParentSize } from "@vx/responsive";
 
 const margin = { top: 20, right: 20, bottom: 40, left: 40 };
@@ -77,6 +75,7 @@ class MultiLine extends React.Component {
     const height = parentWidth * 0.6 - margin.top - margin.bottom;
     const width = parentWidth - margin.left - margin.right;
 
+    const isMobile = parentWidth < 600 ? true : false;
     // Get list of countries
     const countries = set(data.map(d => d.Entity)).values();
     // Create array of options for multiselect
@@ -86,7 +85,6 @@ class MultiLine extends React.Component {
         value: d
       };
     });
-
     // Get list of activeCountries from selectedOptions
     const activeCountries = selectedOptions.map(d => d.value);
 
@@ -98,7 +96,7 @@ class MultiLine extends React.Component {
     // Declare xScale
     const xScale = scaleTime()
       .domain(extent(filteredData, d => d.Year))
-      .range([margin.left, width - margin.right * 4]);
+      .range([margin.left, width - margin.right * 5]);
 
     // Declare yScale
     const yScale = scaleLinear()
@@ -130,6 +128,7 @@ class MultiLine extends React.Component {
       countryOptions,
       selectedOptions,
       height,
+      isMobile,
       lineFn,
       nestedData,
       voronoiFn,
@@ -144,7 +143,16 @@ class MultiLine extends React.Component {
   }
 
   componentDidMount() {
-    const { lineFn, nestedData, voronoiFn, xScale, yScale } = this.state;
+    const {
+      isMobile,
+      lineFn,
+      nestedData,
+      voronoiFn,
+      xScale,
+      yScale,
+      width,
+      height
+    } = this.state;
 
     // Add axis and attributes to xAxis
     this.xAxis.scale(xScale);
@@ -164,6 +172,27 @@ class MultiLine extends React.Component {
       .selectAll("text")
       .attr("dy", ".35em")
       .attr("font-weight", "bold");
+
+    d3Select(".xAxisTitle")
+      .attr("text-anchor", "end")
+      .style("font-size", isMobile ? ".5em" : ".8em")
+      .attr(
+        "transform",
+        `translate(${width - margin.left - margin.right * 2},${height -
+          margin.bottom -
+          margin.top / 2})`
+      )
+      .text("Years");
+
+    d3Select(".yAxisTitle")
+      .attr("text-anchor", "end")
+      .style("font-size", isMobile ? ".5em" : ".8em")
+      .attr(
+        "transform",
+        `translate(${margin.right + margin.left}, ${margin.top +
+          margin.bottom / 5}) rotate(-90)`
+      )
+      .text("Adujusted GDP Per Capita");
 
     // Add data and G for each country
     const country = d3Select("#multiLine")
@@ -231,7 +260,15 @@ class MultiLine extends React.Component {
   }
 
   componentDidUpdate() {
-    const { lineFn, nestedData, voronoiFn, xScale, yScale } = this.state;
+    const {
+      lineFn,
+      nestedData,
+      voronoiFn,
+      xScale,
+      yScale,
+      width,
+      height
+    } = this.state;
 
     const svg = d3Select("#multiLine").transition();
 
@@ -239,13 +276,13 @@ class MultiLine extends React.Component {
     this.xAxis.scale(xScale);
     svg
       .select(".xAxis")
-      .duration(750)
+      .duration(200)
       .call(this.xAxis);
 
     this.yAxis.scale(yScale);
     svg
       .select(".yAxis")
-      .duration(750)
+      .duration(200)
       .call(this.yAxis);
 
     // Bind data to .country elements
@@ -257,8 +294,24 @@ class MultiLine extends React.Component {
     countries
       .exit()
       .attr("class", "exit")
-      .transition(750)
+      .attr("opacity", 1)
+      .transition(200)
+      .attr("opacity", 0)
       .remove();
+
+    const focus = d3Select(".focus");
+
+    if (nestedData.length === 0) {
+      focus.select("circle").attr("r", 0);
+
+      focus
+        .attr("transform", `translate(${width / 2.5}, ${height / 2})`)
+        .select("text")
+        .text("Add some countries!");
+    } else {
+      focus.attr("transform", "translate(-100,-100)");
+      focus.select("circle").attr("r", 3);
+    }
 
     // Adding new elements
     const newCountries = countries
@@ -359,11 +412,17 @@ class MultiLine extends React.Component {
             ref={this.mulitilineXRef}
             transform={`translate(0, ${height - margin.bottom})`}
           />
+          <g>
+            <text className="xAxisTitle" />
+          </g>
           <g
             className="yAxis"
             ref={this.multilineYRef}
             transform={`translate(${margin.left}, 0)`}
           />
+          <g>
+            <text className="yAxisTitle" />
+          </g>
           <g className="focus" transform={`translate(-100, -100)`}>
             <circle r={3.5} />
             <text y={-10} />
