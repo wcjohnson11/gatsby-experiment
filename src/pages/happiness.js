@@ -228,12 +228,18 @@ class Happiness extends React.Component {
             <h1 className={style.title}>
               Measuring Wellbeing for a Better World
             </h1>
+            <div
+              className="pure-u-1"
+              dangerouslySetInnerHTML={{
+                __html: markdownSections["Happiness Intro"]
+              }}
+            />
             <MultiLine data={gdp} />
           </div>
           <div
             className="pure-u-1"
             dangerouslySetInnerHTML={{
-              __html: markdownSections["Happiness Intro"]
+              __html: markdownSections["Beyond GDP"]
             }}
           />
           <div className={`pure-u-1 ${style.center}`}>
