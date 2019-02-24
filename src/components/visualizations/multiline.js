@@ -48,7 +48,12 @@ class MultiLine extends React.Component {
   yAxis = axisLeft().tickSizeOuter(0);
 
   mouseover(d, xScale, yScale) {
-    d3Select(d.data.line).classed("hover", true);
+    selectAll(".line").attr("stroke", el => {
+      if (d.data.Entity == el.key) {
+        return "steelblue";
+      }
+      return "#ddd";
+    });
     d.data.line.parentNode.appendChild(d.data.line);
     d3Select(".focus")
       .attr(
@@ -60,73 +65,8 @@ class MultiLine extends React.Component {
   }
 
   mouseout(d) {
-    d3Select(d.data.line).text("hover", false);
+    selectAll(".line").attr("stroke", "#ddd");
     d3Select(".focus").attr("transform", "translate(-100,-100)");
-  }
-
-  // Hover function for country paths
-  hover(svg, path, xScale, yScale, nestedData) {
-    // Create Range of dates
-    const dateRange = nestedData[0].values.map(d => d.Year);
-    svg.style("position", "relative");
-
-    // handle mobile touch events
-    if ("ontouchstart" in document) {
-      svg
-        .style("-webkit-tap-highlight-color", "transparent")
-        .on("touchmove", moved)
-        .on("touchstart", entered)
-        .on("touchend", left);
-    } else {
-      svg
-        .on("mousemove", moved)
-        .on("mousenter", entered)
-        .on("mouseleave", left);
-    }
-
-    // Handle mouse move
-    function moved() {
-      currentEvent.preventDefault();
-      // Get yAxis input value from mouse event
-      const ym = yScale.invert(currentEvent.layerY);
-      // Get xAxis input value from mouse event
-      const xm = xScale.invert(currentEvent.layerX);
-      // Get index of xAxis Value
-      const i1 = bisectLeft(dateRange, xm, 1);
-      const i0 = i1 - 1;
-      // Get fixed index of xAxis variable
-      const i = xm - dateRange[i0] > dateRange[i1] - xm ? i1 : i0;
-      // Get current country
-      const s = nestedData.reduce((a, b) => {
-        // Handle Shorter Date Ranges
-        const aValue = a.values[i]
-          ? a.values[i]["GDP per capita"]
-          : a.values[a.values.length - 1];
-        const bValue = b.values[i]
-          ? b.values[i]["GDP per capita"]
-          : b.values[b.values.length - 1];
-        return Math.abs(aValue - ym) < Math.abs(bValue - ym) ? a : b;
-      });
-
-      // Current Country becomes blue and comes to top
-      // Other countries become grey
-      path
-        .attr("stroke", d => (d === s ? "steelblue" : "#ddd"))
-        .filter(d => d === s)
-        .raise();
-    }
-
-    // Handle mouse enter
-    function entered() {
-      // Countries become gray
-      path.style("mix-blend-mode", "multiply").attr("stroke", "#ddd");
-    }
-
-    // Handle mouse leave
-    function left() {
-      // Countries become blue
-      path.style("mix-blend-mode", "multiply").attr("stroke", "steelblue");
-    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -232,7 +172,7 @@ class MultiLine extends React.Component {
       .join("g")
       .attr("class", "country")
       .attr("fill", "none")
-      .attr("stroke", "steelblue")
+      .attr("stroke", "#ddd")
       .attr("stroke-width", 1.5)
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round");
@@ -326,7 +266,7 @@ class MultiLine extends React.Component {
       .append("g")
       .attr("class", "country")
       .attr("fill", "none")
-      .attr("stroke", "steelblue")
+      .attr("stroke", "#ddd")
       .attr("stroke-width", 1.5)
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round");
