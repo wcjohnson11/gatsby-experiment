@@ -45,7 +45,6 @@ class Happiness extends React.Component {
       ],
       currentBarChart: "Group by Continent"
     };
-
     this.handleCircleOver = this.handleCircleOver.bind(this);
     this.handleLegendClick = this.handleLegendClick.bind(this);
     this.handleVariableFieldSelect = this.handleVariableFieldSelect.bind(this);
@@ -58,18 +57,12 @@ class Happiness extends React.Component {
       csv(withPrefix("gdpovertime.csv"))
     ]).then(allData => {
       // Get countrycodes data
+
       const countryCodes = allData[0];
       // Get happy data
+
       const happy = allData[1];
-      // get gdp over time data
-      const gdp = allData[2].map(d => {
-        return {
-          Entity: d.Entity,
-          Code: d.Code,
-          Year: parseTime(d.Year),
-          "GDP per capita": cleanNumbers(d["GDP per capita"])
-        };
-      });
+
       // Get column Info for happiness dataset
       const columnInfo = [];
       for (var i = 0; i < 9; i++) {
@@ -146,10 +139,20 @@ class Happiness extends React.Component {
         return result;
       }, []);
 
-      // Create ColorScale
+      // Create Continent ColorScale
       const colorScale = scaleOrdinal({
         domain: continentNames,
         range: colors
+      });
+
+      // get gdp over time data
+      const gdp = allData[2].map(d => {
+        return {
+          Entity: d.Entity,
+          Code: d.Code,
+          Year: parseTime(d.Year),
+          "GDP per capita": cleanNumbers(d["GDP per capita"])
+        };
       });
 
       this.setState({
@@ -165,13 +168,15 @@ class Happiness extends React.Component {
     });
   }
 
+  // Country will be the name of a country or null
+  // This sets the currentCountry
+  // VxScatterplot will handle the rest
   handleCircleOver(country) {
-    // Country will be the name of a country or null
-    // This sets the currentCountry
-    // VxScatterplot will handle the rest
     this.setState({ currentCountry: country });
   }
 
+  // Legend click sets current Continent variable
+  // for filtering
   handleLegendClick(label) {
     const { currentContinent } = this.state;
     const continentName = label.datum;
@@ -182,6 +187,8 @@ class Happiness extends React.Component {
     }
   }
 
+  // Variable Field select sets current metric for
+  // Markdown Sections and bar chart sorting
   handleVariableFieldSelect(variable) {
     const { metricVariables } = this.state;
     if (metricVariables.find(metric => metric.name === variable)) {
@@ -197,23 +204,22 @@ class Happiness extends React.Component {
       colorScale,
       isPromiseResolved,
       metricVariables,
+      markdownData,
       currentMetric,
       barChartVariables,
       currentBarChart,
       currentCountry,
       happyData,
-      gdp,
-      markdownData
+      gdp
     } = this.state;
 
-    const markdownDict = {
-      "GINI Index": markdownData[0].node.html,
-      "Happy Planet Index": markdownData[1].node.html,
-      "Human Development Index": markdownData[2].node.html,
-      "Sustainable Economic Development Index": markdownData[3].node.html,
-      "World Happiness Report Score": markdownData[4].node.html,
-      Intro: markdownData[5].node.html
-    };
+    // Create Markdown Section object
+    const markdownSections = {};
+    for (var section in markdownData) {
+      const title = markdownData[section].node.frontmatter.title;
+      const html = markdownData[section].node.html;
+      markdownSections[title] = html;
+    }
 
     return (
       <Layout>
@@ -226,7 +232,9 @@ class Happiness extends React.Component {
           </div>
           <div
             className="pure-u-1"
-            dangerouslySetInnerHTML={{ __html: markdownDict["Intro"] }}
+            dangerouslySetInnerHTML={{
+              __html: markdownSections["Happiness Intro"]
+            }}
           />
           <div className={`pure-u-1 ${style.center}`}>
             <Heatmap data={happyData} columns={metricVariables} />
@@ -251,7 +259,7 @@ class Happiness extends React.Component {
               <div
                 className={style.metricDescription}
                 dangerouslySetInnerHTML={{
-                  __html: markdownDict[currentMetric]
+                  __html: markdownSections[currentMetric]
                 }}
               />
               <D3Map data={happyData} mapMetric={currentMetric} />
@@ -366,8 +374,8 @@ export const query = graphql`
       edges {
         node {
           html
-          fields {
-            slug
+          frontmatter {
+            title
           }
         }
       }
