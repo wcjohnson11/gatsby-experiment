@@ -18,22 +18,6 @@ import style from "./scatterplot.module.css";
 
 const margin = 30;
 
-function makeAcronym(string) {
-  var words, acronym, nextWord;
-  // If GINI index return GINI
-  // Else return acronym
-  if (string === "GINI Index") return "GINI";
-  words = string.split(" ");
-  acronym = "";
-  var index = 0;
-  while (index < words.length) {
-    nextWord = words[index];
-    acronym = acronym + nextWord.charAt(0);
-    index = index + 1;
-  }
-  return acronym;
-}
-
 const colorFunction = (d, currentCountry) => {
   if (currentCountry) {
     if (currentCountry === d.key) {
