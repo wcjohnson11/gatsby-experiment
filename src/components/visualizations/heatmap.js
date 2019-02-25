@@ -1,16 +1,10 @@
 import React from "react";
+import acronymize from "../../utils/acronymize";
 import { axisLeft, axisTop, select, scaleBand } from "d3";
 
 const height = 400;
 const width = 400;
 const margin = { top: 160, left: 175 };
-const yMap = {
-  "GINI Index": "GINI",
-  "Happy Planet Index": "Happy Planet",
-  "Human Development Index": "Human Development",
-  "Sustainable Economic Development Index": "SEDA",
-  "World Happiness Report Score": "World Happiness"
-};
 
 class Heatmap extends React.Component {
   constructor(props) {
@@ -94,7 +88,7 @@ class Heatmap extends React.Component {
     select(this.yAxisRef.current)
       .call(this.yAxis)
       .selectAll("text")
-      .text(d => yMap[d])
+      .text(d => acronymize(d, [{ input: "GINI Index", output: "GINI" }]))
       .attr("dy", ".35em")
       .style("font-size", "16px");
 
