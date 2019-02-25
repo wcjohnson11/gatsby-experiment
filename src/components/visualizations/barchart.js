@@ -106,7 +106,7 @@ class BarChart extends React.Component {
     const yScale = d3
       .scaleBand()
       .domain(dataNames)
-      .range([formattedHeight - margin.bottom, margin.top])
+      .range([formattedHeight - margin.bottom, margin.top + margin.top])
       .paddingInner([0.4])
       .paddingOuter([0.2]);
 
@@ -182,8 +182,15 @@ class BarChart extends React.Component {
     const { dataMedian, formattedHeight, parentWidth, xScale } = this.state;
 
     return (
-      <React.Fragment>
+      <div className={style.wrapper}>
         <svg width={parentWidth} height={formattedHeight}>
+          <text
+            className={style.medianText}
+            x={xScale(dataMedian) - 28}
+            y={margin.top}
+          >
+            median
+          </text>
           <line
             className={style.medianLine}
             x1={xScale(dataMedian)}
@@ -201,7 +208,10 @@ class BarChart extends React.Component {
               />
             ))}
           </g>
-          <g ref="xAxis" transform={`translate(0, ${margin.top})`} />
+          <g
+            ref="xAxis"
+            transform={`translate(0, ${margin.top + margin.top})`}
+          />
           <g ref="yAxis" transform={`translate(${margin.left}, 0)`} />
         </svg>
         {tooltipOpen && (
@@ -211,7 +221,7 @@ class BarChart extends React.Component {
             tooltipData={tooltipData}
           />
         )}
-      </React.Fragment>
+      </div>
     );
   }
 }

@@ -2,3 +2,12 @@
     stroke: lightgray;
     stroke-width: 3px;
 }
+
+.medianText {
+    font-size: 1em;
+    stroke: lightgray;
+}
+
+.wrapper {
+    text-align: center;
+}
