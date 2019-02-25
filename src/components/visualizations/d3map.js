@@ -60,7 +60,6 @@ class D3Map extends React.Component {
     const color = d3
       .scaleSequential(d3.interpolateOranges)
       .domain(d3.extent(data, d => d[mapMetric]));
-
     // Declare X Scale
     const xScale = d3
       .scaleLinear()

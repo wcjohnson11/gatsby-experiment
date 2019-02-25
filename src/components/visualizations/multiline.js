@@ -320,7 +320,7 @@ class MultiLine extends React.Component {
       .append("g")
       .attr("class", "country")
       .attr("fill", "none")
-      .attr("stroke", "#ddd")
+      .attr("stroke", "steelblue")
       .attr("stroke-width", 1.5)
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round");
