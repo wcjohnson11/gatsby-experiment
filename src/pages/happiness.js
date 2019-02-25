@@ -238,6 +238,76 @@ class Happiness extends React.Component {
             <Heatmap data={happyData} columns={metricVariables} />
           </div>
           {isPromiseResolved && (
+            <div className={`pure-g ${style.wrapper}`}>
+              <Legend scale={colorScale} legendClick={this.handleLegendClick} />
+              <div className="pure-u-1-2 pure-u-md-1-5">
+                <VxScatterplotWithSize
+                  data={happyData}
+                  xVar={"GDP Per Capita"}
+                  yVar={"Happy Planet Index"}
+                  currentCountry={currentCountry}
+                  currentContinent={currentContinent}
+                  colorScale={colorScale}
+                  handleCircleOver={this.handleCircleOver}
+                  useGrid={false}
+                  linkHighlighting={false}
+                />
+              </div>
+              <div className="pure-u-1-2 pure-u-md-1-5">
+                <VxScatterplotWithSize
+                  data={happyData}
+                  xVar={"GDP Per Capita"}
+                  yVar={"Human Development Index"}
+                  currentCountry={currentCountry}
+                  currentContinent={currentContinent}
+                  colorScale={colorScale}
+                  handleCircleOver={this.handleCircleOver}
+                  useGrid={false}
+                  linkHighlighting={false}
+                />
+              </div>
+              <div className="pure-u-1-2 pure-u-md-1-5">
+                <VxScatterplotWithSize
+                  data={happyData}
+                  xVar={"GDP Per Capita"}
+                  yVar={"Sustainable Economic Development Index"}
+                  currentCountry={currentCountry}
+                  currentContinent={currentContinent}
+                  colorScale={colorScale}
+                  handleCircleOver={this.handleCircleOver}
+                  useGrid={false}
+                  linkHighlighting={false}
+                />
+              </div>
+              <div className="pure-u-1-2 pure-u-md-1-5">
+                <VxScatterplotWithSize
+                  data={happyData}
+                  xVar={"GDP Per Capita"}
+                  yVar={"World Happiness Report Score"}
+                  currentCountry={currentCountry}
+                  currentContinent={currentContinent}
+                  colorScale={colorScale}
+                  handleCircleOver={this.handleCircleOver}
+                  useGrid={false}
+                  linkHighlighting={false}
+                />
+              </div>
+              <div className="pure-u-1-2 pure-u-md-1-5">
+                <VxScatterplotWithSize
+                  data={happyData}
+                  xVar={"GDP Per Capita"}
+                  yVar={"GINI Index"}
+                  currentCountry={currentCountry}
+                  currentContinent={currentContinent}
+                  colorScale={colorScale}
+                  handleCircleOver={this.handleCircleOver}
+                  useGrid={false}
+                  linkHighlighting={false}
+                />
+              </div>
+            </div>
+          )}
+          {isPromiseResolved && (
             <React.Fragment>
               <div className="pure-u-1">
                 <h3>Explore the Individual Metrics in Greater Detail</h3>
@@ -300,78 +370,8 @@ class Happiness extends React.Component {
                   colorScale={colorScale}
                 />
               </div>
-            </React.Fragment>
-          )}
-          {isPromiseResolved && (
-            <div className={`pure-g ${style.wrapper}`}>
-              <Legend scale={colorScale} legendClick={this.handleLegendClick} />
-              <div className="pure-u-1-2 pure-u-md-1-3">
-                <VxScatterplotWithSize
-                  data={happyData}
-                  xVar={"GDP Per Capita"}
-                  yVar={"Happy Planet Index"}
-                  currentCountry={currentCountry}
-                  currentContinent={currentContinent}
-                  colorScale={colorScale}
-                  handleCircleOver={this.handleCircleOver}
-                  useGrid={false}
-                  linkHighlighting={false}
-                />
-              </div>
-              <div className="pure-u-1-2 pure-u-md-1-3">
-                <VxScatterplotWithSize
-                  data={happyData}
-                  xVar={"GDP Per Capita"}
-                  yVar={"Human Development Index"}
-                  currentCountry={currentCountry}
-                  currentContinent={currentContinent}
-                  colorScale={colorScale}
-                  handleCircleOver={this.handleCircleOver}
-                  useGrid={false}
-                  linkHighlighting={false}
-                />
-              </div>
-              <div className="pure-u-1-2 pure-u-md-1-3">
-                <VxScatterplotWithSize
-                  data={happyData}
-                  xVar={"GDP Per Capita"}
-                  yVar={"Sustainable Economic Development Index"}
-                  currentCountry={currentCountry}
-                  currentContinent={currentContinent}
-                  colorScale={colorScale}
-                  handleCircleOver={this.handleCircleOver}
-                  useGrid={false}
-                  linkHighlighting={false}
-                />
-              </div>
-              <div className="pure-u-1-2 pure-u-md-1-3">
-                <VxScatterplotWithSize
-                  data={happyData}
-                  xVar={"GDP Per Capita"}
-                  yVar={"World Happiness Report Score"}
-                  currentCountry={currentCountry}
-                  currentContinent={currentContinent}
-                  colorScale={colorScale}
-                  handleCircleOver={this.handleCircleOver}
-                  useGrid={false}
-                  linkHighlighting={false}
-                />
-              </div>
-              <div className="pure-u-1-2 pure-u-md-1-3">
-                <VxScatterplotWithSize
-                  data={happyData}
-                  xVar={"GDP Per Capita"}
-                  yVar={"GINI Index"}
-                  currentCountry={currentCountry}
-                  currentContinent={currentContinent}
-                  colorScale={colorScale}
-                  handleCircleOver={this.handleCircleOver}
-                  useGrid={false}
-                  linkHighlighting={false}
-                />
-              </div>
               <MarkdownDiv content={markdownSections["Conclusion"]} />
-            </div>
+            </React.Fragment>
           )}
         </div>
       </Layout>
