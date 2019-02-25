@@ -3,7 +3,7 @@ import { graphql, withPrefix } from "gatsby";
 import { csv, timeParse } from "d3";
 import Layout from "../components/layout";
 import MultiLine from "../components/visualizations/multiline";
-import VariableForm from "../components/variableForm";
+import Select from "react-select";
 import VxScatterplotWithSize from "../components/visualizations/vxscatterplot";
 import Heatmap from "../components/visualizations/heatmap";
 import D3Map from "../components/visualizations/d3map";
@@ -192,10 +192,11 @@ class Happiness extends React.Component {
   // Markdown Sections and bar chart sorting
   handleVariableFieldSelect(variable) {
     const { metricVariables } = this.state;
-    if (metricVariables.find(metric => metric.name === variable)) {
-      this.setState({ currentMetric: variable });
+    const { value } = variable;
+    if (metricVariables.find(metric => metric.name === value)) {
+      this.setState({ currentMetric: value });
     } else {
-      this.setState({ currentBarChart: variable });
+      this.setState({ currentBarChart: value });
     }
   }
 
@@ -246,10 +247,17 @@ class Happiness extends React.Component {
                   detailed look into how country's scores relate to one another.
                 </p>
                 {metricVariables && (
-                  <VariableForm
-                    handleFieldSelect={this.handleVariableFieldSelect}
-                    variableValues={metricVariables}
-                    active={currentMetric}
+                  <Select
+                    value={{ label: currentMetric, value: currentMetric }}
+                    onChange={this.handleVariableFieldSelect}
+                    controlShouldRenderValue={true}
+                    options={metricVariables.map(d => {
+                      return {
+                        value: d.name,
+                        label: d.name
+                      };
+                    })}
+                    isMulti={false}
                   />
                 )}
               </div>
@@ -262,10 +270,17 @@ class Happiness extends React.Component {
               <D3Map data={happyData} mapMetric={currentMetric} />
               <div className="pure-u-1">
                 {barChartVariables && (
-                  <VariableForm
-                    handleFieldSelect={this.handleVariableFieldSelect}
-                    variableValues={barChartVariables}
-                    active={currentBarChart}
+                  <Select
+                    value={{ label: currentBarChart, value: currentBarChart }}
+                    onChange={this.handleVariableFieldSelect}
+                    controlShouldRenderValue={true}
+                    options={barChartVariables.map(d => {
+                      return {
+                        value: d.name,
+                        label: d.name
+                      };
+                    })}
+                    isMulti={false}
                   />
                 )}
                 <BarChart
