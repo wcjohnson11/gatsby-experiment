@@ -54,17 +54,27 @@ class MultiLine extends React.Component {
       return "#ddd";
     });
     d.data.line.parentNode.appendChild(d.data.line);
-    d3Select(".focus")
-      .attr(
-        "transform",
-        `translate(${xScale(d.data.Year)}, ${yScale(d.data["GDP per capita"])})`
-      )
-      .select("text")
+    d3Select(".focus").attr(
+      "transform",
+      `translate(${xScale(d.data.Year)}, ${yScale(d.data["GDP per capita"])})`
+    );
+
+    d3Select(".hoverGroup")
+      .transition()
+      .style("opacity", 1);
+
+    d3Select(".hover-text")
+      .style("font-size", "1em")
+      .style("text-anchor", "middle")
       .text(d.data.Entity);
   }
 
   mouseout(d) {
     selectAll(".line").attr("stroke", "#ddd");
+    d3Select(".hoverGroup")
+      .transition()
+      .style("opacity", 0);
+    d3Select(".hover-text").text("");
     d3Select(".focus").attr("transform", "translate(-100,-100)");
   }
 
@@ -242,6 +252,19 @@ class MultiLine extends React.Component {
       .style("font-style", "sans-serif")
       .style("font-weight", "normal")
       .text(d => d.name);
+
+    const hoverGroup = d3Select("#multiLine")
+      .append("g")
+      .attr("class", "hoverGroup")
+      .style("opacity", 1)
+      .style("stroke-width", 1)
+      .style("stroke", "gray");
+
+    hoverGroup
+      .append("text")
+      .attr("class", "hover-text")
+      .attr("x", width / 2)
+      .attr("y", margin.top);
 
     // Add Voronoi paths for handling mouse events
     // Uncomment stroke to show voronoi
