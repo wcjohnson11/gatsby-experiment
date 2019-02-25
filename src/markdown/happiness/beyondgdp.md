@@ -4,19 +4,15 @@ date: "2019-04-18"
 category: "Happiness"
 ---
 
-### Beyond GDP
+### Beyond GDP, New Metrics for Measuring Well-Being
 
-GDP is relatively easy to measure and served as the primary measure of a country's well-being for many years but over time, criticism arose that growth in a country's economic output doesn't necessarily mean a better life for it's citizens. While increased economic production should lead to some increased objective and subjective well-being, it relies too heavily on economic output by ignoring the rest of the building blocks of objective and subjective well-being. The inability fully capture the complexities of objective and subjective well-being hinders attempts to understand and create policy to improve well-being.
+**GDP** is relatively easy to measure and served as the primary measure of a country's well-being for many years. While economic growth and wealth is a vital component of well-being, it's too simplistic to capture the entirety of it.
 
-In 1990, UN economist Mahbub ul Haq created the Human Development
-Index (HDI) to more accurately measure human well-being, which focused
-on education, health expectancy, gender equality, and standard of
-living. In 2012, UN Secretary General Ban Ki Moon recognized the
-importance of making happiness a goal of public policy.
+It is necessary to create multi-faceted metrics in order to better understand well-being, create policy that will improve it and avoid and reform policies that will degrade it.
 
-### Metrics for Measuring Well-being
+Several individuals and groups have developed metrics for measuring well-being. The differences between these metrics show what these individuals and groups consider to be most important for well-being. Most of these metrics focus on objective well-being because the data is more easily measured and modeled.
 
-Several groups have developed metrics for measuring well-being in a country, most of them focus on objective well-being because the data is more readily available. The differences between these metrics represent the different ideas of how to measure a country's quality of life in comparison to others and to itself over time as well as what should be focused on in policy to improve the quality of life.
+Of the metrics analyzed here, **Happy Planet Index** and **World Happiness Report Score** are the only ones to measure subjective well-being.They take responses to the World Gallup Poll survey question that asks people to rank their happiness on a scale of zero to 10.The **HPI** is a composite of subjective well-being and objective well-being metrics while the **WHRS** is purely a measurement of subjective well-being.
 
 - **The GINI Index** measures inequality in distribution of family income
 - **The Happy Planet Index** measures a combination of well-being, health/life expectancy, inequality and ecologicaly footprint
@@ -24,4 +20,4 @@ Several groups have developed metrics for measuring well-being in a country, mos
 - **The Sustainable Economic Development Assessment** focuses on Economic factors, Investments in Social Services like education, health and infrastructure and Sustainability.
 - **The World Happiness Report Score** measures people's experiences of the quality of their lives
 
-See the below legend for a visual representation of what each metric measures.
+*See the below legend for a visual representation of what each metric measures.*
