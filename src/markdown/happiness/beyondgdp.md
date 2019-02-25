@@ -20,4 +20,4 @@ Of the metrics analyzed here, **Happy Planet Index** and **World Happiness Repor
 - **The Sustainable Economic Development Assessment (SEDA)** focuses on Economic factors, Investments in Social Services like education, health and infrastructure and Sustainability.
 - **The World Happiness Report Score (WHPR)** measures people's experiences of the quality of their lives
 
-*See the below legend for a visual representation of what each metric measures.*
+*See the below graphic for a visual representation of what each metric measures.*
