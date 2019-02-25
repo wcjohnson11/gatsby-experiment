@@ -10,6 +10,7 @@ import { withTooltip } from "@vx/tooltip";
 import { withParentSize } from "@vx/responsive";
 import * as chroma from "chroma-js";
 import { max, select } from "d3";
+import acronymize from "../../utils/acronymize";
 import formatMoney from "../../utils/formatMoney";
 import numTicksForHeight from "../../utils/numTicksForHeight";
 import numTicksForWidth from "../../utils/numTicksForWidth";
@@ -19,7 +20,9 @@ const margin = 30;
 
 function makeAcronym(string) {
   var words, acronym, nextWord;
-
+  // If GINI index return GINI
+  // Else return acronym
+  if (string === "GINI Index") return "GINI";
   words = string.split(" ");
   acronym = "";
   var index = 0;
@@ -218,7 +221,14 @@ class VxScatterplot extends React.Component {
               scale={yScale}
               axisClassName={style.axis}
               labelClassName={style["axis-label"]}
-              label={labels.y.length < 30 ? labels.y : makeAcronym(labels.y)}
+              label={
+                labels.y.length < 10
+                  ? labels.y
+                  : acronymize(labels.y, [
+                      { input: "GINI Index", output: "GINI" }
+                    ])
+              }
+              labelOffset={18}
               left={margin}
               tickClassName={style["tick-label"]}
               stroke="#333333"
