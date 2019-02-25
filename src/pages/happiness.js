@@ -9,6 +9,7 @@ import Heatmap from "../components/visualizations/heatmap";
 import D3Map from "../components/visualizations/d3map";
 import Scatterplot from "../components/visualizations/scatterplot";
 import Legend from "../components/visualizations/legend";
+import MarkdownDiv from "../components/markdowndiv";
 import { scaleOrdinal } from "@vx/scale";
 import style from "./happiness.module.css";
 import BarChart from "../components/visualizations/barchart";
@@ -226,22 +227,12 @@ class Happiness extends React.Component {
         <div className={`pure-g ${style.happiness}`}>
           <div className="pure-u-1">
             <h1 className={style.title}>
-              Measuring Wellbeing for a Better World
+              Measuring Well-being for a Better World
             </h1>
-            <div
-              className="pure-u-1"
-              dangerouslySetInnerHTML={{
-                __html: markdownSections["Happiness Intro"]
-              }}
-            />
+            <MarkdownDiv content={markdownSections["Happiness Intro"]} />
             <MultiLine data={gdp} />
           </div>
-          <div
-            className="pure-u-1"
-            dangerouslySetInnerHTML={{
-              __html: markdownSections["Beyond GDP"]
-            }}
-          />
+          <MarkdownDiv content={markdownSections["Beyond GDP"]} />
           <div className={`pure-u-1 ${style.center}`}>
             <Heatmap data={happyData} columns={metricVariables} />
           </div>
@@ -342,7 +333,7 @@ class Happiness extends React.Component {
                 <VxScatterplotWithSize
                   data={happyData}
                   xVar={"GDP Per Capita"}
-                  yVar={"Happy Planet Index"}
+                  yVar={"World Happiness Report Score"}
                   currentCountry={currentCountry}
                   currentContinent={currentContinent}
                   colorScale={colorScale}
@@ -364,6 +355,7 @@ class Happiness extends React.Component {
                   linkHighlighting={false}
                 />
               </div>
+              <MarkdownDiv content={markdownSections["Conclusion"]} />
             </div>
           )}
         </div>
