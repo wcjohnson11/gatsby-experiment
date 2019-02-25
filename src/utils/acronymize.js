@@ -1,8 +1,8 @@
 const acronymize = (string, specialCase) => {
   if (specialCase) {
-    for (var index in specialCase) {
-      if (string === specialCase[index].input) {
-        return specialCase[index].output;
+    for (var obj in specialCase) {
+      if (string === specialCase[obj].input) {
+        return specialCase[obj].output;
       }
     }
   }
