@@ -16,6 +16,5 @@ category: "Happiness"
     and tax havens make it hard to measure income and wealth, particularly
     in developing countries. Despite this, it appears to be fairly well
     correlated to GDP per capita, meaning that countries with a higher GDP
-    per capita tend to have less inequality, at least as far as it can be
-    measured.
+    per capita tend to have less inequality, at least as far as it is measured here.
 </p>

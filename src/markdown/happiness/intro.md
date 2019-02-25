@@ -18,7 +18,7 @@ If we can understand the building blocks of well-being, then we can create polic
 
 By measuring well-being we can analyze the impact of different policies on well-being, observing trends in countries' historical well-being and compare them against other countries. Increasing quality of life should be a key focus for all governments and the more we attempt to measure and improve well-being, the more we will learn about how to measure and improve well-being.
 
-### The history of measuring human well-being
+### The History of Measuring Human Well-Being
 
 Global efforts to measure human well-being are still relatively new. After World War 2 and the Great Depression, when
 countries were attempting to find ways to measure their

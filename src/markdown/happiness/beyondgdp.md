@@ -14,10 +14,10 @@ Several individuals and groups have developed metrics for measuring well-being. 
 
 Of the metrics analyzed here, **Happy Planet Index** and **World Happiness Report Score** are the only ones to measure subjective well-being.They take responses to the World Gallup Poll survey question that asks people to rank their happiness on a scale of zero to 10.The **HPI** is a composite of subjective well-being and objective well-being metrics while the **WHRS** is purely a measurement of subjective well-being.
 
-- **The GINI Index** measures inequality in distribution of family income
-- **The Happy Planet Index** measures a combination of well-being, health/life expectancy, inequality and ecologicaly footprint
-- **The Human Development Index** measures health/life expectancy, standard of living, amount of education received
-- **The Sustainable Economic Development Assessment** focuses on Economic factors, Investments in Social Services like education, health and infrastructure and Sustainability.
-- **The World Happiness Report Score** measures people's experiences of the quality of their lives
+- **The GINI Index (GINI)** measures inequality in distribution of family income
+- **The Happy Planet Index (HPI)** measures a combination of well-being, health/life expectancy, inequality and ecologicaly footprint
+- **The Human Development Index (HDI)** measures health/life expectancy, standard of living, amount of education received
+- **The Sustainable Economic Development Assessment (SEDA)** focuses on Economic factors, Investments in Social Services like education, health and infrastructure and Sustainability.
+- **The World Happiness Report Score (WHPR)** measures people's experiences of the quality of their lives
 
 *See the below legend for a visual representation of what each metric measures.*
