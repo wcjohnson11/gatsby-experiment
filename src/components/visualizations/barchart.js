@@ -94,7 +94,7 @@ class BarChart extends React.Component {
     const xScale = d3
       .scaleLinear()
       .domain([0, dataXMax])
-      .range([margin.left, parentWidth - margin.right]);
+      .range([margin.left, parentWidth]);
 
     // Get array of names in dataset
     const dataNames = barData.reduce((result, d) => {
