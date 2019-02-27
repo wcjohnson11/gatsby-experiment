@@ -32,7 +32,6 @@
 }
 
 .metricButton {
-    composes: pure-button from '../components/pure.css';
     margin-bottom: 1em;
     height: 4em;
     width: 100%;
@@ -41,14 +40,6 @@
 .metricButton > b > big {
     margin-top: .5em;
     font-size: 95%;
-}
-
-.globe {
-    composes: pure-u-1 from '../components/pure.css';
-}
-
-.metricDescription {
-    composes: pure-u-1 from '../components/pure.css';
 }
 
 .metricDescription > p {
