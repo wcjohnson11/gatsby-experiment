@@ -1,6 +1,6 @@
 import React from 'react';
 import { LegendItem, LegendLabel, LegendOrdinal } from '@vx/legend';
-import style from './legend.module.css';
+import style from './styles/legend.module.css';
 
 class Legend extends React.Component {
 	render() {

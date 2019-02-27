@@ -8,7 +8,7 @@ import { scaleLinear, scaleBand } from '@vx/scale';
 import { withParentSize } from '@vx/responsive';
 import { Group } from '@vx/group';
 import numTicksForWidth from '../../utils/numTicksForWidth';
-import style from './scatterplot.module.css';
+import style from './styles/scatterplot.module.css';
 
 // const margin = 25;
 

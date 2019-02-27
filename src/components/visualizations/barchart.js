@@ -4,7 +4,7 @@ import { localPoint } from "@vx/event";
 import { withParentSize } from "@vx/responsive";
 import { withTooltip } from "@vx/tooltip";
 import BoundedToolTip from "./boundedTooltip";
-import style from "./barchart.module.css";
+import style from "./styles/barchart.module.css";
 const margin = { top: 20, right: 105, bottom: 20, left: 125 };
 
 // TODO

@@ -4,7 +4,7 @@ import { withParentSize } from "@vx/responsive";
 import { withTooltip } from "@vx/tooltip";
 import * as chroma from "chroma-js";
 import BoundedToolTip from "./boundedTooltip";
-import styles from "./scatterplot.module.css";
+import styles from "./styles/scatterplot.module.css";
 
 const padding = 50;
 

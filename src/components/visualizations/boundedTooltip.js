@@ -1,6 +1,6 @@
 import React from "react";
 import { TooltipWithBounds } from "@vx/tooltip";
-import style from "./boundedTooltip.module.css";
+import style from "./styles/boundedTooltip.module.css";
 
 class BoundedToolTip extends React.Component {
   constructor(props) {

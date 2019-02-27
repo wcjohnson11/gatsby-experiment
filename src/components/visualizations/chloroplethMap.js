@@ -11,7 +11,7 @@ import { withTooltip } from "@vx/tooltip";
 import { withParentSize } from "@vx/responsive";
 import { scaleLinear } from "d3-scale";
 import { max, min } from "d3";
-import style from "./chloroplethMap.module.css";
+import style from "./styles/chloroplethMap.module.css";
 
 class ChloroplethMap extends React.Component {
   handleMouseOver(event, datum) {

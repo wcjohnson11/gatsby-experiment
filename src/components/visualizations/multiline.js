@@ -16,7 +16,7 @@ import {
 import { merge } from "d3-array";
 import Select from "react-select";
 import { withParentSize } from "@vx/responsive";
-import style from "./multiline.module.css";
+import style from "./styles/multiline.module.css";
 
 const margin = { top: 20, right: 20, bottom: 40, left: 40 };
 class MultiLine extends React.Component {

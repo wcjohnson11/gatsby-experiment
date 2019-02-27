@@ -2,7 +2,7 @@ import React from "react";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
 import { withParentSize } from "@vx/responsive";
-import style from "./d3map.module.css";
+import style from "./styles/d3map.module.css";
 import topology from "../../../static/world-topology.json";
 
 // Color function for updating topoCountries

@@ -14,7 +14,7 @@ import acronymize from "../../utils/acronymize";
 import formatMoney from "../../utils/formatMoney";
 import numTicksForHeight from "../../utils/numTicksForHeight";
 import numTicksForWidth from "../../utils/numTicksForWidth";
-import style from "./scatterplot.module.css";
+import style from "./styles/scatterplot.module.css";
 
 const margin = 30;
 
