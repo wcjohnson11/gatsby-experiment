@@ -1,6 +1,6 @@
 module.exports = {
     siteMetadata: {
-        title: 'William Johnson',
+        title: 'wcj.io',
         url: 'https://wcj.io',
         description: 'Analytics, Art, Data, Engineering',
         image: "/src/assets/favicon.ico",
