@@ -1,3 +1,7 @@
+const autoprefixer = require('autoprefixer');
+const postCssFocus = require('postcss-focus');
+const postCssImport = require('postcss-import');
+
 module.exports = {
     siteMetadata: {
         title: 'wcj.io',
@@ -13,6 +17,16 @@ module.exports = {
         'gatsby-transformer-remark',
         'gatsby-plugin-react-helmet',
         'gatsby-plugin-sitemap',
+        {
+            resolve: 'gatsby-plugin-postcss',
+            options: {
+                postCssPlugins: [
+                    autoprefixer(),
+                    postCssFocus(),
+                    postCssImport()
+                ]
+            },
+        },
         {
             resolve: 'gatsby-plugin-typography',
             options: {
