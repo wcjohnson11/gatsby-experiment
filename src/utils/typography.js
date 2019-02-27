@@ -1,6 +1,6 @@
 import Typography from "typography";
-import GithubTheme from "typography-theme-github";
+import USWebStandards from "typography-theme-us-web-design-standards";
 
-const typography = new Typography(GithubTheme);
+const typography = new Typography(USWebStandards);
 
 export default typography;

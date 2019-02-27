@@ -42,7 +42,7 @@
     "react-typography": "^0.16.18",
     "topojson-client": "^3.0.0",
     "typography": "^0.16.18",
-    "typography-theme-github": "^0.16.18",
+    "typography-theme-us-web-design-standards": "^0.16.18",
     "vx": "0.0.1"
   },
   "repository": {
