@@ -54,7 +54,7 @@ query SiteMetadata {
     site {
       siteMetadata {
         title
-        url
+        siteUrl: url
         description
         image
         social {

@@ -1,7 +1,7 @@
 module.exports = {
     siteMetadata: {
         title: 'wcj.io',
-        url: 'https://wcj.io',
+        siteUrl: 'https://wcj.io',
         description: 'Analytics, Art, Data, Engineering',
         image: "/src/assets/favicon.ico",
         social: {
@@ -12,6 +12,7 @@ module.exports = {
     plugins: [
         'gatsby-transformer-remark',
         'gatsby-plugin-react-helmet',
+        'gatsby-plugin-sitemap',
         {
             resolve: 'gatsby-plugin-typography',
             options: {
