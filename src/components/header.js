@@ -1,6 +1,6 @@
 import React from "react";
 import { graphql, Link, StaticQuery } from "gatsby";
-import styles from "./header.module.css";
+import styles from "./styles/header.module.css";
 
 export default () => (
   <StaticQuery

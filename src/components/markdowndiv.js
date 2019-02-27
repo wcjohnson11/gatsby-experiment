@@ -1,5 +1,5 @@
 import React from "react";
-import style from "./markdowndiv.module.css";
+import style from "./styles/markdowndiv.module.css";
 
 export default ({ content }) => (
   <div

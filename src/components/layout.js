@@ -2,7 +2,7 @@ import React from "react";
 import Container from "./container";
 import Header from "./header";
 import Footer from "./footer";
-import style from "./layout.module.css";
+import style from "./styles/layout.module.css";
 
 export default ({ children }) => (
   <Container>

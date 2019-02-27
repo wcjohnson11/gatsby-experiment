@@ -1,7 +1,7 @@
 import React from "react";
 import { FaGithubAlt, FaLinkedinIn, FaCodepen } from "react-icons/fa";
 import { MdMailOutline } from "react-icons/md";
-import style from "./footer.module.css";
+import style from "./styles/footer.module.css";
 
 export default () => (
   <div className={style.footer}>
