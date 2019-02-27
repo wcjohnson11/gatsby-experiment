@@ -1,9 +1,17 @@
 module.exports = {
     siteMetadata: {
-        title: 'wcj.io',
+        title: 'William Johnson',
+        url: 'https://wcj.io',
+        description: 'Analytics, Art, Data, Engineering',
+        image: "/src/assets/favicon.ico",
+        social: {
+            twitter: "@wcj111",
+            github: "wcjohnson11"
+        }
     },
     plugins: [
         'gatsby-transformer-remark',
+        'gatsby-plugin-react-helmet',
         {
             resolve: 'gatsby-plugin-typography',
             options: {
