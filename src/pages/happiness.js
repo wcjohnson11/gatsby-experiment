@@ -11,7 +11,7 @@ import Scatterplot from "../components/visualizations/scatterplot";
 import Legend from "../components/visualizations/legend";
 import MarkdownDiv from "../components/markdowndiv";
 import { scaleOrdinal } from "@vx/scale";
-import style from "./happiness.module.css";
+import style from "./styles/happiness.module.css";
 import BarChart from "../components/visualizations/barchart";
 
 const cleanNumbers = string => {

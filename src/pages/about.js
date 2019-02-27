@@ -1,6 +1,6 @@
 import React from "react"
 import Layout from "../components/layout"
-import styles from "./about.module.css"
+import styles from "./styles/about.module.css"
 
 const Story = props => (
   <div className={styles.story}>

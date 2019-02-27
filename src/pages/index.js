@@ -1,7 +1,7 @@
 import React from "react";
 import Layout from "../components/layout";
 import { select } from "d3";
-import style from "./index.module.css";
+import style from "./styles/index.module.css";
 class index extends React.Component {
   componentDidMount() {
     select("svg")
