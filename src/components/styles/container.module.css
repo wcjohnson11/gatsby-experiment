@@ -1,8 +1,10 @@
+@import '../../utils/colors.css';
+
 .container {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-    background-color: #FFFFFF;
+    background-color: var(--backgroundColor);
 }
 
 .pure-g {

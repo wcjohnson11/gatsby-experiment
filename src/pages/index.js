@@ -9,7 +9,6 @@ class index extends React.Component {
       .attr("cx", 150)
       .attr("cy", 150)
       .attr("r", 120)
-      .style("fill", "#592037")
       .classed(`${style.circle}`, true);
 
     select("svg")
@@ -18,12 +17,6 @@ class index extends React.Component {
       .attr("y", 150)
       .attr("dy", ".35em")
       .text(() => "Welcome :)");
-
-    // Orange FF530D
-    // Red E82C0C
-    // Purple 33004B
-    // Blue 03B0F0
-    // Pink FF0DFF
   }
   render() {
     return (

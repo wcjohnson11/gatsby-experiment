@@ -1,11 +1,13 @@
+@import '../../../utils/colors.css';
+
 .medianLine {
-    stroke: lightgray;
+    stroke: var(--lightgray);
     stroke-width: 3px;
 }
 
 .medianText {
     font-size: 1em;
-    stroke: lightgray;
+    stroke: var(--lightgray);
 }
 
 .wrapper {

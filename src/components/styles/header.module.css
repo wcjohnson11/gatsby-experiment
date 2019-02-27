@@ -1,7 +1,9 @@
+@import '../../utils/colors.css';
+
 .header {
     padding: .5rem 1rem;
     margin-bottom: 1.5rem;
-    background-color: #0D030D;
+    background-color: var(--darkPurple);
     height: 40px;
     display: flex;
     align-items: center;
@@ -11,7 +13,7 @@
 .headerTitle {
     text-shadow: none;
     background-image: none;
-    color: white;
+    color: var(--lightGray);
     text-decoration: none;
 }
 
@@ -21,6 +23,7 @@
 }
 
 .headerTitle:hover {
-    color: #F52B86;
-    text-decoration-color: #F6E444;
+    color: var(--hotPink);
+    text-decoration: underline;
+    text-decoration-color: var(--lemonYellow);
 }

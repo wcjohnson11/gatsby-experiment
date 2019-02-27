@@ -1,5 +1,7 @@
+@import '../../utils/colors.css';
+
 .footer {
-    background-color: #0D030D;
+    background-color: var(--darkPurple);
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -20,11 +22,11 @@
     width: 1em;
     margin-right: 2.1em;
     margin-left: 2.1em;
-    fill: #8490A7;
+    fill: var(--lightGray);
 }
 
 .icon:hover {
-    fill: #592037;
+    fill: var(--darkRed);
     cursor: pointer;
     justify-content: space-between;
 }

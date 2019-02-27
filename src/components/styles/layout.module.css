@@ -2,3 +2,9 @@
     margin: 0 auto;
     max-width: 650px;
 }
+
+@media only screen and (max-device-width: 680px) {
+    .layout {
+        margin: 0 4% 0 4%;
+    }
+}
