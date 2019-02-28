@@ -6,8 +6,12 @@ class Legend extends React.Component {
 	render() {
 		const { scale, legendClick } = this.props;
 		return (
-			<div className={`pure-u-1 ${style.legend}`}>
-				<div className={style.title}>Continents</div>
+			<div className={style.legend}>
+				<div className={style.title}>
+					<big>Continents</big>
+					<br />
+					<small><i>Click on a continent to filter the data</i></small>
+				</div>
 				<LegendOrdinal scale={scale} labelFormat={(label) => `${label.toUpperCase()}`}>
 					{(labels, i) => {
 						return (
@@ -21,10 +25,10 @@ class Legend extends React.Component {
 											alignItems="center"
 											onClick={() => legendClick(label)}
 										>
-											<svg width={size} height={size} style={{ marginRight: 5 }}>
+											<svg className={style.legendItem} width={size} height={size}>
 												<circle fill={label.value} r={size / 2} cx={size / 2} cy={size / 2} />
 											</svg>
-											<LegendLabel align={'left'}>{label.text}</LegendLabel>
+											<LegendLabel align={'left'}><p className={style.label}>{label.text}</p></LegendLabel>
 										</LegendItem>
 									);
 								})}
