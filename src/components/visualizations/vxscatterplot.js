@@ -84,12 +84,12 @@ class VxScatterplot extends React.Component {
 
     const xScale = scaleLinear({
       domain: [0, max(data, d => d[xVar])],
-      range: [margin, parentWidth - margin - margin]
+      range: [margin, parentWidth]
     });
 
     const yScale = scaleLinear({
       domain: [0, max(data, d => d[yVar])],
-      range: [parentHeight - margin, margin]
+      range: [parentHeight, margin]
     });
 
     const circles = data
@@ -185,8 +185,8 @@ class VxScatterplot extends React.Component {
 
     return (
       <React.Fragment>
-        <svg width={parentWidth} height={parentHeight + margin + margin}>
-          <Group top={margin} left={margin}>
+        <svg width={parentWidth} height={parentHeight + margin + margin + margin}>
+          <Group top={margin} left={margin / 5}>
             {useGrid && (
               <Grid
                 top={0}
@@ -195,7 +195,7 @@ class VxScatterplot extends React.Component {
                 xScale={xScale}
                 yScale={yScale}
                 stroke="rgba(142, 32, 95, 0.3)"
-                width={parentWidth - margin * 2}
+                width={parentWidth - margin}
                 height={parentHeight - margin}
                 numTicksRows={numTicksForHeight(parentHeight)}
                 numTicksColumns={numTicksForWidth(parentWidth)}
@@ -224,7 +224,7 @@ class VxScatterplot extends React.Component {
               axisClassName={style.axis}
               labelClassName={style["axis-label"]}
               label={labels.x}
-              top={parentHeight - margin}
+              top={parentHeight}
               tickClassName={style["tick-label"]}
               stroke="#333333"
               tickStroke="#333333"

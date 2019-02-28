@@ -1,5 +1,6 @@
 import React from 'react';
 import VxScatterplotWithSize from "./vxscatterplot";
+import style from "./styles/vxscatterrow.module.css";;
 
 class VxScatterRow extends React.Component {
     render() {
@@ -28,10 +29,10 @@ class VxScatterRow extends React.Component {
             />
         );
         return (
-            <React.Fragment>
+            <div className={style.row}>
                 { metrics &&
                     scatterRow }
-            </React.Fragment>
+            </div>
         )
         ;
     }
