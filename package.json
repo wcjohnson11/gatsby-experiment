@@ -47,7 +47,7 @@
     "react-helmet": "^5.2.0",
     "react-icons": "^3.4.0",
     "react-motion": "^0.5.2",
-    "react-select": "^2.4.1",
+    "react-select": "^2.4.0",
     "react-simple-maps": "^0.12.1",
     "react-typography": "^0.16.18",
     "topojson-client": "^3.0.0",

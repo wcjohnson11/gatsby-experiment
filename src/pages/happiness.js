@@ -281,6 +281,7 @@ class Happiness extends React.Component {
                         label: d
                       };
                     })}
+                    blurInputOnSelect={false}
                     isMulti={false}
                   />
                 )}
@@ -307,6 +308,7 @@ class Happiness extends React.Component {
                         label: d
                       };
                     })}
+                    blurInputOnSelect={false}
                     isMulti={false}
                   />
                 )}
