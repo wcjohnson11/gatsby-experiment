@@ -164,7 +164,6 @@ class Happiness extends React.Component {
           "GDP per capita": cleanNumbers(d["GDP per capita"])
         };
       });
-      console.log(metrics, columns)
 
       this.setState({
         colorScale: colorScale,
@@ -191,7 +190,7 @@ class Happiness extends React.Component {
   // for filtering
   handleLegendClick(label) {
     const { currentContinent } = this.state;
-    const continentName = label.datum;
+    const continentName = label;
     if (continentName === currentContinent) {
       this.setState({ currentContinent: false });
     } else {
@@ -213,17 +212,18 @@ class Happiness extends React.Component {
 
   render() {
     const {
-      currentContinent,
-      colorScale,
-      isPromiseResolved,
-      metrics,
-      markdownData,
-      currentMetric,
       barChartVariables,
       currentBarChart,
+      currentContinent,
       currentCountry,
+      currentMetric,
+      colorScale,
+      columns,
       happyData,
-      gdp
+      gdp,
+      isPromiseResolved,
+      markdownData,
+      metrics
     } = this.state;
 
     // Create Markdown Section object
@@ -246,7 +246,7 @@ class Happiness extends React.Component {
           </section>
           <MarkdownDiv content={markdownSections["Beyond GDP"]} />
           <div className={style.center}>
-            <Heatmap data={happyData} columns={columns} />
+            <Heatmap data={happyData} columns={columns} metrics={metrics} />
           </div>
           {isPromiseResolved && (
             <section className={style.wrapper}>
@@ -257,6 +257,7 @@ class Happiness extends React.Component {
                 currentContinent={currentContinent}
                 colorScale={colorScale}
                 handleCircleOver={this.handleCircleOver}
+                metrics={metrics}
                 useGrid={false}
                 linkHighlighting={false}
               />
@@ -285,10 +286,10 @@ class Happiness extends React.Component {
                     isMulti={false}
                   />
                 )}
+                </section>
                 <div className={style.globe}>
                   <D3Map data={happyData} mapMetric={currentMetric} />
                 </div>
-              </section>
               <section
                 className={style.metricDescription}
                 dangerouslySetInnerHTML={{
