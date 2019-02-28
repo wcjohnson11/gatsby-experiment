@@ -32,24 +32,27 @@
 }
 
 .legendItem {
-    margin-right: 5;
+    all: initial;
+    display: flex;
+    flex-wrap: wrap;
     cursor: pointer;
+    border-radius: 10px;
+    padding-top: 10px;
 }
 
-.legentItem:hover {
-    fill: red;
-    opacity: 1;
+.legendItem:hover .label {
+    color: var(--lightGray);
+    text-decoration: underline;
+    text-decoration-color: var(--darkGray);
 }
 
 .label {
     all: initial;
     cursor: pointer;
+    position: relative;
+    top: -5px;
     font-size: 14px;
     padding-left: 4px;
-}
-
-.label:hover {
-    color: var(--lightGray);
 }
 
 .active {
@@ -65,4 +68,6 @@
 
 .title small {
     font-weight: 500;
+    position: relative;
+    top: -6px;
 }
