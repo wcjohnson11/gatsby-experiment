@@ -21,21 +21,21 @@ class index extends React.Component {
   render() {
     return (
       <Layout>
-        <div className={style.svg}>
-          <svg width={300} height={300} />
-        </div>
-        <div className={style.title}>
-          <h1>Will Johnson</h1>
-          <p>Analytics, Art, Data, Engineering</p>
-        </div>
-        <div className={style.contentColumns}>
-          <div className={`pure-u-1 pure-u-md-12-24 ${style.projects}`}>
-            <h3>Projects</h3>
+        <section className={style.hero}>
+          <div className={style.svg}>
+            <svg width={300} height={300} />
           </div>
-          <div className={`pure-u-1 pure-u-md-12-24 ${style.blog}`}>
-            <h3>Blog</h3>
+          <div className={style.title}>
+            <h1>Will Johnson</h1>
+            <p>Analytics, Art, Data, Engineering</p>
           </div>
-        </div>
+        </section>
+        <section className={style.projects}>
+          <h3>Projects</h3>
+        </section>
+        <section className={style.blog}>
+          <h3>Blog</h3>
+        </section>
       </Layout>
     );
   }

@@ -1,5 +1,12 @@
 @import '../../utils/colors.css';
 
+.hero {
+    background-color: var(--lemonYellow);
+    top: 0;
+    left: 0;
+    width: 100vw;
+}
+
 .title {
     text-align: center;
 }
@@ -20,12 +27,9 @@
 
 .projects {
     height: 40vh;
+    position: relative;
 }
 
 .blog {
     height: 40vh;
-}
-
-.contentColumns > div > h3 {
-    text-align: center;
 }
