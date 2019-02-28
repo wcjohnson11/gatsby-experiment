@@ -1,3 +1,5 @@
+@import '../../../utils/colors.css';
+
 .legend {
     width: 100%;
     font-size: 14px;
@@ -34,12 +36,32 @@
     cursor: pointer;
 }
 
+.legentItem:hover {
+    fill: red;
+    opacity: 1;
+}
+
 .label {
     all: initial;
     cursor: pointer;
     font-size: 14px;
     padding-left: 4px;
 }
+
+.label:hover {
+    color: var(--lightGray);
+}
+
+.active {
+    text-decoration: underline;
+    text-decoration-color: var(--hotPink);
+    text-decoration-style: double;
+}
+
+.active:hover {
+    color: var(--darkGray);
+}
+
 
 .title small {
     font-weight: 500;

@@ -4,7 +4,7 @@ import style from './styles/legend.module.css';
 
 class Legend extends React.Component {
 	render() {
-		const { scale, legendClick } = this.props;
+		const { currentContinent, scale, legendClick } = this.props;
 		return (
 			<div className={style.legend}>
 				<div className={style.title}>
@@ -18,6 +18,8 @@ class Legend extends React.Component {
 							<div className={style.row}>
 								{labels.map((label, i) => {
 									const size = 15;
+									const textClass = currentContinent === label.datum ? `${style.label} ${style.active}` : `${style.label}`;
+									console.log(label, textClass)
 									return (
 										<LegendItem
 											key={`legend-quantile-${i}`}
@@ -28,7 +30,7 @@ class Legend extends React.Component {
 											<svg className={style.legendItem} width={size} height={size}>
 												<circle fill={label.value} r={size / 2} cx={size / 2} cy={size / 2} />
 											</svg>
-											<LegendLabel align={'left'}><p className={style.label}>{label.text}</p></LegendLabel>
+											<LegendLabel align={'left'}><p className={textClass}>{label.text}</p></LegendLabel>
 										</LegendItem>
 									);
 								})}

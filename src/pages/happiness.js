@@ -190,7 +190,7 @@ class Happiness extends React.Component {
   // for filtering
   handleLegendClick(label) {
     const { currentContinent } = this.state;
-    const continentName = label;
+    const continentName = label.datum;
     if (continentName === currentContinent) {
       this.setState({ currentContinent: false });
     } else {
@@ -202,7 +202,8 @@ class Happiness extends React.Component {
   // Markdown Sections and bar chart sorting
   handleVariableFieldSelect(variable) {
     const { metrics } = this.state;
-    const { value } = variable;
+    const value = variable;
+    console.log(variable)
     if (metrics.find(metric => metric === value)) {
       this.setState({ currentMetric: value });
     } else {
@@ -252,7 +253,7 @@ class Happiness extends React.Component {
           </section>
           {isPromiseResolved && (
             <section className={style.wrapper}>
-              <Legend scale={colorScale} legendClick={this.handleLegendClick} />
+              <Legend currentContinent={currentContinent} scale={colorScale} legendClick={this.handleLegendClick} />
               <VxScatterRow
                 data={happyData}
                 currentCountry={currentCountry}
