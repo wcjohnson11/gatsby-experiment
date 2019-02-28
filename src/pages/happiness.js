@@ -244,10 +244,12 @@ class Happiness extends React.Component {
             <MarkdownDiv content={markdownSections["Happiness Intro"]} />
             <MultiLine data={gdp} />
           </section>
-          <MarkdownDiv content={markdownSections["Beyond GDP"]} />
-          <div className={style.center}>
-            <Heatmap data={happyData} columns={columns} metrics={metrics} />
-          </div>
+          <section className={style.belowViz}>
+            <MarkdownDiv content={markdownSections["Beyond GDP"]} />
+            <div className={style.center}>
+              <Heatmap data={happyData} columns={columns} metrics={metrics} />
+            </div>
+          </section>
           {isPromiseResolved && (
             <section className={style.wrapper}>
               <Legend scale={colorScale} legendClick={this.handleLegendClick} />
@@ -291,17 +293,18 @@ class Happiness extends React.Component {
                   <D3Map data={happyData} mapMetric={currentMetric} />
                 </div>
               <section
-                className={style.metricDescription}
+                className={`${style.belowViz} ${style.metricDescription}`}
                 dangerouslySetInnerHTML={{
                   __html: markdownSections[currentMetric]
                 }}
               />
-              <section>
+              <section className={style.belowViz}>
                 {barChartVariables && (
                   <Select
                     value={{ label: currentBarChart, value: currentBarChart }}
                     onChange={this.handleVariableFieldSelect}
                     controlShouldRenderValue={true}
+                    className={style.select}
                     options={barChartVariables.map(d => {
                       return {
                         value: d.name,
@@ -328,7 +331,7 @@ class Happiness extends React.Component {
                   colorScale={colorScale}
                 />
               </section>
-              <section>
+              <section className={style.belowViz}>
                 <MarkdownDiv content={markdownSections["Conclusion"]} />
               </section>
             </React.Fragment>

@@ -1,6 +1,7 @@
 .happiness {
     margin: 0 auto;
     max-width: 650px;
+    margin-top: 5em;
 }
 
 @media only screen and (max-device-width: 680px) {
@@ -34,8 +35,8 @@
     font-size: 95%;
 }
 
-.metricDescription > p {
-    margin-bottom: 0px;
+.belowViz {
+    margin-top: 1.53rem;
 }
 
 .center {
@@ -44,4 +45,9 @@
 
 .globe {
     max-height: 720px;
+}
+
+.select {
+    margin-bottom: 1.53rem;
+    margin-top: 3.5rem;
 }
