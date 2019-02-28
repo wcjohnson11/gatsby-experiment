@@ -1,5 +1,5 @@
 import React from 'react';
-import VxScatterplotWithSize from "../components/visualizations/vxscatterplot";
+import VxScatterplotWithSize from "./vxscatterplot";
 
 class VxScatterRow extends React.Component {
     render() {
@@ -13,25 +13,28 @@ class VxScatterRow extends React.Component {
             linkHighlighting,
             metrics
         } = this.props;
+        const scatterRow = metrics.map(metric => 
+            <VxScatterplotWithSize
+                key={metric}
+                colorScale={colorScale}
+                currentCountry={currentCountry}
+                currentContinent={currentContinent}
+                data={data}
+                handleCircleOver={handleCircleOver}
+                useGrid={useGrid}
+                linkHighlighting={linkHighlighting}
+                xVar={"GDP Per Capita"}
+                yVar={metric}
+            />
+        );
         return (
             <React.Fragment>
-                { metrics && metrics.map(metric => {
-                    return (
-                        <VxScatterplotWithSize
-                            data={data}
-                            xVar={"GDP Per Capita"}
-                            yVar={metric}
-                            currentCountry={currentCountry}
-                            currentContinent={currentContinent}
-                            colorScale={colorScale}
-                            handleCircleOver={handleCircleOver}
-                            useGrid={useGrid}
-                            linkHighlighting={linkHighlighting}
-                        />
-                    )
-                })}
+                { metrics &&
+                    scatterRow }
             </React.Fragment>
         )
         ;
     }
 }
+
+export default VxScatterRow;
