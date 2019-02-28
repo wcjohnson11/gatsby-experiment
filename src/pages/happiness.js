@@ -40,7 +40,7 @@ class Happiness extends React.Component {
 			currentMetric     : 'GINI Index',
 			barChartVariables : [ 'Low to High', 'High to Low', 'Group by Continent', 'Alphabetical' ],
 			currentBarChart   : 'Group by Continent',
-			yAxisVariables    : [
+			xAxisVariables    : [
 				'GDP Per Capita',
 				'GINI Index',
 				'Happy Planet Index',
@@ -56,7 +56,7 @@ class Happiness extends React.Component {
         "Overall Economic Freedom Score",
         "Government Integrity Score"
 			],
-			currentYAxis      : 'GDP Per Capita'
+			currentXAxis: 'GDP Per Capita'
 		};
 		this.handleCircleOver = this.handleCircleOver.bind(this);
 		this.handleLegendClick = this.handleLegendClick.bind(this);
@@ -212,9 +212,8 @@ class Happiness extends React.Component {
   }
   
   handleAxisFieldSelect(variable) {
-    const { yAxisVariables } = this.state;
     const { value } = variable;
-    this.setState({ currentYAxis: value });
+    this.setState({ currentXAxis: value });
   }
 
 	render() {
@@ -224,7 +223,7 @@ class Happiness extends React.Component {
 			currentContinent,
 			currentCountry,
 			currentMetric,
-			currentYAxis,
+			currentXAxis,
 			colorScale,
 			columns,
 			happyData,
@@ -232,7 +231,7 @@ class Happiness extends React.Component {
 			isPromiseResolved,
 			markdownData,
 			metrics,
-			yAxisVariables
+			xAxisVariables
 		} = this.state;
 
 		// Create Markdown Section object
@@ -304,22 +303,26 @@ class Happiness extends React.Component {
 									/>
 								)}
 							</section>
-							<div className={style.globe}>
-								<D3Map data={happyData} mapMetric={currentMetric} />
-							</div>
 							<section
 								className={`${style.belowViz} ${style.metricDescription}`}
 								dangerouslySetInnerHTML={{
 									__html : markdownSections[currentMetric]
 								}}
 							/>
+							<section className={style.globe}>
+                <h4>Viewing {currentMetric} On A Map</h4>
+                <p>Get a geographical overview and regional trends of {currentMetric}</p>
+								<D3Map data={happyData} mapMetric={currentMetric} />
+							</section>
 							<section>
+                <h4>Changing the X Axis</h4>
+                <p>Choosing a different X Axis variable allows you to explore relationship between it and the {currentMetric} on the Y Axis.</p>
 								<Select
-									value={{ label: currentYAxis, value: currentYAxis }}
+									value={{ label: currentXAxis, value: currentXAxis }}
 									onChange={this.handleAxisFieldSelect}
 									controlShouldRenderValue={true}
 									className={style.select}
-									options={yAxisVariables.filter(d => d !== currentMetric).map((d) => {
+									options={xAxisVariables.filter(d => d !== currentMetric).map((d) => {
 										return {
 											value : d,
 											label : d
@@ -330,12 +333,14 @@ class Happiness extends React.Component {
 								/>
 								<Scatterplot
 									data={happyData}
-									xVar={currentYAxis}
+									xVar={currentXAxis}
 									yVar={currentMetric}
 									colorScale={colorScale}
 								/>
 							</section>
 							<section className={style.belowViz}>
+              <h4>Exploring The Countries as Bars</h4>
+                <p>The below bar chart shows all countries on the y Axis and the {currentMetric} on the yAxis. You can change how they're sorted with the below selector.</p>
 								{barChartVariables && (
 									<Select
 										value={{ label: currentBarChart, value: currentBarChart }}
