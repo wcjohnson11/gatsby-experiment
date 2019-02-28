@@ -2,9 +2,9 @@ import React from "react";
 import acronymize from "../../utils/acronymize";
 import { axisLeft, axisTop, select, scaleBand } from "d3";
 
-const height = 400;
-const width = 400;
-const margin = { top: 100, left: 125 };
+const height = 350;
+const width = 350;
+const margin = { top: 120, left: 100 };
 
 class Heatmap extends React.Component {
   constructor(props) {
