@@ -15,8 +15,8 @@ class Scatterplot extends React.Component {
   circleRef = React.createRef();
 
   // Initialize Axes
-  xAxis = d3.axisBottom().ticks(5);
-  yAxis = d3.axisLeft();
+  xAxis = d3.axisBottom().ticks(5).tickSizeOuter(0);
+  yAxis = d3.axisLeft().tickSizeOuter(0);
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const {
@@ -38,9 +38,12 @@ class Scatterplot extends React.Component {
     };
     // Get min, max of x value
     // and map to X-position
+    var xMin = d3.min(data, d => d[xVar]);
+    const xMax = d3.max(data, d => d[xVar])
+    if (xMin > 0) xMin = 0;
     const xScale = d3
       .scaleLinear()
-      .domain([-1000, d3.max(data, d => d[xVar])])
+      .domain([xMin, xMax])
       .range([padding, width - padding]);
 
     // 2. Initialize scale of Y Position
