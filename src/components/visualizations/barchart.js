@@ -5,7 +5,7 @@ import { withParentSize } from "@vx/responsive";
 import { withTooltip } from "@vx/tooltip";
 import BoundedToolTip from "./boundedTooltip";
 import style from "./styles/barchart.module.css";
-const margin = { top: 20, right: 105, bottom: 20, left: 125 };
+const margin = { top: 20, right: 20, bottom: 20, left: 120 };
 
 // TODO
 // Create Legend
@@ -20,8 +20,8 @@ class BarChart extends React.Component {
     this.barRef = React.createRef();
   }
 
-  xAxis = d3.axisTop();
-  yAxis = d3.axisLeft();
+  xAxis = d3.axisTop().tickSizeOuter(0);
+  yAxis = d3.axisLeft().tickSizeOuter(0);
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const {
@@ -72,8 +72,8 @@ class BarChart extends React.Component {
           if (a.name > b.name) return -1;
         } else if (sortType === "Group by Continent") {
           if (a["Continent Name"] === b["Continent Name"]) {
-            if (a[xVar] < b[xVar]) return 1;
-            if (a[xVar] > b[xVar]) return -1;
+            if (a[xVar] < b[xVar]) return -1;
+            if (a[xVar] > b[xVar]) return 1;
           }
           if (a["Continent Name"] < b["Continent Name"]) return 1;
           if (a["Continent Name"] > b["Continent Name"]) return -1;
@@ -94,7 +94,7 @@ class BarChart extends React.Component {
     const xScale = d3
       .scaleLinear()
       .domain([0, dataXMax])
-      .range([margin.left, parentWidth]);
+      .range([margin.left, parentWidth - margin.right]);
 
     // Get array of names in dataset
     const dataNames = barData.reduce((result, d) => {
@@ -116,7 +116,7 @@ class BarChart extends React.Component {
         x: `${margin.left}`,
         y: yScale(d[yVar]),
         height: yScale.bandwidth(),
-        width: xScale(d[xVar]) - margin.right,
+        width: xScale(d[xVar]) - margin.left,
         fill: colorScale(d["Continent Name"]),
         name: d[yVar],
         xRaw: d[xVar],
@@ -150,6 +150,7 @@ class BarChart extends React.Component {
       .selectAll("rect")
       .data(this.state.bars)
       .transition()
+      .duration(400)
       .attr("y", d => d.y)
       .attr("height", d => d.height)
       .attr("width", d => d.width)
@@ -186,15 +187,15 @@ class BarChart extends React.Component {
         <svg width={parentWidth} height={formattedHeight}>
           <text
             className={style.medianText}
-            x={xScale(dataMedian) - 28}
-            y={margin.top}
+            x={xScale(dataMedian) - margin.top}
+            y={margin.top - margin.top/4}
           >
             median
           </text>
           <line
             className={style.medianLine}
             x1={xScale(dataMedian)}
-            y1={margin.top}
+            y1={margin.top - 4}
             x2={xScale(dataMedian)}
             y2={formattedHeight - margin.bottom}
           />

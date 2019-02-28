@@ -37,12 +37,19 @@ class Happiness extends React.Component {
       currentCountry: false,
       currentContinent: false,
       isPromiseResolved: false,
+      metrics: [
+        "Happy Planet Index",
+        "GINI Index",
+        "Human Development Index",
+        "Sustainable Economic Development Index",
+        "World Happiness Report Score",
+      ],
       currentMetric: "GINI Index",
       barChartVariables: [
-        { name: "Low to High" },
-        { name: "High to Low" },
-        { name: "Group by Continent" },
-        { name: "Alphabetical" }
+        "Low to High",
+        "High to Low",
+        "Group by Continent",
+        "Alphabetical"
       ],
       currentBarChart: "Group by Continent"
     };
@@ -131,15 +138,6 @@ class Happiness extends React.Component {
           };
         });
 
-        // Define metrics
-        const metrics = [
-          "Happy Planet Index",
-          "GINI Index",
-          "Human Development Index",
-          "Sustainable Economic Development Index",
-          "World Happiness Report Score",
-        ];
-
       // Get list of Continent Names for color scale
       const continentNames = newHappy.reduce((result, country) => {
         const continentName = country["Continent Name"];
@@ -170,11 +168,7 @@ class Happiness extends React.Component {
         isPromiseResolved: true,
         happyData: newHappy,
         gdp: gdp,
-        columns: columns,
-        metrics: metrics,
-        currentMetric: this.state.currentMetric,
-        barChartVariables: this.state.barChartVariables,
-        currentBarChart: this.state.currentBarChart
+        columns: columns
       });
     });
   }
@@ -202,8 +196,8 @@ class Happiness extends React.Component {
   // Markdown Sections and bar chart sorting
   handleVariableFieldSelect(variable) {
     const { metrics } = this.state;
-    const value = variable;
-    console.log(variable)
+    const { value } = variable;
+
     if (metrics.find(metric => metric === value)) {
       this.setState({ currentMetric: value });
     } else {
@@ -280,6 +274,7 @@ class Happiness extends React.Component {
                     value={{ label: currentMetric, value: currentMetric }}
                     onChange={this.handleVariableFieldSelect}
                     controlShouldRenderValue={true}
+                    className={style.select}
                     options={metrics.map(d => {
                       return {
                         value: d,
@@ -308,8 +303,8 @@ class Happiness extends React.Component {
                     className={style.select}
                     options={barChartVariables.map(d => {
                       return {
-                        value: d.name,
-                        label: d.name
+                        value: d,
+                        label: d
                       };
                     })}
                     isMulti={false}
