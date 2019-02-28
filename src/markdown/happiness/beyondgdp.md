@@ -18,6 +18,6 @@ Of the metrics analyzed here, **Happy Planet Index** and **World Happiness Repor
 - **The Happy Planet Index (HPI)** measures a combination of well-being, health/life expectancy, inequality and ecologicaly footprint
 - **The Human Development Index (HDI)** measures health/life expectancy, standard of living, amount of education received
 - **The Sustainable Economic Development Assessment (SEDA)** focuses on Economic factors, Investments in Social Services like education, health and infrastructure and Sustainability.
-- **The World Happiness Report Score (WHPR)** measures people's experiences of the quality of their lives
+- **The World Happiness Report Score (WHRS)** measures people's experiences of the quality of their lives
 
 *See the below graphic for a visual representation of what each metric measures.*
