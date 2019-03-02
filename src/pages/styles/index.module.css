@@ -1,15 +1,17 @@
 @import '../../utils/colors.css';
 
 .hero {
-    background-color: var(--lemonYellow);
     top: 0;
     left: 0;
     width: 100vw;
+    height: 500px;
 }
 
 
 .title {
     text-align: center;
+    top: 350px;
+    position: relative;
 }
 
 .title > h1 {
@@ -17,24 +19,30 @@
 }
 
 .svg {
-    display: flex;
-    justify-content: center;
+    position: absolute;
+    left: 0;
+    top: 40px;
 }
 
 .circle {
     fill: var(--darkRed);
-    filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
+    /* filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7)); */
+}
+
+.active {
+    stroke: var(--hotpink);
+    stroke-width: 2px;
 }
 
 .projects {
-    height: 40vh;
+    height: 80vh;
     position: relative;
     margin: 0 auto;
     max-width: 650px;
 }
 
 .blog {
-    height: 40vh;
+    height: 80vh;
     margin: 0 auto;
     max-width: 650px;
 }

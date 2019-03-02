@@ -6,13 +6,3 @@
     flex-direction: column;
     background-color: var(--backgroundColor);
 }
-
-.pure-g {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-.pure-g > div {
-    width: 95% !important;
-    height: 95% !important;
-}
