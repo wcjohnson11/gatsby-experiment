@@ -130,6 +130,7 @@ class VxScatterplot extends React.Component {
       .attr("fill", d => d.color)
       .attr("r", d => d.r)
       .attr("strokeWidth", d => 1)
+      .attr("stroke", d => chroma(d.color).darken(2))
       .on("mouseenter", d => {
         select(this).raise()
         handleCircleOver(d.key, yVar)
@@ -157,7 +158,8 @@ class VxScatterplot extends React.Component {
       .duration(250)
       .attr("fill", d => colorFunction(d, currentCountry))
       .attr("r", d => radiusFunction(d, currentCountry, currentContinent))
-      .attr("strokeWidth", d => strokeWidthFunction(d, currentCountry));
+      .attr("strokeWidth", d => strokeWidthFunction(d, currentCountry))
+      .attr("stroke", d => chroma(d.color).darken(2));
       
       // If currentCountry (country is being hovered over)
       // And it doesn't belong to the hovered scatterplot
@@ -229,7 +231,6 @@ class VxScatterplot extends React.Component {
                 return (
                   <Circle
                     key={d.key}
-                    stroke={chroma(d.color).darken(2)}
                     cx={d.cx}
                     cy={d.cy}
                     x={d.x}

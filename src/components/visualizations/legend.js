@@ -1,6 +1,5 @@
 import React from 'react';
 import { LegendItem, LegendLabel, LegendOrdinal } from '@vx/legend';
-import Tooltip from './tooltip';
 import chroma from "chroma-js";
 import style from './styles/legend.module.css';
 
