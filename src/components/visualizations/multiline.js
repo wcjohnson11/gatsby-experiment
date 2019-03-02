@@ -18,7 +18,7 @@ import Select from "react-select";
 import { withParentSize } from "@vx/responsive";
 import style from "./styles/multiline.module.css";
 
-const margin = { top: 20, right: 20, bottom: 40, left: 40 };
+const margin = { top: 20, right: 20, bottom: 40, left: 45 };
 class MultiLine extends React.Component {
   constructor(props) {
     super(props);
@@ -33,7 +33,7 @@ class MultiLine extends React.Component {
         { label: "India", value: "India" },
         { label: "China", value: "China" },
         { label: "Germany", value: "Germany" },
-        { label: "Switzerland", value: "Switzerland" }
+        { label: "France", value: "France" }
       ]
     };
     this.mulitilineXRef = React.createRef();
@@ -83,10 +83,12 @@ class MultiLine extends React.Component {
     const { data, parentWidth } = nextProps;
     if (!data) return {};
 
-    const height = parentWidth * 0.6 - margin.top - margin.bottom;
-    const width = parentWidth - margin.left - margin.right;
-
+    const width = parentWidth;
     const isMobile = parentWidth < 600 ? true : false;
+
+
+    const height = isMobile ? parentWidth * .8 - margin.top - margin.bottom : parentWidth * 0.6 - margin.top - margin.bottom;
+
     // Get list of countries
     const countries = set(data.map(d => d.Entity)).values();
     // Create array of options for multiselect
@@ -168,7 +170,7 @@ class MultiLine extends React.Component {
     // Add axis and attributes to xAxis
     this.xAxis.scale(xScale);
     d3Select(this.mulitilineXRef.current)
-      .call(this.xAxis)
+      .call(isMobile ? this.xAxis.ticks(5) : this.xAxis)
       .selectAll("text")
       .attr("y", 3)
       .attr("x", margin.right / 2)
@@ -179,30 +181,33 @@ class MultiLine extends React.Component {
     // Add axis and attributes to yAxis
     this.yAxis.scale(yScale);
     d3Select(this.multilineYRef.current)
-      .call(this.yAxis)
+      .call(isMobile ? this.yAxis.ticks(5) : this.yAxis)
       .selectAll("text")
       .attr("dy", ".35em")
       .attr("font-weight", "bold");
 
+    const responsiveXTranslate = isMobile ?
+    `translate(${width - margin.left * 1.1 - margin.right * 1.1},${height -
+      margin.bottom * .90})` :
+      `translate(${width - margin.left * 1 - margin.right * 1},${height -
+        margin.bottom * .9})`;
+
     d3Select(".xAxisTitle")
       .attr("text-anchor", "end")
-      .style("font-size", isMobile ? ".5em" : ".8em")
-      .attr(
-        "transform",
-        `translate(${width - margin.left - margin.right * 2},${height -
-          margin.bottom -
-          margin.top / 2})`
-      )
+      .style("font-size", isMobile ? ".6em" : ".8em")
+      .style("font-weight", "bold")
+      .attr("transform", responsiveXTranslate)
       .text("Years");
+
+      const responsiveYTranslate = isMobile ?
+      `translate(${margin.left * 1.5 + margin.right * 1.5},${margin.top * .65})` :
+        `translate(${margin.left * 2.45 + margin.right * 2.45}, ${margin.top * .7})`;
 
     d3Select(".yAxisTitle")
       .attr("text-anchor", "end")
       .style("font-size", isMobile ? ".5em" : ".8em")
-      .attr(
-        "transform",
-        `translate(${margin.right + margin.left}, ${margin.top +
-          margin.bottom / 5}) rotate(-90)`
-      )
+      .style("font-weight", "bold")
+      .attr("transform", responsiveYTranslate)
       .text("Adujusted GDP Per Capita");
 
     // Add data and G for each country
