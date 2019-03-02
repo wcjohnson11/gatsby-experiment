@@ -118,7 +118,7 @@ class Scatterplot extends React.Component {
         tooltipLeft: d.cx,
         tooltipTop: d.cy,
         tooltipData: {
-          name: d.name,
+          name: d.key,
           x: d.x,
           y: d.y,
           labels: labels
