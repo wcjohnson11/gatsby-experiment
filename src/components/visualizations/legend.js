@@ -11,7 +11,7 @@ class Legend extends React.Component {
 				<div className={style.title}>
 					<big>Continents Legend</big>
 					<br />
-					<small><i>Click on a continent to filter the data</i></small>
+					<small><i>Click on a continent name to filter the data</i></small>
 				</div>
 				<LegendOrdinal scale={scale} labelFormat={(label) => `${label.toUpperCase()}`}>
 					{(labels, i) => {

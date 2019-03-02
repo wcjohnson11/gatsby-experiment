@@ -310,7 +310,7 @@ class Happiness extends React.Component {
 								}}
 							/>
 							<section className={style.globe}>
-                <h4>Viewing {currentMetric} On A Map</h4>
+                <h4>Viewing the {currentMetric} On A World Map</h4>
                 <p>Get a geographical overview and regional trends of {currentMetric}</p>
 								<D3Map data={happyData} mapMetric={currentMetric} />
 							</section>
