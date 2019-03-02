@@ -5,7 +5,7 @@ category: "Happiness"
 ---
 <h3>Human Development Index</h3>
 <p>
-    The Human Development Index was created by the <a href="http://hdr.undp.org/en/content/human-development-index-hdi">United Nations Development Program</a> in 1990 as a way to measure the potential of people across different countries according to three key dimensions, life expectancy, education and earning potential. The HDI is not meant to include all of the factors of human development and well-being, it is meant to stimulate debate around policy priorities pertaining to its three key dimensions.
+    The Human Development Index was created by the United Nations Development Program in 1990 as a way to measure the potential of people across different countries according to three key dimensions, life expectancy, education and earning potential. The HDI is not meant to include all of the factors of human development and well-being, it is meant to stimulate debate around policy priorities pertaining to its three key dimensions.
 </p>
 
 <p>
@@ -19,3 +19,4 @@ category: "Happiness"
 <p>
     The Human Development Index shares a strong correlation with the Sustainable Development Assessment Index.
 </p>
+[Check out the report here](http://hdr.undp.org/en/content/human-development-index-hdi)

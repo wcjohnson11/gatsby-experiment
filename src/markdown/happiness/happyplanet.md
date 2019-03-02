@@ -5,7 +5,8 @@ category: "Happiness"
 ---
 <h3>Happy Planet Index</h3>
 <p>
-    The Happy Planet Index was created by the <a href="http://www.neweconomics.org/">New Economics Foundation</a>, the UK's leading think tank promoting social, economic and environmental justice. They devised the Happy Planet Index in hopes of shaping the economies of the world to be better for people and the environment. The Happy Planet Index is calculated according to four key metrics, well-being, life expectancy, inequality and ecological footprint. The exact methodology is broken down in their <a href="http://happyplanetindex.org/s/Methods-paper_2016-48te.pdf">Methods Paper.</a>
+    The Happy Planet Index was created by the New Economics Foundation, the UK's leading think tank promoting social, economic and environmental justice. They devised the Happy Planet Index in hopes of shaping the economies of the world to be better for people and the environment. The Happy Planet Index is calculated according to four key metrics, well-being, life expectancy, inequality and ecological footprint.
+    [The exact methodology is broken down in their methods paper](http://happyplanetindex.org/s/Methods-paper_2016-48te.pdf)
 </p>
 <br />
 
