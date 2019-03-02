@@ -25,18 +25,15 @@ class BoundedToolTip extends React.Component {
       >
         {data && (
           <div className={style.tooltip}>
-            <p>
-              Country
-            </p>
+            <p>Country</p>
             <p><span>{data.name}</span></p>
-            <p>
-              {data.labels.x}
-            </p>
+            <p>{data.labels.x}</p>
             <p><span>{data.x}</span></p>
             { data.y &&
-              <p>
-                {data.labels.y} <span>{data.y}</span>
-              </p>
+            <React.Fragment>
+              <p>{data.labels.y}</p>
+              <p><span>{data.y}</span></p>
+            </React.Fragment>
             }
           </div>
         )}
