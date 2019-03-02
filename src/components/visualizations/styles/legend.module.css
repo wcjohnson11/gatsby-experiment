@@ -2,6 +2,7 @@
 
 .legend {
     width: 100%;
+    height: 150px;
     font-size: 14px;
     text-align: center;
     justify-content: center;
@@ -27,8 +28,10 @@
 .row {
     flex: 1;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     flex-wrap: wrap;
+    transition: opacity .25s ease-in-out;
+    opacity: 1;
 }
 
 .legendItem {
@@ -44,6 +47,15 @@
     color: var(--lightGray);
     text-decoration: underline;
     text-decoration-color: var(--darkGray);
+}
+
+.tooltip {
+    width: 100%;
+}
+
+.hidden {
+    opacity: 0;
+    transition: opacity .25s ease-in-out;
 }
 
 .label {

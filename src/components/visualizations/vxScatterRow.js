@@ -5,6 +5,7 @@ import style from "./styles/vxscatterrow.module.css";;
 class VxScatterRow extends React.Component {
     render() {
         const {
+            currentCircleY,
             currentCountry,
             currentContinent,
             colorScale,
@@ -17,10 +18,11 @@ class VxScatterRow extends React.Component {
         const scatterRow = metrics.map(metric => 
             <VxScatterplotWithSize
                 key={metric}
+                currentCircleY={currentCircleY}
                 colorScale={colorScale}
                 currentCountry={currentCountry}
                 currentContinent={currentContinent}
-                data={data}
+                data={data.filter(country => country.Population > 5000000)}
                 handleCircleOver={handleCircleOver}
                 useGrid={useGrid}
                 linkHighlighting={linkHighlighting}

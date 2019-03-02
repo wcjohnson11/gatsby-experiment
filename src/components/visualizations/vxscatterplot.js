@@ -4,9 +4,6 @@ import { Grid } from "@vx/grid";
 import { Circle } from "@vx/shape";
 import { scaleLinear } from "@vx/scale";
 import { AxisLeft, AxisBottom } from "@vx/axis";
-import { localPoint } from "@vx/event";
-import BoundedToolTip from "./boundedTooltip";
-import { withTooltip } from "@vx/tooltip";
 import { withParentSize } from "@vx/responsive";
 import * as chroma from "chroma-js";
 import { max, select } from "d3";
@@ -23,7 +20,7 @@ const colorFunction = (d, currentCountry) => {
     if (currentCountry === d.key) {
       return d.color;
     } else {
-      return "gray";
+      return chroma(d.color).brighten(3);
     }
   } else {
     return d.color;
@@ -38,9 +35,9 @@ const radiusFunction = (d, currentCountry, currentContinent) => {
   } else {
     if (currentCountry) {
       if (currentCountry === d.key) {
-        return d.r;
+        return 4;
       } else {
-        return d.r;
+        return 2.5;
       }
     } else {
       return d.r;
@@ -121,63 +118,60 @@ class VxScatterplot extends React.Component {
 
   componentDidMount() {
     const { circles } = this.state;
+    const { handleCircleOver, yVar } = this.props;
 
+    // Bind data to circle elements in circleRef
     const circleSelection = select(this.circleRef.current)
       .selectAll("circle")
       .data(circles);
 
+    // Add attributes and mouseover events
     circleSelection
       .attr("fill", d => d.color)
       .attr("r", d => d.r)
-      .attr("strokeWidth", d => 1);
+      .attr("strokeWidth", d => 1)
+      .on("mouseenter", d => {
+        select(this).raise()
+        handleCircleOver(d.key, yVar)
+      })
+      .on("mouseleave", () => handleCircleOver(false))
   }
 
   componentDidUpdate() {
     const { circles } = this.state;
-    const { currentCountry, currentContinent } = this.props;
+    const { currentCircleY, currentCountry, currentContinent, handleCircleOver, yVar } = this.props;
 
+    // Update circles with new Data
     const circleSelection = select(this.circleRef.current)
       .selectAll("circle")
-      .data(circles);
+      .data(circles)
+      .on("mouseenter", d => {
+        select(this).raise()
+        handleCircleOver(d.key, yVar)
+      })
+      .on("mouseleave", () => handleCircleOver(false));
 
-    circleSelection
+      // Update attributes and event handlers of circles
+      circleSelection
       .transition()
-      .duration(450)
+      .duration(250)
       .attr("fill", d => colorFunction(d, currentCountry))
       .attr("r", d => radiusFunction(d, currentCountry, currentContinent))
       .attr("strokeWidth", d => strokeWidthFunction(d, currentCountry));
-  }
-
-  handleMouseOver(event, datum) {
-    const { handleCircleOver } = this.props;
-    handleCircleOver(datum.key);
-    const coords = localPoint(event.target.ownerSVGElement, event);
-    this.props.showTooltip({
-      tooltipLeft: coords.x,
-      tooltipTop: coords.y,
-      tooltipData: {
-        name: datum.key,
-        x: datum.x,
-        y: datum.y,
-        labels: this.state.labels
+      
+      // If currentCountry (country is being hovered over)
+      // And it doesn't belong to the hovered scatterplot
+      // Raise country
+      if (currentCountry && currentCircleY !== yVar) {
+        circleSelection
+          .filter(d => d.key === currentCountry)
+          .raise()
       }
-    });
-  }
-
-  handleMouseOut() {
-    // TODO: create animation w opacity
-    const { handleCircleOver } = this.props;
-    handleCircleOver(false);
-    setTimeout(() => this.props.hideTooltip(), 300);
   }
 
   render() {
     const {
       parentWidth,
-      tooltipData,
-      tooltipLeft,
-      tooltipTop,
-      tooltipOpen,
       useGrid
     } = this.props;
 
@@ -215,8 +209,8 @@ class VxScatterplot extends React.Component {
               labelOffset={18}
               left={margin}
               tickClassName={style["tick-label"]}
-              stroke="#333333"
-              tickStroke="#333333"
+              stroke="#8490A7"
+              tickStroke="#8490A7"
               numTicks={numTicksForHeight(parentHeight)}
             />
             <AxisBottom
@@ -226,8 +220,8 @@ class VxScatterplot extends React.Component {
               label={labels.x}
               top={parentHeight}
               tickClassName={style["tick-label"]}
-              stroke="#333333"
-              tickStroke="#333333"
+              stroke="#8490A7"
+              tickStroke="#8490A7"
               numTicks={numTicksForWidth(parentWidth)}
             />
             <g ref={this.circleRef}>
@@ -235,32 +229,22 @@ class VxScatterplot extends React.Component {
                 return (
                   <Circle
                     key={d.key}
-                    stroke={chroma("gray").darken(2)}
+                    stroke={chroma(d.color).darken(2)}
                     cx={d.cx}
                     cy={d.cy}
                     x={d.x}
                     y={d.y}
-                    onMouseEnter={e => this.handleMouseOver(e, d)}
-                    onMouseLeave={() => this.handleMouseOut()}
                   />
                 );
               })}
             </g>
           </Group>
         </svg>
-        {tooltipOpen && (
-          <BoundedToolTip
-            tooltipTop={tooltipTop}
-            tooltipLeft={tooltipLeft}
-            tooltipData={tooltipData}
-          />
-        )}
       </React.Fragment>
     );
   }
 }
 
-const VxScatterplotWithTooltip = withTooltip(VxScatterplot);
-const VxScatterplotWithSize = withParentSize(VxScatterplotWithTooltip);
+const VxScatterplotWithSize = withParentSize(VxScatterplot);
 
 export default VxScatterplotWithSize;

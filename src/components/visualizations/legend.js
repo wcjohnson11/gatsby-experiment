@@ -1,11 +1,13 @@
 import React from 'react';
 import { LegendItem, LegendLabel, LegendOrdinal } from '@vx/legend';
+import Tooltip from './tooltip';
 import chroma from "chroma-js";
 import style from './styles/legend.module.css';
 
 class Legend extends React.Component {
 	render() {
-		const { currentContinent, scale, legendClick } = this.props;
+		const { currentContinent, currentCountry, data, scale, legendClick } = this.props;
+		const currentVars = currentCountry && data.find(country => country.name === currentCountry)
 		return (
 			<div className={style.legend}>
 				<div className={style.title}>
@@ -39,6 +41,18 @@ class Legend extends React.Component {
 										</LegendItem>
 									);
 								})}
+								<div className={style.tooltip}>
+									<div>
+										<big>{currentCountry || <i>Hover over a country to see it's info across all indices</i>}</big>
+									</div>
+									<div className={currentCountry ? `${style.row}` : `${style.row} ${style.hidden}`}>
+										<p><b>HPI: </b>{currentVars["Happy Planet Index"] || "N/A"}</p>
+										<p><b>GINI: </b>{currentVars["GINI Index"] || "N/A"}</p>
+										<p><b>HDI: </b>{currentVars["Human Development Index"] || "N/A"}</p>
+										<p><b>SEDI: </b>{currentVars["Sustainable Economic Development Index"] || "N/A"}</p>
+										<p><b>WHRS: </b>{currentVars["World Happiness Report Score"] || "N/A"}</p>
+									</div>
+								</div>
 							</div>
 						);
 					}}

@@ -27,7 +27,8 @@ class Happiness extends React.Component {
 		this.state = {
 			markdownData      : props.data && props.data.allMarkdownRemark.edges,
 			datasets          : {},
-			currentCountry    : false,
+      currentCountry    : false,
+      currentCircleY: false,
 			currentContinent  : false,
 			isPromiseResolved : false,
 			metrics           : [
@@ -182,8 +183,8 @@ class Happiness extends React.Component {
 	// Country will be the name of a country or null
 	// This sets the currentCountry
 	// VxScatterplot will handle the rest
-	handleCircleOver(country) {
-		this.setState({ currentCountry: country });
+	handleCircleOver(country, yVar) {
+		this.setState({ currentCountry: country, currentCircleY: yVar });
 	}
 
 	// Legend click sets current Continent variable
@@ -219,7 +220,8 @@ class Happiness extends React.Component {
 	render() {
 		const {
 			barChartVariables,
-			currentBarChart,
+      currentBarChart,
+      currentCircleY,
 			currentContinent,
 			currentCountry,
 			currentMetric,
@@ -261,14 +263,17 @@ class Happiness extends React.Component {
 					{isPromiseResolved && (
 						<section className={style.wrapper}>
 							<Legend
-								currentContinent={currentContinent}
+                currentContinent={currentContinent}
+                currentCountry={currentCountry}
+                data={happyData}
 								scale={colorScale}
 								legendClick={this.handleLegendClick}
 							/>
 							<VxScatterRow
 								data={happyData}
 								currentCountry={currentCountry}
-								currentContinent={currentContinent}
+                currentContinent={currentContinent}
+                currentCircleY={currentCircleY}
 								colorScale={colorScale}
 								handleCircleOver={this.handleCircleOver}
 								metrics={metrics}
