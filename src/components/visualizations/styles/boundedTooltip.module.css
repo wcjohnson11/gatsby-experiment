@@ -1,15 +1,21 @@
 .tooltip {
-    display: block;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
     box-shadow: 0 0 4 4 rgba(0,0,0,0.5);
 }
 
 .tooltip > p {
-    margin-bottom: .3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
     text-decoration: underline;
+    width: 40%;
 }
 
 .tooltip > p > span {
-    font-weight: bold;
-    float: right;
-    padding-left: 10px;
+    align-self: flex-end;
+    font-weight: normal;
+    margin-bottom: 0px;
+    text-decoration: underline;
+    text-decoration-color: #fff;
 }

@@ -5,11 +5,8 @@ import { withParentSize } from "@vx/responsive";
 import { withTooltip } from "@vx/tooltip";
 import BoundedToolTip from "./boundedTooltip";
 import style from "./styles/barchart.module.css";
-const margin = { top: 20, right: 20, bottom: 20, left: 120 };
 
-// TODO
-// Create Legend
-// Style
+const margin = { top: 20, right: 20, bottom: 20, left: 120 };
 
 class BarChart extends React.Component {
   constructor(props) {
@@ -165,7 +162,7 @@ class BarChart extends React.Component {
       tooltipData: {
         name: datum.name,
         x: datum.xRaw,
-        y: datum.yRaw,
+        y: false,
         labels: this.state.labels
       }
     });
