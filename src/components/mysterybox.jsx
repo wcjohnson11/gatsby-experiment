@@ -1,7 +1,7 @@
 import React from 'react';
 import style from './styles/mysterybox.module.css';
 
-export default ({}) => (
+export default () => (
     <div className={style.container}>
         <div className={style.cube}>
             <div className={`${style.side} ${style.front}`}></div>
