@@ -1,3 +1,7 @@
 .wrapper {
     text-align: center;
 }
+
+.multiLine {
+    margin-top: 1em;
+}

@@ -47,6 +47,7 @@ class MultiLine extends React.Component {
   yAxis = axisLeft().tickSizeOuter(0);
 
   mouseover(d, xScale, yScale) {
+    const { isMobile } = this.state;
     selectAll(".line").attr("stroke", el => {
       if (d.data.Entity === el.key) {
         return "steelblue";
@@ -64,8 +65,9 @@ class MultiLine extends React.Component {
       .style("opacity", 1);
 
     d3Select(".hover-text")
-      .style("font-size", "1em")
+      .style("font-size", isMobile ? ".7em" : ".9em")
       .style("text-anchor", "middle")
+      .attr("y", isMobile ? margin.top * 1.2 : margin.top * 1.5)
       .text(d.data.Entity);
   }
 
@@ -195,20 +197,20 @@ class MultiLine extends React.Component {
     d3Select(".xAxisTitle")
       .attr("text-anchor", "end")
       .style("font-size", isMobile ? ".6em" : ".8em")
-      .style("font-weight", "bold")
+      .style("font-weight", 600)
       .attr("transform", responsiveXTranslate)
       .text("Years");
 
       const responsiveYTranslate = isMobile ?
       `translate(${margin.left * 1.5 + margin.right * 1.5},${margin.top * .65})` :
-        `translate(${margin.left * 2.45 + margin.right * 2.45}, ${margin.top * .7})`;
+        `translate(${margin.left * 2.3 + margin.right * 2.3}, ${margin.top * .5})`;
 
     d3Select(".yAxisTitle")
       .attr("text-anchor", "end")
       .style("font-size", isMobile ? ".5em" : ".8em")
-      .style("font-weight", "bold")
+      .style("font-weight", 600)
       .attr("transform", responsiveYTranslate)
-      .text("Adujusted GDP Per Capita");
+      .text("Adjusted GDP Per Capita");
 
     // Add data and G for each country
     const country = d3Select("#multiLine")
@@ -435,7 +437,7 @@ class MultiLine extends React.Component {
           isMulti={true}
           isSearchable={true}
         />
-        <svg id="multiLine" height={height} width={width}>
+        <svg className={style.multiLine} id="multiLine" height={height} width={width}>
           <g
             className="xAxis"
             ref={this.mulitilineXRef}
